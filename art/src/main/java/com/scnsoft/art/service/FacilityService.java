@@ -5,30 +5,43 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.scnsoft.art.dto.FacilityDto;
+import com.scnsoft.art.dto.mapper.FacilityMapper;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.FacilityRepository;
 
 @Service
-public record FacilityService(FacilityRepository facilityRepository) {
+public record FacilityService(
+    FacilityRepository facilityRepository, 
+    FacilityMapper facilityMapper
+) {
 
-    public List<Facility> findAll() {
-        return facilityRepository.findAll();
+    public List<FacilityDto> findAll() {
+        return facilityRepository.findAll()
+            .stream()
+            .map(facilityMapper::mapToDto)
+            .toList();
     }
 
-    public Facility findById(UUID id) {
+    public FacilityDto findById(UUID id) {
         return facilityRepository
             .findById(id)
+            .map(facilityMapper::mapToDto)
             .orElseThrow(ArtResourceNotFoundException::new);
     }
 
-    public Facility save(Facility facility) {
-        return facilityRepository.save(facility);
+    public FacilityDto save(FacilityDto facilityDto) {
+        Facility facility = facilityMapper.mapToEntity(facilityDto);
+        Facility persistedFacility = facilityRepository.save(facility);
+        return facilityMapper.mapToDto(persistedFacility);
     }
 
-    public Facility update(UUID id, Facility facility) {
+    public FacilityDto update(UUID id, FacilityDto facilityDto) {
+        Facility facility = facilityMapper.mapToEntity(facilityDto);
         facility.setId(id);
-        return facilityRepository.save(facility);
+        Facility updatedFacility = facilityRepository.save(facility);
+        return facilityMapper.mapToDto(updatedFacility);
     }
 
     public void deleteById(UUID id) {

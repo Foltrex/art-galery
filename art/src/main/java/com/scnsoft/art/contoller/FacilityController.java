@@ -3,7 +3,6 @@ package com.scnsoft.art.contoller;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,25 +14,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scnsoft.art.entity.Facility;
+import com.scnsoft.art.dto.FacilityDto;
 import com.scnsoft.art.service.FacilityService;
 
 @RestController
 @RequestMapping("api/v1/facilities")
 public record FacilityController(FacilityService facilityService) {
     @GetMapping
-    public ResponseEntity<List<Facility>> findAll() {
+    public ResponseEntity<List<FacilityDto>> findAll() {
         return ResponseEntity.ok(facilityService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<Facility> save(@RequestBody Facility facility) {
-        return new ResponseEntity<>(facilityService.save(facility), HttpStatus.CREATED);
+    public ResponseEntity<FacilityDto> save(@RequestBody FacilityDto facilityDto) {
+        return new ResponseEntity<>(facilityService.save(facilityDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Facility> update(@PathVariable UUID id, @RequestBody Facility facility) {
-        return ResponseEntity.ok(facilityService.update(id, facility));
+    public ResponseEntity<FacilityDto> update(@PathVariable UUID id, @RequestBody FacilityDto facilityDto) {
+        return ResponseEntity.ok(facilityService.update(id, facilityDto));
     }
 
     @DeleteMapping("/{id}")

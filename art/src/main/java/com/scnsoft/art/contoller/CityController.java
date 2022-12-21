@@ -3,7 +3,6 @@ package com.scnsoft.art.contoller;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scnsoft.art.entity.City;
+import com.scnsoft.art.dto.CityDto;
 import com.scnsoft.art.service.CityService;
 
 @RestController
@@ -23,18 +22,18 @@ import com.scnsoft.art.service.CityService;
 public record CityController(CityService cityService) {
     
     @GetMapping
-    public ResponseEntity<List<City>> findAll() {
+    public ResponseEntity<List<CityDto>> findAll() {
         return ResponseEntity.ok(cityService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<City> save(@RequestBody City city) {
-        return new ResponseEntity<>(cityService.save(city), HttpStatus.CREATED);
+    public ResponseEntity<CityDto> save(@RequestBody CityDto cityDto) {
+        return new ResponseEntity<>(cityService.save(cityDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<City> update(@PathVariable UUID id, @RequestBody City city) {
-        return ResponseEntity.ok(cityService.update(id, city));
+    public ResponseEntity<CityDto> update(@PathVariable UUID id, @RequestBody CityDto cityDto) {
+        return ResponseEntity.ok(cityService.update(id, cityDto));
     }
 
     @DeleteMapping("/{id}")
