@@ -1,15 +1,14 @@
 package com.scnsoft.user.repository;
 
-import com.scnsoft.user.entity.Account;
+import com.scnsoft.user.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
-
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, UUID> {
+public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    Optional<Account> findByLogin(String login);
+    Optional<Role> findByName(Role.RoleType name);
+
 }
