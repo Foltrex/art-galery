@@ -37,7 +37,7 @@ public record FacilityController(FacilityService facilityService) {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        facilityService.deleteById(null);
+        facilityService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
