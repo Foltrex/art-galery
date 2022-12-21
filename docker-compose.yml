@@ -2,19 +2,20 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:latest
+    image: postgres
     restart: always
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: user
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - 5433:5432
-  
+
   pgadmin:
     image: dpage/pgadmin4
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: user@gmail.com
       PGADMIN_DEFAULT_PASSWORD: user
+      # PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
-      - "5050:80"
+      - 5050:8080
