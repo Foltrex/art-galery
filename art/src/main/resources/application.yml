@@ -1,0 +1,14 @@
+spring:
+    application:
+        name: art-service
+    datasource:
+        url: jdbc:postgresql://localhost:5432/art
+        username: postgres
+        password: 994499_ma
+    jpa:
+        hibernate:
+            ddl-auto: update
+        generate-ddl: true
+        show-sql: true
+        # driverClassName: org.postgresql.Driver
+
