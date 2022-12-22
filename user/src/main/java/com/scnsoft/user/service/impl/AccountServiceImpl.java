@@ -5,6 +5,7 @@ import com.scnsoft.user.controller.dto.request.RegisterRequestDto;
 import com.scnsoft.user.controller.dto.response.AccountResponseDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Role;
+import com.scnsoft.user.exception.AccountBlockedException;
 import com.scnsoft.user.exception.LoginAlreadyExistsException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.repository.AccountRepository;
@@ -14,14 +15,18 @@ import com.scnsoft.user.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +65,24 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findByLogin(loginRequestDto.getLogin())
                 .orElseThrow(() -> new ResourseNotFoundException("Account not found!"));
 
-        setAccountToAuthentication(loginRequestDto.getLogin(), loginRequestDto.getPassword());
+        Integer failCount = account.getFailCount();
+        if (failCount != 0 && failCount % 5 == 0) {
+            long secondsToUnblock = calculateSecondsToUnblock(account.getBlockedSince());
+
+            if (secondsToUnblock > 0) {
+                throw new AccountBlockedException("Account blocked on " + secondsToUnblock + " seconds");
+            }
+        }
+
+        try {
+            setAccountToAuthentication(loginRequestDto.getLogin(), loginRequestDto.getPassword());
+            account.setFailCount(0);
+            accountRepository.save(account);
+        } catch (AuthenticationException e) {
+            handleEventOfBadCredentials(account);
+            throw new BadCredentialsException("Invalid credentials");
+        }
+
         return createAccountResponse(account);
     }
 
@@ -72,6 +94,17 @@ public class AccountServiceImpl implements AccountService {
         context.setAuthentication(authentication);
     }
 
+    private void handleEventOfBadCredentials(Account account) {
+        Integer failCount = account.getFailCount();
+        account.setFailCount(++failCount);
+        account.setLastFail(new Date());
+
+        if (failCount % 5 == 0) {
+            account.setBlockedSince(new Date());
+        }
+        accountRepository.save(account);
+    }
+
     private AccountResponseDto createAccountResponse(Account account) {
 
         return AccountResponseDto.builder()
@@ -79,6 +112,13 @@ public class AccountServiceImpl implements AccountService {
                 .login(account.getLogin())
                 .token(jwtUtils.createToken(account.getLogin(), account.getAccountType(), account.getRoles()))
                 .build();
+    }
+
+    private long calculateSecondsToUnblock(Date blockedSince) {
+        long diff = new Date().getTime() - blockedSince.getTime();
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(diff);
+
+        return 300 - seconds;
     }
 
 }
