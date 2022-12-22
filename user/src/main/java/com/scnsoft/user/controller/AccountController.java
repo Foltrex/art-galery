@@ -25,6 +25,7 @@ public class AccountController {
 
 
     @PostMapping("/register")
+    @PreAuthorize("@accountSecurityHandler.isHasRegisterAccess(#registerRequestDto.accountType)")
     public ResponseEntity<AccountResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return new ResponseEntity<>(accountService.register(registerRequestDto), HttpStatus.CREATED);
     }
@@ -56,7 +57,7 @@ public class AccountController {
     }
 
     @GetMapping("/4")
-    @PreAuthorize("@accountTypeHandler.isHasType('ARTIST')")
+    @PreAuthorize("@accountSecurityHandler.isHasType('ARTIST')")
     public String test4() {
         return "PERMIT ARTIST";
     }
