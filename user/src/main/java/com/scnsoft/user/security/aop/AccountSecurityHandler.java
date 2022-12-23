@@ -20,7 +20,7 @@ public class AccountSecurityHandler {
     public boolean isHasRegisterAccess(String accountType) {
         if (Account.AccountType.valueOf(accountType).equals(Account.AccountType.ARTIST)) {
             return true;
-        } else if (Account.AccountType.valueOf(accountType).equals(Account.AccountType.FACILITY)) {
+        } else if (Account.AccountType.valueOf(accountType).equals(Account.AccountType.ORGANIZATION)) {
             Account account = getCurrentAccount();
             return account.getAccountType().equals(Account.AccountType.SYSTEM);
         }

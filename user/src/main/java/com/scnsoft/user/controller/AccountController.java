@@ -3,8 +3,6 @@ package com.scnsoft.user.controller;
 import com.scnsoft.user.controller.dto.request.LoginRequestDto;
 import com.scnsoft.user.controller.dto.request.RegisterRequestDto;
 import com.scnsoft.user.controller.dto.response.AccountResponseDto;
-import com.scnsoft.user.entity.Account;
-import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

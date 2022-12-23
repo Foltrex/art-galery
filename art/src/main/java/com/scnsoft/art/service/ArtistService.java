@@ -1,8 +1,8 @@
-package com.scnsoft.user.service.impl;
+package com.scnsoft.art.service;
 
-import com.scnsoft.user.entity.Artist;
-import com.scnsoft.user.exception.ResourseNotFoundException;
-import com.scnsoft.user.repository.ArtistRepository;
+import com.scnsoft.art.entity.Artist;
+import com.scnsoft.art.exception.ArtResourceNotFoundException;
+import com.scnsoft.art.repository.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ArtistServiceImpl {
+public class ArtistService {
 
     private final ArtistRepository artistRepository;
 
@@ -22,7 +22,7 @@ public class ArtistServiceImpl {
     public Artist findById(UUID id) {
         return artistRepository
                 .findById(id)
-                .orElseThrow(() -> new ResourseNotFoundException("Account not found!"));
+                .orElseThrow(ArtResourceNotFoundException::new);
     }
 
     public Artist save(Artist artist) {

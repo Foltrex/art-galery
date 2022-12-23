@@ -1,7 +1,10 @@
-package com.scnsoft.user.controller;
+package com.scnsoft.art.contoller;
 
-import com.scnsoft.user.entity.Artist;
-import com.scnsoft.user.service.impl.ArtistServiceImpl;
+import java.util.List;
+import java.util.UUID;
+
+import com.scnsoft.art.entity.Artist;
+import com.scnsoft.art.service.ArtistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.UUID;
+import com.scnsoft.art.dto.CityDto;
+import com.scnsoft.art.service.CityService;
 
 @RestController
 @RequestMapping("api/v1/cities")
-public record ArtistController(ArtistServiceImpl artistService) {
+public record ArtistController(ArtistService artistService) {
 
     @GetMapping
     public ResponseEntity<List<Artist>> findAll() {

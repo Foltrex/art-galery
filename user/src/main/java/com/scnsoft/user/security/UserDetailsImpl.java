@@ -1,7 +1,6 @@
 package com.scnsoft.user.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.scnsoft.user.entity.Account;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,6 +1,6 @@
-package com.scnsoft.user.repository;
+package com.scnsoft.art.repository;
 
-import com.scnsoft.user.entity.Artist;
+import com.scnsoft.art.entity.Artist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

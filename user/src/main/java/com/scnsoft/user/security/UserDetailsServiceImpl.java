@@ -1,6 +1,5 @@
 package com.scnsoft.user.security;
 
-import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -39,7 +39,7 @@ import java.util.UUID;
 public class Account {
 
     public enum AccountType {
-        ARTIST, FACILITY, SYSTEM
+        ARTIST, ORGANIZATION, SYSTEM
     }
 
     @Id
@@ -60,7 +60,7 @@ public class Account {
 
     private Date blockedSince;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
     @ManyToMany(fetch = FetchType.EAGER)
