@@ -37,7 +37,6 @@ public class AccountSecurityHandler {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String login = authentication.getName();
 
-        log.info(login);
         return accountRepository
                 .findByLogin(login)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
