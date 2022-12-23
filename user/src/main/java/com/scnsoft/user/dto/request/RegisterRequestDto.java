@@ -1,4 +1,4 @@
-package com.scnsoft.user.controller.dto.request;
+package com.scnsoft.user.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
@@ -6,11 +6,13 @@ import lombok.Data;
 
 @Data
 @Builder
-public class LoginRequestDto {
+public class RegisterRequestDto {
 
     @NotEmpty
     private String login;
 
     @NotEmpty
     private String password;
+
+    private String accountType;
 }

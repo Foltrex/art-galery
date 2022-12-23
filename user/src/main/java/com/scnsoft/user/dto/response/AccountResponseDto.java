@@ -1,4 +1,4 @@
-package com.scnsoft.user.controller.dto.response;
+package com.scnsoft.user.dto.response;
 
 import lombok.Builder;
 import lombok.Data;

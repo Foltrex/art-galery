@@ -18,7 +18,7 @@ import com.scnsoft.art.dto.FacilityDto;
 import com.scnsoft.art.service.FacilityService;
 
 @RestController
-@RequestMapping("api/v1/facilities")
+@RequestMapping("facilities")
 public record FacilityController(FacilityService facilityService) {
     @GetMapping
     public ResponseEntity<List<FacilityDto>> findAll() {

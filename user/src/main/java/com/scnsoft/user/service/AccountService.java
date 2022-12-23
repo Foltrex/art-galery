@@ -1,8 +1,8 @@
 package com.scnsoft.user.service;
 
-import com.scnsoft.user.controller.dto.request.LoginRequestDto;
-import com.scnsoft.user.controller.dto.request.RegisterRequestDto;
-import com.scnsoft.user.controller.dto.response.AccountResponseDto;
+import com.scnsoft.user.dto.request.LoginRequestDto;
+import com.scnsoft.user.dto.request.RegisterRequestDto;
+import com.scnsoft.user.dto.response.AccountResponseDto;
 
 public interface AccountService {
 

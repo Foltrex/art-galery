@@ -18,7 +18,7 @@ import com.scnsoft.art.dto.CityDto;
 import com.scnsoft.art.service.CityService;
 
 @RestController
-@RequestMapping("api/v1/cities")
+@RequestMapping("cities")
 public record CityController(CityService cityService) {
     
     @GetMapping

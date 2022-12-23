@@ -1,10 +1,8 @@
 package com.scnsoft.art.contoller;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.service.ArtistService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,16 +14,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scnsoft.art.dto.CityDto;
-import com.scnsoft.art.service.CityService;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/cities")
+@RequestMapping("artists")
+@Slf4j
 public record ArtistController(ArtistService artistService) {
 
     @GetMapping
     public ResponseEntity<List<Artist>> findAll() {
         return ResponseEntity.ok(artistService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Artist> findById(@PathVariable UUID id) {
+        log.info("AAAAA");
+        return ResponseEntity.ok(artistService.findById(id));
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        log.info("AAAAA");
+        return ResponseEntity.ok("HELLO WORLD");
     }
 
     @PostMapping
