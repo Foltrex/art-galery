@@ -11,11 +11,11 @@ import lombok.Data;
 @Entity
 @Data
 @Builder
-public class Facility {
+public class Address {
     @Id
     @GeneratedValue
     private UUID id;
-    private String name;
-    private boolean isActive;
-    private Address address;
+    private City city;
+    private String streetName;
+    private int streetNumber;
 }
