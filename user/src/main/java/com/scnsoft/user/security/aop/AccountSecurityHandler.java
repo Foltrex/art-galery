@@ -35,10 +35,10 @@ public class AccountSecurityHandler {
 
     private Account getCurrentAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String login = authentication.getName();
+        String email = authentication.getName();
 
         return accountRepository
-                .findByLogin(login)
+                .findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                         "Full authentication is required to access this resource"));
     }

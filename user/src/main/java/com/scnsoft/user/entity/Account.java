@@ -49,7 +49,7 @@ public class Account {
 
     @Column(unique = true)
     @Size(min = 3)
-    private String login;
+    private String email;
 
     @Size(min = 3)
     private String password;

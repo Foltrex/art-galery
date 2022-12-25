@@ -1,4 +1,4 @@
-package com.scnsoft.user.dto.request;
+package com.scnsoft.user.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.Data;
 public class LoginRequestDto {
 
     @NotEmpty
-    private String login;
+    private String email;
 
     @NotEmpty
     private String password;

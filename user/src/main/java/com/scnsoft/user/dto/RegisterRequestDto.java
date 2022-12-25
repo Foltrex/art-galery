@@ -1,4 +1,4 @@
-package com.scnsoft.user.dto.request;
+package com.scnsoft.user.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;

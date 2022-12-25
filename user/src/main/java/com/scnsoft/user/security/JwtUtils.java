@@ -25,10 +25,10 @@ import java.util.Set;
 @Slf4j
 public class JwtUtils {
 
-    @Value("${app.token.secret}")
+    @Value("${app.props.token.secret}")
     private String jwtSecret;
 
-    @Value("${app.token.expired}")
+    @Value("${app.props.token.expired}")
     private long jwtExpirationMs;
 
     @PostConstruct

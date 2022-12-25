@@ -1,8 +1,9 @@
 package com.scnsoft.user.service.impl;
 
-import com.scnsoft.user.dto.request.LoginRequestDto;
-import com.scnsoft.user.dto.request.RegisterRequestDto;
-import com.scnsoft.user.dto.response.AccountResponseDto;
+import com.scnsoft.art.entity.Artist;
+import com.scnsoft.user.dto.LoginRequestDto;
+import com.scnsoft.user.dto.RegisterRequestDto;
+import com.scnsoft.user.dto.AccountResponseDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Role;
 import com.scnsoft.user.exception.AccountBlockedException;
@@ -12,6 +13,7 @@ import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.repository.RoleRepository;
 import com.scnsoft.user.security.JwtUtils;
 import com.scnsoft.user.service.AccountService;
+import com.scnsoft.user.util.ArtistFeignClientUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +25,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.Set;
@@ -38,15 +41,16 @@ public class AccountServiceImpl implements AccountService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final ArtistFeignClientUtil artistFeignClientUtil;
 
     @Override
     public AccountResponseDto register(RegisterRequestDto registerRequestDto) {
-        if (accountRepository.findByLogin(registerRequestDto.getLogin()).isPresent()) {
+        if (accountRepository.findByEmail(registerRequestDto.getLogin()).isPresent()) {
             throw new LoginAlreadyExistsException("Login is already in use!");
         }
 
         Account account = Account.builder()
-                .login(registerRequestDto.getLogin())
+                .email(registerRequestDto.getLogin())
                 .password(passwordEncoder.encode(registerRequestDto.getPassword()))
                 .failCount(0)
                 .accountType(Account.AccountType.valueOf(registerRequestDto.getAccountType()))
@@ -56,13 +60,32 @@ public class AccountServiceImpl implements AccountService {
 
         accountRepository.save(account);
 
+        Account.AccountType accountType = account.getAccountType();
+        switch (accountType) {
+            case ARTIST -> {
+                Artist artist = Artist.builder()
+                        .accountId(account.getId())
+                        .build();
+
+                try {
+                    artistFeignClientUtil.save(artist);
+                } catch (Exception e) {
+                    accountRepository.delete(account);
+                }
+            }
+            case ORGANIZATION -> {
+                log.info("AAAA");
+
+            }
+        }
+
         setAccountToAuthentication(registerRequestDto.getLogin(), registerRequestDto.getPassword());
         return createAccountResponse(account);
     }
 
     @Override
     public AccountResponseDto login(LoginRequestDto loginRequestDto) {
-        Account account = accountRepository.findByLogin(loginRequestDto.getLogin())
+        Account account = accountRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(() -> new ResourseNotFoundException("Account not found!"));
 
         Integer failCount = account.getFailCount();
@@ -75,7 +98,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         try {
-            setAccountToAuthentication(loginRequestDto.getLogin(), loginRequestDto.getPassword());
+            setAccountToAuthentication(loginRequestDto.getEmail(), loginRequestDto.getPassword());
             account.setFailCount(0);
             accountRepository.save(account);
         } catch (AuthenticationException e) {
@@ -109,8 +132,8 @@ public class AccountServiceImpl implements AccountService {
 
         return AccountResponseDto.builder()
                 .id(account.getId())
-                .login(account.getLogin())
-                .token(jwtUtils.createToken(account.getLogin(), account.getAccountType(), account.getRoles()))
+                .login(account.getEmail())
+                .token(jwtUtils.createToken(account.getEmail(), account.getAccountType(), account.getRoles()))
                 .build();
     }
 
