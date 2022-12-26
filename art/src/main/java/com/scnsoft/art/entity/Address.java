@@ -17,5 +17,5 @@ public class Address {
     private UUID id;
     private City city;
     private String streetName;
-    private int streetNumber;
+    private Integer streetNumber;
 }

@@ -20,10 +20,10 @@ public record AddressMapper(
 
     public Address mapToEntity(AddressDto addressDto) {
         return Address.builder()
-            .id(addressDto.id())
-            .city(cityMapper.mapToEntity(addressDto.cityDto()))
-            .streetName(addressDto.streetName())
-            .streetNumber(addressDto.streetNumber())
+            .id(addressDto.getId())
+            .city(cityMapper.mapToEntity(addressDto.getCityDto()))
+            .streetName(addressDto.getStreetName())
+            .streetNumber(addressDto.getStreetNumber())
             .build();
     }
 }

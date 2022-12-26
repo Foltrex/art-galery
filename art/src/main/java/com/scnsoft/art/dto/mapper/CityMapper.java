@@ -18,10 +18,10 @@ public class CityMapper {
 
     public City mapToEntity(CityDto cityDto) {
         return City.builder()
-            .id(cityDto.id())
-            .name(cityDto.name())
-            .latitude(cityDto.latitude())
-            .longitude(cityDto.longitude())
+            .id(cityDto.getId())
+            .name(cityDto.getName())
+            .latitude(cityDto.getLatitude())
+            .longitude(cityDto.getLongitude())
             .build();
     }
 }

@@ -7,15 +7,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Data
 @Builder
 public class City {
     @Id
-    @GeneratedValue
     private UUID id;
     private String name;
-    private double latitude;
-    private double longitude;
+    private Double latitude;
+    private Double longitude;
 }

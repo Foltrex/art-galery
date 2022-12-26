@@ -16,6 +16,6 @@ public class Facility {
     @GeneratedValue
     private UUID id;
     private String name;
-    private boolean isActive;
+    private Boolean isActive;
     private Address address;
 }

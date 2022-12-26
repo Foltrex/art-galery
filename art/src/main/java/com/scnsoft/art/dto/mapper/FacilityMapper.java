@@ -14,17 +14,17 @@ public record FacilityMapper(
         return FacilityDto.builder()
             .id(facility.getId())
             .name(facility.getName())
-            .isActive(facility.isActive())
+            .isActive(facility.getIsActive())
             .addressDto(addressMapper.mapToDto(facility.getAddress()))
             .build();
     }
 
     public Facility mapToEntity(FacilityDto facilityDto) {
         return Facility.builder()
-            .id(facilityDto.id())
-            .name(facilityDto.name())
-            .isActive(facilityDto.isActive())
-            .address(addressMapper.mapToEntity(facilityDto.addressDto()))
+            .id(facilityDto.getId())
+            .name(facilityDto.getName())
+            .isActive(facilityDto.getIsActive())
+            .address(addressMapper.mapToEntity(facilityDto.getAddressDto()))
             .build();
     }
 }
