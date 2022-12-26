@@ -6,14 +6,16 @@ import com.scnsoft.art.dto.FacilityDto;
 import com.scnsoft.art.entity.Facility;
 
 @Component
-public class FacilityMapper {
+public record FacilityMapper(
+    AddressMapper addressMapper
+) {
     
     public FacilityDto mapToDto(Facility facility) {
         return FacilityDto.builder()
             .id(facility.getId())
             .name(facility.getName())
             .isActive(facility.isActive())
-            .cityId(facility.getCityId())
+            .addressDto(addressMapper.mapToDto(facility.getAddress()))
             .build();
     }
 
@@ -22,7 +24,7 @@ public class FacilityMapper {
             .id(facilityDto.id())
             .name(facilityDto.name())
             .isActive(facilityDto.isActive())
-            .cityId(facilityDto.cityId())
+            .address(addressMapper.mapToEntity(facilityDto.addressDto()))
             .build();
     }
 }

@@ -5,10 +5,10 @@ import java.util.UUID;
 import lombok.Builder;
 
 @Builder
-public record FacilityDto(
+public record AddressDto(
     UUID id,
-    String name,
-    boolean isActive,
-    AddressDto addressDto
+    CityDto cityDto,
+    String streetName,
+    int streetNumber
 ) {
 }
