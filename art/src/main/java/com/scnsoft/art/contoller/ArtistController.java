@@ -1,5 +1,6 @@
 package com.scnsoft.art.contoller;
 
+import com.scnsoft.art.dto.ArtistDto;
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.service.ArtistService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,30 +24,24 @@ import java.util.UUID;
 public record ArtistController(ArtistService artistService) {
 
     @GetMapping
-    public ResponseEntity<List<Artist>> findAll() {
+    public ResponseEntity<List<ArtistDto>> findAll() {
         return ResponseEntity.ok(artistService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Artist> findById(@PathVariable UUID id) {
+    public ResponseEntity<ArtistDto> findById(@PathVariable UUID id) {
         log.info("AAAAA");
         return ResponseEntity.ok(artistService.findById(id));
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        log.info("AAAAA");
-        return ResponseEntity.ok("HELLO WORLD");
-    }
-
     @PostMapping
-    public ResponseEntity<Artist> save(@RequestBody Artist artist) {
-        return new ResponseEntity<>(artistService.save(artist), HttpStatus.CREATED);
+    public ResponseEntity<ArtistDto> save(@RequestBody ArtistDto artistDto) {
+        return new ResponseEntity<>(artistService.save(artistDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Artist> update(@PathVariable UUID id, @RequestBody Artist artist) {
-        return ResponseEntity.ok(artistService.update(id, artist));
+    public ResponseEntity<ArtistDto> update(@PathVariable UUID id, @RequestBody ArtistDto artistDto) {
+        return ResponseEntity.ok(artistService.update(id, artistDto));
     }
 
     @DeleteMapping("/{id}")

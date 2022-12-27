@@ -1,5 +1,7 @@
 package com.scnsoft.art.service;
 
+import com.scnsoft.art.dto.ArtistDto;
+import com.scnsoft.art.dto.mapper.ArtistMapper;
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.ArtistRepository;
@@ -14,24 +16,30 @@ import java.util.UUID;
 public class ArtistService {
 
     private final ArtistRepository artistRepository;
+    private final ArtistMapper artistMapper;
 
-    public List<Artist> findAll() {
-        return artistRepository.findAll();
+    public List<ArtistDto> findAll() {
+        return artistRepository.findAll().stream()
+                .map(artistMapper::mapToDto)
+                .toList();
     }
 
-    public Artist findById(UUID id) {
+    public ArtistDto findById(UUID id) {
         return artistRepository
                 .findById(id)
+                .map(artistMapper::mapToDto)
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
-    public Artist save(Artist artist) {
-        return artistRepository.save(artist);
+    public ArtistDto save(ArtistDto artistDto) {
+        Artist artist = artistMapper.mapToEntity(artistDto);
+        return artistMapper.mapToDto(artistRepository.save(artist));
     }
 
-    public Artist update(UUID id, Artist artist) {
+    public ArtistDto update(UUID id, ArtistDto artistDto) {
+        Artist artist = artistMapper.mapToEntity(artistDto);
         artist.setId(id);
-        return artistRepository.save(artist);
+        return artistMapper.mapToDto(artistRepository.save(artist));
     }
 
     public void deleteById(UUID id) {
