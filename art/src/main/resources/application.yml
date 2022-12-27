@@ -4,13 +4,20 @@ spring:
     application:
         name: art-service
     datasource:
-        url: jdbc:postgresql://localhost:5432/art
+        url: jdbc:postgresql://localhost:5433/art
         username: postgres
-        password: 994499_ma
+        password: postgres
     jpa:
         hibernate:
             ddl-auto: update
         generate-ddl: true
         show-sql: true
         # driverClassName: org.postgresql.Driver
+        
+eureka:
+    client:
+        service-url: 
+            defaultZone: http://localhsot:8761/eureka
+        fetch-registry: true
+        register-with-eureka: true
 
