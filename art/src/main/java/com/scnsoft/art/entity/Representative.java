@@ -1,12 +1,12 @@
 package com.scnsoft.art.entity;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,25 +20,20 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Artist {
+public class Representative {
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private UUID id;
 
-    @Size(min = 2)
-    private String firstname;
-
-    @Size(min = 2)
-    private String lastname;
-
-    @Size(min = 2, max = 1024)
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "organization_id", referencedColumnName = "id")
+    private Organization organization;
 
     @ManyToOne
-    @JoinColumn(name = "city_id", referencedColumnName = "id")
-    private City city;
+    @JoinColumn(name = "facility_id", referencedColumnName = "id")
+    private Facility facility;
 
     @NotNull
     private UUID accountId;

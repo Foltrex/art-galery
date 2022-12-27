@@ -1,6 +1,10 @@
 package com.scnsoft.art.entity;
 
+import com.scnsoft.art.listener.OrganizationListener;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -20,7 +24,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Artist {
+@EntityListeners(OrganizationListener.class)
+public class Organization {
+
+    public enum Status {
+        NEW,
+        ACTIVE,
+        INACTIVE
+    }
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -28,17 +39,14 @@ public class Artist {
     private UUID id;
 
     @Size(min = 2)
-    private String firstname;
-
-    @Size(min = 2)
-    private String lastname;
-
-    @Size(min = 2, max = 1024)
-    private String description;
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "city_id", referencedColumnName = "id")
-    private City city;
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
+    @Enumerated(value = EnumType.ORDINAL)
+    private Status status;
 
     @NotNull
     private UUID accountId;

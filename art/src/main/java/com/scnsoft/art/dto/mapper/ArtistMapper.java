@@ -1,35 +1,48 @@
 package com.scnsoft.art.dto.mapper;
 
+import com.scnsoft.art.dto.ArtistDto;
+import com.scnsoft.art.dto.CityDto;
+import com.scnsoft.art.entity.Artist;
+import com.scnsoft.art.entity.City;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import com.scnsoft.art.dto.ArtistDto;
-import com.scnsoft.art.entity.Artist;
-
 @Component
-public record ArtistMapper(
-    CityMapper cityMapper
-) {
+@RequiredArgsConstructor
+public class ArtistMapper implements Mapper<Artist, ArtistDto> {
 
+    private final CityMapper cityMapper;
+
+    @Override
     public ArtistDto mapToDto(Artist artist) {
         return ArtistDto.builder()
-            .id(artist.getId())
-            .firstname(artist.getFirstname())
-            .lastname(artist.getLastname())
-            .description(artist.getDescription())
-            .accountId(artist.getAccountId())
-            .cityDto(cityMapper.mapToDto(artist.getCity()))
-            .build();
+                .id(artist.getId())
+                .city(mapCityToDto(artist.getCity()))
+                .firstname(artist.getFirstname())
+                .lastname(artist.getLastname())
+                .description(artist.getDescription())
+                .accountId(artist.getAccountId())
+                .build();
     }
 
+    @Override
     public Artist mapToEntity(ArtistDto artistDto) {
         return Artist.builder()
-            .id(artistDto.getId())
-            .firstname(artistDto.getFirstname())
-            .lastname(artistDto.getLastname())
-            .description(artistDto.getDescription())
-            .accountId(artistDto.getAccountId())
-            .city(cityMapper.mapToEntity(artistDto.getCityDto()))
-            .build();
+                .id(artistDto.getId())
+                .city(mapCityDtoToEntity(artistDto.getCity()))
+                .firstname(artistDto.getFirstname())
+                .lastname(artistDto.getLastname())
+                .description(artistDto.getDescription())
+                .accountId(artistDto.getAccountId())
+                .build();
+    }
+
+    private CityDto mapCityToDto(City city) {
+        return city != null ? cityMapper.mapToDto(city) : null;
+    }
+
+    private City mapCityDtoToEntity(CityDto cityDto) {
+        return cityDto != null ? cityMapper.mapToEntity(cityDto) : null;
     }
 
 }

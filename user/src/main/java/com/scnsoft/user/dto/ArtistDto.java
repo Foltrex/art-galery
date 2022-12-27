@@ -1,4 +1,4 @@
-package com.scnsoft.art.dto;
+package com.scnsoft.user.dto;
 
 import lombok.Builder;
 import lombok.Data;

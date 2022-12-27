@@ -1,7 +1,6 @@
 package com.scnsoft.user.util;
 
-
-import com.scnsoft.art.entity.Artist;
+import com.scnsoft.user.dto.ArtistDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,18 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.UUID;
 
-@FeignClient(value = "art-service", url = "http://localhost:8081/artists")
+@FeignClient(value = "artist-service", url = "http://localhost:8081/artists")
 public interface ArtistFeignClientUtil {
 
-    @GetMapping(path = "/{artistId}")
-    Artist getArtistById(@PathVariable("artistId") UUID userId);
-
-    @GetMapping(path = "/test")
-    ResponseEntity<String> test();
+    @GetMapping(path = "/{id}")
+    ResponseEntity<ArtistDto> getArtistById(@PathVariable("id") UUID artistId);
 
     @PostMapping()
-    ResponseEntity<Artist> save(@RequestBody Artist artist);
-
-
+    ResponseEntity<ArtistDto> save(@RequestBody ArtistDto artistDto);
 
 }

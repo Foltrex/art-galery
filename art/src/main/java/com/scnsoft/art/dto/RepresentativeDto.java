@@ -7,11 +7,9 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class ArtistDto {
+public class RepresentativeDto {
     private UUID id;
-    private String firstname;
-    private String lastname;
-    private String description;
+    private OrganizationDto organization;
+    private FacilityDto facility;
     private UUID accountId;
-    private CityDto city;
 }
