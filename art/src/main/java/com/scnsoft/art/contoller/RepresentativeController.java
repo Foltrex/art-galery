@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("organizations")
+@RequestMapping("representatives")
 public record RepresentativeController(RepresentativeService representativeService) {
 
     @GetMapping

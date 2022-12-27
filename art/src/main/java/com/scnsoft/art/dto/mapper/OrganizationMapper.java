@@ -19,7 +19,8 @@ public class OrganizationMapper implements Mapper<Organization, OrganizationDto>
                 .id(organization.getId())
                 .name(organization.getName())
                 .address(mapAddressToDto(organization.getAddress()))
-                .status(organization.getStatus())
+                .status(mapStatusToDto(organization.getStatus()))
+                .accountId(organization.getAccountId())
                 .build();
     }
 
@@ -29,7 +30,8 @@ public class OrganizationMapper implements Mapper<Organization, OrganizationDto>
                 .id(organizationDto.getId())
                 .name(organizationDto.getName())
                 .address(mapAddressDtoToEntity(organizationDto.getAddress()))
-                .status(organizationDto.getStatus())
+                .status(mapStatusToEntity(organizationDto.getStatus()))
+                .accountId(organizationDto.getAccountId())
                 .build();
     }
 
@@ -39,6 +41,14 @@ public class OrganizationMapper implements Mapper<Organization, OrganizationDto>
 
     private Address mapAddressDtoToEntity(AddressDto addressDto) {
         return addressDto != null ? addressMapper.mapToEntity(addressDto) : null;
+    }
+
+    private Organization.Status mapStatusToEntity(String status) {
+        return status != null ? Organization.Status.valueOf(status) : null;
+    }
+
+    private String mapStatusToDto(Organization.Status status) {
+        return status != null ? status.toString() : null;
     }
 
 }

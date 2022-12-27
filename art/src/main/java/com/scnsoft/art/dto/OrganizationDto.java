@@ -1,6 +1,5 @@
 package com.scnsoft.art.dto;
 
-import com.scnsoft.art.entity.Organization;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,5 +11,6 @@ public class OrganizationDto {
     private UUID id;
     private String name;
     private AddressDto address;
-    private Organization.Status status;
+    private String status;
+    private UUID accountId;
 }

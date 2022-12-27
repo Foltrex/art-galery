@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public record OrganizationService(OrganizationRepository organizationRepository,
                                   OrganizationMapper organizationMapper) {
