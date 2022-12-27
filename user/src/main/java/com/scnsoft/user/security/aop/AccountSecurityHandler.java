@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -28,9 +30,9 @@ public class AccountSecurityHandler {
         return false;
     }
 
-    public boolean isHasType(String accountType) {
+    public boolean isHasType(Set<String> accountTypes) {
         Account account = getCurrentAccount();
-        return account.getAccountType().equals(Account.AccountType.valueOf(accountType));
+        return accountTypes.contains(account.getAccountType().toString());
     }
 
     private Account getCurrentAccount() {

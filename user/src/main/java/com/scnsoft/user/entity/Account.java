@@ -39,7 +39,9 @@ import java.util.UUID;
 public class Account {
 
     public enum AccountType {
-        ARTIST, ORGANIZATION, SYSTEM
+        ARTIST,
+        ORGANIZATION,
+        SYSTEM
     }
 
     @Id
@@ -60,8 +62,11 @@ public class Account {
 
     private Date blockedSince;
 
+    private Boolean isApproved;
+
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

@@ -1,8 +1,8 @@
 package com.scnsoft.user.controller;
 
+import com.scnsoft.user.dto.AccountResponseDto;
 import com.scnsoft.user.dto.LoginRequestDto;
 import com.scnsoft.user.dto.RegisterRequestDto;
-import com.scnsoft.user.dto.AccountResponseDto;
 import com.scnsoft.user.service.AccountService;
 import com.scnsoft.user.util.ArtistFeignClientUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class AccountController {
     private final ArtistFeignClientUtil artFeignClientUtil;
 
     @PostMapping("/register")
-    @PreAuthorize("@accountSecurityHandler.isHasRegisterAccess(#registerRequestDto.accountType)")
+//    @PreAuthorize("@accountSecurityHandler.isHasRegisterAccess(#registerRequestDto.accountType)")
     public ResponseEntity<AccountResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return new ResponseEntity<>(accountService.register(registerRequestDto), HttpStatus.CREATED);
     }
@@ -43,7 +43,7 @@ public class AccountController {
     @GetMapping("/1")
     @PreAuthorize("permitAll()")
     public String test1() {
-        log.info(artFeignClientUtil.test().getBody());
+//        log.info(artFeignClientUtil.test().getBody());
         return "PERMIT ALL";
     }
 
@@ -60,7 +60,7 @@ public class AccountController {
     }
 
     @GetMapping("/4")
-    @PreAuthorize("@accountSecurityHandler.isHasType('ARTIST')")
+    @PreAuthorize("@accountSecurityHandler.isHasType('ARTIST, SYSTEM')")
     public String test4() {
         return "PERMIT ARTIST";
     }
