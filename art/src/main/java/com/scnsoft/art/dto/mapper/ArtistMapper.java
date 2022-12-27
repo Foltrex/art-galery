@@ -1,20 +1,23 @@
 package com.scnsoft.art.dto.mapper;
 
 import com.scnsoft.art.dto.ArtistDto;
+import com.scnsoft.art.dto.CityDto;
 import com.scnsoft.art.entity.Artist;
+import com.scnsoft.art.entity.City;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ArtistMapper {
+public class ArtistMapper implements Mapper<Artist, ArtistDto> {
 
     private final CityMapper cityMapper;
 
+    @Override
     public ArtistDto mapToDto(Artist artist) {
         return ArtistDto.builder()
                 .id(artist.getId())
-                .city(cityMapper.mapToDto(artist.getCity()))
+                .city(mapCityToDto(artist.getCity()))
                 .firstname(artist.getFirstname())
                 .lastname(artist.getLastname())
                 .description(artist.getDescription())
@@ -22,15 +25,24 @@ public class ArtistMapper {
                 .build();
     }
 
+    @Override
     public Artist mapToEntity(ArtistDto artistDto) {
         return Artist.builder()
                 .id(artistDto.getId())
-                .city(cityMapper.mapToEntity(artistDto.getCity()))
+                .city(mapCityDtoToEntity(artistDto.getCity()))
                 .firstname(artistDto.getFirstname())
                 .lastname(artistDto.getLastname())
                 .description(artistDto.getDescription())
                 .accountId(artistDto.getAccountId())
                 .build();
+    }
+
+    private CityDto mapCityToDto(City city) {
+        return city != null ? cityMapper.mapToDto(city) : null;
+    }
+
+    private City mapCityDtoToEntity(CityDto cityDto) {
+        return cityDto != null ? cityMapper.mapToEntity(cityDto) : null;
     }
 
 }
