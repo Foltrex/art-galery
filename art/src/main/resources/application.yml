@@ -8,11 +8,11 @@ spring:
         username: postgres
         password: 994499_ma
     jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        generate-ddl: true
         hibernate:
             ddl-auto: update
-        generate-ddl: true
         show-sql: true
-        # driverClassName: org.postgresql.Driver
         
 eureka:
     client:

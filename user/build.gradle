@@ -38,10 +38,10 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.0'
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-    implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '2.3.3'
-    implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.0.1'
+    // implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '2.3.3'
+    // implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.0.1'
 
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
+    implementation 'org.postgresql:postgresql'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
