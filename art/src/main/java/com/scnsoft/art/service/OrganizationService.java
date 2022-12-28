@@ -5,7 +5,6 @@ import com.scnsoft.art.dto.mapper.impl.OrganizationMapper;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.OrganizationRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

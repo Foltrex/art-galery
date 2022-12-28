@@ -5,7 +5,6 @@ import com.scnsoft.art.dto.mapper.impl.RepresentativeMapper;
 import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.RepresentativeRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -1,35 +1,34 @@
 package com.scnsoft.art.service;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-
 import com.scnsoft.art.dto.CityDto;
 import com.scnsoft.art.dto.mapper.impl.CityMapper;
 import com.scnsoft.art.entity.City;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.CityRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public record CityService(
-    CityRepository cityRepository, 
-    CityMapper cityMapper
+        CityRepository cityRepository,
+        CityMapper cityMapper
 ) {
-    
-    
+
+
     public List<CityDto> findAll() {
         return cityRepository.findAll()
-            .stream()
-            .map(cityMapper::mapToDto)
-            .toList();
+                .stream()
+                .map(cityMapper::mapToDto)
+                .toList();
     }
 
     public CityDto findById(UUID id) {
         return cityRepository
-            .findById(id)
-            .map(cityMapper::mapToDto)
-            .orElseThrow(ArtResourceNotFoundException::new);
+                .findById(id)
+                .map(cityMapper::mapToDto)
+                .orElseThrow(ArtResourceNotFoundException::new);
     }
 
     public CityDto save(CityDto cityDto) {

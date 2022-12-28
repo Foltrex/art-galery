@@ -1,36 +1,34 @@
 package com.scnsoft.art.service;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.scnsoft.art.dto.UploadArtDto;
 import com.scnsoft.art.dto.mapper.impl.UploadArtMapper;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.ArtRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public record ArtService(
-    ArtRepository artRepository,
-    UploadArtMapper artMapper,
-    RestTemplate restTemplate
+        ArtRepository artRepository,
+        UploadArtMapper artMapper,
+        RestTemplate restTemplate
 ) {
     public List<UploadArtDto> findAll() {
         return artRepository.findAll()
-            .stream()
-            .map(artMapper::mapToDto)
-            .toList();
+                .stream()
+                .map(artMapper::mapToDto)
+                .toList();
     }
 
     public UploadArtDto findById(UUID id) {
         return artRepository
-            .findById(id)
-            .map(artMapper::mapToDto)
-            .orElseThrow(ArtResourceNotFoundException::new);
+                .findById(id)
+                .map(artMapper::mapToDto)
+                .orElseThrow(ArtResourceNotFoundException::new);
     }
 
     public UploadArtDto save(UploadArtDto artDto) {

@@ -1,11 +1,10 @@
 package com.scnsoft.art.repository;
 
-import java.util.UUID;
-
+import com.scnsoft.art.entity.Art;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.scnsoft.art.entity.Art;
+import java.util.UUID;
 
 public interface ArtRepository extends JpaRepository<Art, UUID> {
-    
+
 }

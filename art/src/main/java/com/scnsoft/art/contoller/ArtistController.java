@@ -2,7 +2,6 @@ package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.ArtistDto;
 import com.scnsoft.art.service.ArtistService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

@@ -1,8 +1,7 @@
 package com.scnsoft.art.contoller;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.scnsoft.art.dto.CityDto;
+import com.scnsoft.art.service.CityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scnsoft.art.dto.CityDto;
-import com.scnsoft.art.service.CityService;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("cities")
 public record CityController(CityService cityService) {
-    
+
     @GetMapping
     public ResponseEntity<List<CityDto>> findAll() {
         return ResponseEntity.ok(cityService.findAll());
