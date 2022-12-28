@@ -1,8 +1,8 @@
 package com.scnsoft.art.exception;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ResponseStatus(value = NOT_FOUND)
 public class ArtResourceNotFoundException extends RuntimeException {
@@ -23,8 +23,8 @@ public class ArtResourceNotFoundException extends RuntimeException {
     }
 
     public ArtResourceNotFoundException(String message, Throwable cause, boolean enableSuppression,
-            boolean writableStackTrace) {
+                                        boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
-    
+
 }
