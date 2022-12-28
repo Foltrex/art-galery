@@ -53,14 +53,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountResponseDto register(RegisterRequestDto registerRequestDto) {
-        if (accountRepository.findByEmail(registerRequestDto.getLogin()).isPresent()) {
+        if (accountRepository.findByEmail(registerRequestDto.getEmail()).isPresent()) {
             throw new LoginAlreadyExistsException("email is already in use!");
         }
 
         Account.AccountType accountType = Account.AccountType.valueOf(registerRequestDto.getAccountType());
 
         Account account = Account.builder()
-                .email(registerRequestDto.getLogin())
+                .email(registerRequestDto.getEmail())
                 .password(passwordEncoder.encode(registerRequestDto.getPassword()))
                 .failCount(0)
                 .isApproved(accountType.equals(Account.AccountType.ARTIST))
@@ -89,10 +89,10 @@ public class AccountServiceImpl implements AccountService {
         } catch (FeignException e) {
             log.error(e.getMessage());
             accountRepository.delete(account);
-            throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.contentUTF8());
+            throw new ResponseStatusException(HttpStatus.valueOf(400), "11111");
         }
 
-        setAccountToAuthentication(registerRequestDto.getLogin(), registerRequestDto.getPassword());
+        setAccountToAuthentication(registerRequestDto.getEmail(), registerRequestDto.getPassword());
         return createAccountResponse(account);
     }
 
