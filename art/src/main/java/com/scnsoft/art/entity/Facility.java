@@ -7,6 +7,8 @@ import org.hibernate.annotations.GenericGenerator;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Data;
 
@@ -20,5 +22,7 @@ public class Facility {
     private UUID id;
     private String name;
     private Boolean isActive;
+    @ManyToOne
+    @JoinColumn(name = "address_id")
     private Address address;
 }
