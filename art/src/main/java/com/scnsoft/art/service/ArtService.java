@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.scnsoft.art.dto.UploadArtDto;
-import com.scnsoft.art.dto.mapper.UploadArtMapper;
+import com.scnsoft.art.dto.mapper.impl.UploadArtMapper;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.ArtRepository;

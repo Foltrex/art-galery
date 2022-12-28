@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.scnsoft.art.dto.FacilityDto;
-import com.scnsoft.art.dto.mapper.FacilityMapper;
+import com.scnsoft.art.dto.mapper.impl.FacilityMapper;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.FacilityRepository;

@@ -1,7 +1,7 @@
 package com.scnsoft.art.service;
 
 import com.scnsoft.art.dto.RepresentativeDto;
-import com.scnsoft.art.dto.mapper.RepresentativeMapper;
+import com.scnsoft.art.dto.mapper.impl.RepresentativeMapper;
 import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.RepresentativeRepository;

@@ -1,7 +1,8 @@
-package com.scnsoft.art.dto.mapper;
+package com.scnsoft.art.dto.mapper.impl;
 
 import com.scnsoft.art.dto.ArtistDto;
 import com.scnsoft.art.dto.CityDto;
+import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.entity.City;
 import lombok.RequiredArgsConstructor;
