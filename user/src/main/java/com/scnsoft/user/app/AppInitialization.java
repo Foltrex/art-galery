@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-@PropertySource("/application.properties")
+@PropertySource("/application.yml")
 @Slf4j
 public class AppInitialization {
 

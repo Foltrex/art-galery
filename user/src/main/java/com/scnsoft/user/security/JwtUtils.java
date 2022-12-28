@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-@PropertySource("/application.properties")
+@PropertySource("/application.yml")
 @Slf4j
 public class JwtUtils {
 
