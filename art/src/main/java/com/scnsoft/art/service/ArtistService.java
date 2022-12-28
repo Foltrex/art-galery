@@ -1,7 +1,7 @@
 package com.scnsoft.art.service;
 
 import com.scnsoft.art.dto.ArtistDto;
-import com.scnsoft.art.dto.mapper.ArtistMapper;
+import com.scnsoft.art.dto.mapper.impl.ArtistMapper;
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.ArtistRepository;

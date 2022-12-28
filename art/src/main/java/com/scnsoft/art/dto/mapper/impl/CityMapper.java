@@ -1,12 +1,14 @@
-package com.scnsoft.art.dto.mapper;
+package com.scnsoft.art.dto.mapper.impl;
 
 import org.springframework.stereotype.Component;
 
 import com.scnsoft.art.dto.CityDto;
+import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.City;
 
 @Component
-public class CityMapper {
+public class CityMapper implements Mapper<City, CityDto> {
+    @Override
     public CityDto mapToDto(City city) {
         return CityDto.builder()
             .id(city.getId())
@@ -16,6 +18,7 @@ public class CityMapper {
             .build();
     }
 
+    @Override
     public City mapToEntity(CityDto cityDto) {
         return City.builder()
             .id(cityDto.getId())

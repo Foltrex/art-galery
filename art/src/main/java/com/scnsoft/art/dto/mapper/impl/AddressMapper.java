@@ -1,14 +1,19 @@
-package com.scnsoft.art.dto.mapper;
+package com.scnsoft.art.dto.mapper.impl;
 
 import org.springframework.stereotype.Component;
 
 import com.scnsoft.art.dto.AddressDto;
+import com.scnsoft.art.dto.CityDto;
+import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.Address;
+import com.scnsoft.art.entity.City;
 
 @Component
 public record AddressMapper(
     CityMapper cityMapper
-) {
+) implements Mapper<Address, AddressDto> {
+
+    @Override
     public AddressDto mapToDto(Address address) {
         return AddressDto.builder()
             .id(address.getId())
@@ -18,6 +23,7 @@ public record AddressMapper(
             .build();
     }
 
+    @Override
     public Address mapToEntity(AddressDto addressDto) {
         return Address.builder()
             .id(addressDto.getId())

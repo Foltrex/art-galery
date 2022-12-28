@@ -1,7 +1,8 @@
-package com.scnsoft.art.dto.mapper;
+package com.scnsoft.art.dto.mapper.impl;
 
 import com.scnsoft.art.dto.AddressDto;
 import com.scnsoft.art.dto.OrganizationDto;
+import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.Address;
 import com.scnsoft.art.entity.Organization;
 import lombok.RequiredArgsConstructor;

@@ -4,9 +4,9 @@ spring:
     application:
         name: art-service
     datasource:
-        url: jdbc:postgresql://localhost:5433/art
+        url: jdbc:postgresql://localhost:5432/art
         username: postgres
-        password: postgres
+        password: 994499_ma
     jpa:
         hibernate:
             ddl-auto: update
