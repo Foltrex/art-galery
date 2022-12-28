@@ -1,14 +1,12 @@
 package com.scnsoft.user.dto;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.UUID;
 
+@Data
 @Builder
-@Getter
-@Setter
 public class AddressDto {
     UUID id;
     CityDto cityDto;

@@ -3,11 +3,8 @@ package com.scnsoft.user.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
@@ -20,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,14 +24,10 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
-@Table(name = "account")
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
 public class Account {
 
     public enum AccountType {

@@ -4,7 +4,6 @@ import com.scnsoft.user.dto.AccountResponseDto;
 import com.scnsoft.user.dto.LoginRequestDto;
 import com.scnsoft.user.dto.RegisterRequestDto;
 import com.scnsoft.user.service.AccountService;
-import com.scnsoft.user.util.ArtistFeignClientUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,10 +23,7 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    private final ArtistFeignClientUtil artFeignClientUtil;
-
     @PostMapping("/register")
-//    @PreAuthorize("@accountSecurityHandler.isHasRegisterAccess(#registerRequestDto.accountType)")
     public ResponseEntity<AccountResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return new ResponseEntity<>(accountService.register(registerRequestDto), HttpStatus.CREATED);
     }
@@ -36,7 +32,6 @@ public class AccountController {
     public ResponseEntity<AccountResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         return new ResponseEntity<>(accountService.login(loginRequestDto), HttpStatus.OK);
     }
-
 
     ////////////////////////////////////// FOR TESTS ////////////////////////////////
 
