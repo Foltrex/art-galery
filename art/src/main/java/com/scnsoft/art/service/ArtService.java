@@ -1,5 +1,6 @@
 package com.scnsoft.art.service;
 
+import com.scnsoft.art.client.FileFeignClient;
 import com.scnsoft.art.dto.UploadArtDto;
 import com.scnsoft.art.dto.mapper.impl.UploadArtMapper;
 import com.scnsoft.art.entity.Art;
@@ -15,7 +16,7 @@ import java.util.UUID;
 public record ArtService(
         ArtRepository artRepository,
         UploadArtMapper artMapper,
-        RestTemplate restTemplate
+        FileFeignClient fileFeignClient
 ) {
     public List<UploadArtDto> findAll() {
         return artRepository.findAll()
@@ -34,8 +35,8 @@ public record ArtService(
     public UploadArtDto save(UploadArtDto artDto) {
         Art art = artMapper.mapToEntity(artDto);
         Art persistedArt = artRepository.save(art);
-        // return restTemplate.postForEntity(null, persistedArt, null, null)
-        return artMapper.mapToDto(persistedArt);
+        UploadArtDto mappedPersistedArt = artMapper.mapToDto(persistedArt);
+        return fileFeignClient.save(mappedPersistedArt);
     }
 
     public UploadArtDto update(UUID id, UploadArtDto artDto) {
