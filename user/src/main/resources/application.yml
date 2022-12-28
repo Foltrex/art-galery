@@ -9,7 +9,7 @@ app:
       expired: 86400000
 #------------> Spring server <---------------
 server:
-  port: 8080
+  port: 8083
   error:
     include-stacktrace: never
     include-message: always
@@ -21,8 +21,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/users
     username: postgres
     # for docker compose database password
-    # password: postgres
-    password: 27072001
+    password: 994499_ma
     # password: 27072001
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -34,7 +33,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhsot:8761/eureka
+      defaultZone: http://localhost:8761/eureka
     fetch-registry: true
     register-with-eureka: true
 
