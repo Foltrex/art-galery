@@ -5,6 +5,9 @@ app:
       expired: 86400000
 server:
   port: 8081
+  error:
+    include-stacktrace: never
+    include-message: always
 spring:
   application:
     name: art-service

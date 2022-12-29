@@ -13,8 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashSet;
@@ -55,24 +57,12 @@ public class JwtUtils {
                 .compact();
     }
 
-    private Set<String> getRoleNames(Set<Role> userRoles) {
-        Set<String> roles = new HashSet<>();
-        userRoles.forEach(role -> roles.add(role.getName().toString()));
-
-        return roles;
-    }
-
-    public String getUsernameFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public String getAccountType(String token) {
-        return (String) Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("type");
-    }
-
-    public String getRoles(String token) {
-        log.info(Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("roles").toString());
-        return "";
+    public String parseJwtToken(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
+        }
+        return null;
     }
 
     public boolean validateJwtToken(String authToken) {
@@ -91,5 +81,16 @@ public class JwtUtils {
             log.error("JWT claims string is empty: {}", e.getMessage());
         }
         return false;
+    }
+
+    public String getEmailFromJwtToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    private Set<String> getRoleNames(Set<Role> userRoles) {
+        Set<String> roles = new HashSet<>();
+        userRoles.forEach(role -> roles.add(role.getName().toString()));
+
+        return roles;
     }
 }

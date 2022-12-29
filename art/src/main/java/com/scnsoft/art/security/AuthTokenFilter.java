@@ -3,7 +3,6 @@ package com.scnsoft.art.security;
 import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.feignclient.AccountFeignClient;
 import feign.FeignException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -32,40 +29,30 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
     private AccountFeignClient accountFeignClient;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         try {
-            String token = parseJwt(request);
+            String token = jwtUtils.parseJwtToken(request);
 
             if (token != null && jwtUtils.validateJwtToken(token)) {
-                UUID id = jwtUtils.getId(token);
-                String username = jwtUtils.getUsernameFromJwtToken(token);
-                List<String> roles = jwtUtils.getRoles(token);
+                UUID id = jwtUtils.getIdFromJwtToken(token);
+                String email = jwtUtils.getEmailFromJwtToken(token);
+                List<String> roles = jwtUtils.getRolesFromJwtToken(token);
 
                 try {
-                    ResponseEntity<AccountDto> accountDtoResponse = accountFeignClient.getAccountByEmail(username);
-                    AccountDto accountDto = accountDtoResponse.getBody();
-                    if (accountDto == null) {
+                    ResponseEntity<AccountDto> accountDtoResponse = accountFeignClient.getAccountByEmail(email);
+                    if (accountDtoResponse.getBody() == null) {
                         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
                     }
-
                 } catch (FeignException e) {
                     throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.getMessage());
                 }
 
-                UserDetails userDetails = UserDetailsImpl.build(id, username, roles);
-
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                setUserAuthentication(request, id, email, roles);
             }
         } catch (Exception e) {
             log.error("Cannot set user authentication: {}", e.getMessage());
@@ -73,11 +60,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
-        }
-        return null;
+    private void setUserAuthentication(HttpServletRequest request, UUID id, String email, List<String> roles) {
+        UserDetails userDetails = UserDetailsImpl.build(id, email, roles);
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
 }

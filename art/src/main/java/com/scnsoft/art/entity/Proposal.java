@@ -1,7 +1,9 @@
 package com.scnsoft.art.entity;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,12 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-
-import lombok.Builder;
-import lombok.Data;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Proposal {
     @Id
@@ -28,13 +31,15 @@ public class Proposal {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "artist_id")
-    @Column(updatable = false)
+    // @TODO Caused by: org.hibernate.AnnotationException: @Column(s) not allowed on a @ManyToOne property
+//    @Column(updatable = false)
     private Artist artist;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "organisation_id")
-    @Column(updatable = false)
+    // @TODO Caused by: org.hibernate.AnnotationException: @Column(s) not allowed on a @ManyToOne property
+//    @Column(updatable = false)
     private Organization organization;
 
     @ManyToOne

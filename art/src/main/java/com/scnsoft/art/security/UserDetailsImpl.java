@@ -17,32 +17,22 @@ public class UserDetailsImpl implements UserDetails {
     @Serial
     private static final long serialVersionUID = 1L;
     private final UUID id;
-    private final String login;
+    private final String email;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(UUID id,
-                           String login,
+                           String email,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
-        this.login = login;
+        this.email = email;
         this.authorities = authorities;
     }
 
-//    public static UserDetailsImpl build(AccountDto accountDto) {
-//        List<GrantedAuthority> authorities = account.getRoles().stream()
-//                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-//                .collect(Collectors.toList());
-//
-//        return new UserDetailsImpl(
-//                accountDto.getId(),
-//                accountDto.getEmail(),
-////                account.getPassword(),
-//                null);
-//    }
-
     public static UserDetailsImpl build(UUID id, String email, List<String> roles) {
-        List<SimpleGrantedAuthority> authorities = roles.stream()
-                .map(SimpleGrantedAuthority::new).toList();
+        List<SimpleGrantedAuthority> authorities = roles
+                .stream()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
 
         return new UserDetailsImpl(id, email, authorities);
     }
@@ -54,12 +44,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @Override

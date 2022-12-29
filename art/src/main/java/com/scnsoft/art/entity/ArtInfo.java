@@ -1,8 +1,6 @@
 package com.scnsoft.art.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.UUID;
+import lombok.Data;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,12 +9,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import lombok.Data;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Data
+@Table(name = "art_info")
 public class ArtInfo {
     public enum Status {
         INACTIVE, ACTIVE, SOLD, RETURN

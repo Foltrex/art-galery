@@ -1,13 +1,12 @@
 package com.scnsoft.art.service;
 
-import com.scnsoft.art.feignclient.FileFeignClient;
 import com.scnsoft.art.dto.UploadArtDto;
 import com.scnsoft.art.dto.mapper.impl.UploadArtMapper;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
+import com.scnsoft.art.feignclient.FileFeignClient;
 import com.scnsoft.art.repository.ArtRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.UUID;
