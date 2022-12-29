@@ -3,6 +3,7 @@ package com.scnsoft.art.entity;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,11 +28,13 @@ public class Proposal {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "artist_id")
+    @Column(updatable = false)
     private Artist artist;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "organisation_id")
+    @Column(updatable = false)
     private Organization organization;
 
     @ManyToOne
