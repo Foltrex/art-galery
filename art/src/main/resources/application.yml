@@ -1,24 +1,29 @@
+app:
+  props:
+    token:
+      secret: my_secret_key
+      expired: 86400000
 server:
-    port: 8081
+  port: 8081
 spring:
-    application:
-        name: art-service
-    datasource:
-        url: jdbc:postgresql://localhost:5432/art
-        username: postgres
-        password: 994499_ma
-    jpa:
-        database-platform: org.hibernate.dialect.PostgreSQLDialect
-        generate-ddl: true
-        hibernate:
-            ddl-auto: update
-        show-sql: true
-        
+  application:
+    name: art-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/art
+    username: postgres
+    password: 994499_ma
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 eureka:
-    client:
-        service-url:
-            defaultZone: http://localhost:8761/eureka
-        fetch-registry: true
-        register-with-eureka: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
 
 

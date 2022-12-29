@@ -1,12 +1,8 @@
-package com.scnsoft.user.security;
+package com.scnsoft.art.security;
 
-import com.scnsoft.user.entity.Account;
-import com.scnsoft.user.entity.Role;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Base64;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -37,30 +31,12 @@ public class JwtUtils {
         jwtSecret = Base64.getEncoder().encodeToString(jwtSecret.getBytes());
     }
 
-    public String createToken(String email, UUID id, Account.AccountType accountType, Set<Role> roles) {
-        Claims claims = Jwts.claims().setSubject(email);
-
-        claims.put("id", id);
-        claims.put("type", accountType.toString());
-        claims.put("roles", getRoleNames(roles));
-
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtExpirationMs);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
-    }
-
-    private Set<String> getRoleNames(Set<Role> userRoles) {
-        Set<String> roles = new HashSet<>();
-        userRoles.forEach(role -> roles.add(role.getName().toString()));
-
-        return roles;
-    }
+//    private Set<String> getRoleNames(Set<Role> userRoles) {
+//        Set<String> roles = new HashSet<>();
+//        userRoles.forEach(role -> roles.add(role.getName().toString()));
+//
+//        return roles;
+//    }
 
     public String getUsernameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
@@ -70,9 +46,13 @@ public class JwtUtils {
         return (String) Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("type");
     }
 
-    public String getRoles(String token) {
-        log.info(Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("roles").toString());
-        return "";
+    public UUID getId(String token) {
+        return UUID.fromString((String) Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("id"));
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    public List<String> getRoles(String token) {
+        return (List<String>) Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("roles");
     }
 
     public boolean validateJwtToken(String authToken) {

@@ -16,19 +16,20 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class FeignConfig {
 
-    @Bean
-    public RequestInterceptor requestTokenBearerInterceptor() {
-        return requestTemplate -> {
-            if (RequestContextHolder.getRequestAttributes() != null && RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes) {
-                HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-                String authorization = request.getHeader("Authorization");
-                log.info(authorization);
-                if (StringUtils.isNotBlank(authorization)) {
-                    requestTemplate.header("Authorization", authorization);
-                }
-            }
-        };
-    }
+    // Test to include JWT token in feign client
+//    @Bean
+//    public RequestInterceptor requestTokenBearerInterceptor() {
+//        return requestTemplate -> {
+//            if (RequestContextHolder.getRequestAttributes() != null && RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes) {
+//                HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//                String authorization = request.getHeader("Authorization");
+//                log.info(authorization);
+//                if (StringUtils.isNotBlank(authorization)) {
+//                    requestTemplate.header("Authorization", authorization);
+//                }
+//            }
+//        };
+//    }
 
     @LoadBalanced
     @Bean

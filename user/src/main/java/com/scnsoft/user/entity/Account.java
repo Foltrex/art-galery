@@ -1,6 +1,7 @@
 package com.scnsoft.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.scnsoft.user.listener.AccountListener;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -28,11 +30,13 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AccountListener.class)
 public class Account {
 
     public enum AccountType {
         ARTIST,
         ORGANIZATION,
+        REPRESENTATIVE,
         SYSTEM
     }
 
@@ -58,7 +62,6 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

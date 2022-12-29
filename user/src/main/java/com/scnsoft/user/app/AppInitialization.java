@@ -42,7 +42,7 @@ public class AppInitialization {
 
     @Transactional
     public void initRoles() {
-        log.info("init roles");
+        log.info("Initialization roles");
         if (roleRepository.findByName(Role.RoleType.ROLE_ADMIN).isEmpty()) {
             Role roleAdmin = Role.builder().name(Role.RoleType.ROLE_ADMIN).build();
             roleRepository.save(roleAdmin);
@@ -58,7 +58,7 @@ public class AppInitialization {
     }
 
     private void initAdminAccount() {
-        log.info("init admin account");
+        log.info("Initialization admin account");
         if (accountRepository.findByEmail(adminEmail).isEmpty()) {
             Account account = Account.builder()
                     .email(adminEmail)

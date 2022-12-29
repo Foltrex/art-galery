@@ -1,20 +1,29 @@
-package com.scnsoft.user.security;
+package com.scnsoft.art.security;
 
+import com.scnsoft.art.dto.AccountDto;
+import com.scnsoft.art.feignclient.AccountFeignClient;
+import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -25,17 +34,32 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private AccountFeignClient accountFeignClient;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            String jwt = parseJwt(request);
+            String token = parseJwt(request);
 
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                String username = jwtUtils.getUsernameFromJwtToken(jwt);
+            if (token != null && jwtUtils.validateJwtToken(token)) {
+                UUID id = jwtUtils.getId(token);
+                String username = jwtUtils.getUsernameFromJwtToken(token);
+                List<String> roles = jwtUtils.getRoles(token);
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                jwtUtils.getRoles(jwt);
+                try {
+                    ResponseEntity<AccountDto> accountDtoResponse = accountFeignClient.getAccountByEmail(username);
+                    AccountDto accountDto = accountDtoResponse.getBody();
+                    if (accountDto == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+                    }
+
+                } catch (FeignException e) {
+                    throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.getMessage());
+                }
+
+                UserDetails userDetails = UserDetailsImpl.build(id, username, roles);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

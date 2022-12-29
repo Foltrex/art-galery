@@ -1,21 +1,23 @@
 package com.scnsoft.user.service.impl;
 
-import com.scnsoft.user.dto.AccountResponseDto;
+import com.scnsoft.user.dto.AccountDto;
 import com.scnsoft.user.dto.ArtistDto;
+import com.scnsoft.user.dto.AuthTokenDto;
 import com.scnsoft.user.dto.LoginRequestDto;
 import com.scnsoft.user.dto.OrganizationDto;
 import com.scnsoft.user.dto.RegisterRequestDto;
+import com.scnsoft.user.dto.mapper.impl.AccountMapper;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Role;
 import com.scnsoft.user.exception.AccountBlockedException;
 import com.scnsoft.user.exception.LoginAlreadyExistsException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
+import com.scnsoft.user.feignclient.ArtistFeignClient;
+import com.scnsoft.user.feignclient.OrganizationFeignClient;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.repository.RoleRepository;
 import com.scnsoft.user.security.JwtUtils;
 import com.scnsoft.user.service.AccountService;
-import com.scnsoft.user.util.ArtistFeignClientUtil;
-import com.scnsoft.user.util.OrganizationFeignClientUtil;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,11 +50,12 @@ public class AccountServiceImpl implements AccountService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
-    private final ArtistFeignClientUtil artistFeignClientUtil;
-    private final OrganizationFeignClientUtil organizationFeignClientUtil;
+    private final ArtistFeignClient artistFeignClient;
+    private final OrganizationFeignClient organizationFeignClient;
+    private final AccountMapper accountMapper;
 
     @Override
-    public AccountResponseDto register(RegisterRequestDto registerRequestDto) {
+    public AuthTokenDto register(RegisterRequestDto registerRequestDto) {
         if (accountRepository.findByEmail(registerRequestDto.getEmail()).isPresent()) {
             throw new LoginAlreadyExistsException("email is already in use!");
         }
@@ -74,30 +77,33 @@ public class AccountServiceImpl implements AccountService {
             UUID accountId = account.getId();
             switch (accountType) {
                 case ARTIST -> {
-                    ResponseEntity<ArtistDto> response = artistFeignClientUtil.save(
-                            ArtistDto.builder().accountId(accountId).build());
+                    ResponseEntity<ArtistDto> response =
+                            artistFeignClient.save(ArtistDto.builder().accountId(accountId).build());
 
                     log.info(Objects.requireNonNull(response.getBody()).toString());
                 }
                 case ORGANIZATION -> {
-                    ResponseEntity<OrganizationDto> response = organizationFeignClientUtil.save(
-                            OrganizationDto.builder().accountId(accountId).build());
+                    ResponseEntity<OrganizationDto> response =
+                            organizationFeignClient.save(OrganizationDto.builder().accountId(accountId).build());
 
                     log.info(Objects.requireNonNull(response.getBody()).toString());
                 }
             }
         } catch (FeignException e) {
-            log.error(e.getMessage());
+            int statusCode = e.status();
             accountRepository.delete(account);
-            throw new ResponseStatusException(HttpStatus.valueOf(400), "11111");
+            if (statusCode == -1) {
+                throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, e.getMessage());
+            }
+            throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.getMessage());
         }
 
         setAccountToAuthentication(registerRequestDto.getEmail(), registerRequestDto.getPassword());
-        return createAccountResponse(account);
+        return createAuthTokenResponse(account);
     }
 
     @Override
-    public AccountResponseDto login(LoginRequestDto loginRequestDto) {
+    public AuthTokenDto login(LoginRequestDto loginRequestDto) {
         Account account = accountRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(() -> new ResourseNotFoundException("Account not found!"));
 
@@ -119,7 +125,15 @@ public class AccountServiceImpl implements AccountService {
             throw new BadCredentialsException("Invalid credentials");
         }
 
-        return createAccountResponse(account);
+        return createAuthTokenResponse(account);
+    }
+
+    @Override
+    public AccountDto findByEmail(String email) {
+        return accountRepository
+                .findByEmail(email)
+                .map(accountMapper::mapToDto)
+                .orElseThrow(() -> new ResourseNotFoundException("Account not found by email: " + email));
     }
 
     private Set<Role> getUserRoles() {
@@ -147,11 +161,11 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
     }
 
-    private AccountResponseDto createAccountResponse(Account account) {
-        return AccountResponseDto.builder()
+    private AuthTokenDto createAuthTokenResponse(Account account) {
+        return AuthTokenDto.builder()
                 .id(account.getId())
-                .login(account.getEmail())
-                .token(jwtUtils.createToken(account.getEmail(), account.getAccountType(), account.getRoles()))
+                .token(jwtUtils
+                        .createToken(account.getEmail(), account.getId(), account.getAccountType(), account.getRoles()))
                 .build();
     }
 

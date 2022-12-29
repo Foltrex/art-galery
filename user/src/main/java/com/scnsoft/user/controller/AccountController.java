@@ -1,6 +1,7 @@
 package com.scnsoft.user.controller;
 
-import com.scnsoft.user.dto.AccountResponseDto;
+import com.scnsoft.user.dto.AccountDto;
+import com.scnsoft.user.dto.AuthTokenDto;
 import com.scnsoft.user.dto.LoginRequestDto;
 import com.scnsoft.user.dto.RegisterRequestDto;
 import com.scnsoft.user.service.AccountService;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +26,19 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/register")
-    public ResponseEntity<AccountResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
+    public ResponseEntity<AuthTokenDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return new ResponseEntity<>(accountService.register(registerRequestDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AccountResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<AuthTokenDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         return new ResponseEntity<>(accountService.login(loginRequestDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/byEmail/{email}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<AccountDto> findByEmail(@PathVariable String email) {
+        return new ResponseEntity<>(accountService.findByEmail(email), HttpStatus.OK);
     }
 
     ////////////////////////////////////// FOR TESTS ////////////////////////////////
@@ -38,7 +46,6 @@ public class AccountController {
     @GetMapping("/1")
     @PreAuthorize("permitAll()")
     public String test1() {
-//        log.info(artFeignClientUtil.test().getBody());
         return "PERMIT ALL";
     }
 

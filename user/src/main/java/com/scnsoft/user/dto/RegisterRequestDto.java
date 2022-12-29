@@ -16,5 +16,6 @@ public class RegisterRequestDto {
     @NotEmpty
     private String password;
 
+    @NotEmpty
     private String accountType;
 }

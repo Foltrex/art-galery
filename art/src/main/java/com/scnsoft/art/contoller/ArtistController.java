@@ -2,8 +2,10 @@ package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.ArtistDto;
 import com.scnsoft.art.service.ArtistService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +20,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("artists")
-public record ArtistController(ArtistService artistService) {
+@RequiredArgsConstructor
+public class ArtistController {
+
+    private final ArtistService artistService;
 
     @GetMapping
     public ResponseEntity<List<ArtistDto>> findAll() {
@@ -45,4 +50,32 @@ public record ArtistController(ArtistService artistService) {
         artistService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    ////////////////////////////////////// FOR TESTS ////////////////////////////////
+
+    @GetMapping("/1")
+    @PreAuthorize("permitAll()")
+    public String test1() {
+        return "PERMIT ALL";
+    }
+
+
+    @GetMapping("/2")
+    @PreAuthorize("hasRole('USER')")
+    public String test2() {
+        return "PERMIT USER";
+    }
+
+    @GetMapping("/3")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String test3() {
+        return "PERMIT ADMIN";
+    }
+
+//    @GetMapping("/4")
+//    @PreAuthorize("@accountSecurityHandler.isHasType('ARTIST, SYSTEM')")
+//    public String test4() {
+//        return "PERMIT ARTIST";
+//    }
+
 }
