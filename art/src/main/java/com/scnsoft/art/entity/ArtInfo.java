@@ -2,6 +2,10 @@ package com.scnsoft.art.entity;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.UUID;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
