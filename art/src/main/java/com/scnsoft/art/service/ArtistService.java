@@ -31,10 +31,16 @@ public class ArtistService {
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
-    public ArtistDto findByAccountId(UUID accountId) {
+
+    public boolean existWithAccountId(UUID accountId) {
+        return artistRepository
+            .findByAccountId(accountId)
+            .isPresent();
+    }
+
+    public Artist findByAccountId(UUID accountId) {
         return artistRepository
                 .findByAccountId(accountId)
-                .map(artistMapper::mapToDto)
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 

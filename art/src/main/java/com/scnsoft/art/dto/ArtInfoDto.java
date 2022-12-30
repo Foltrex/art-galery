@@ -10,11 +10,12 @@ import lombok.Data;
 @Data
 @Builder
 public class ArtInfoDto {
+    public enum Status {
+        INACTIVE, ACTIVE, SOLD, RETURN
+    }
+
     private UUID proposalId;
     private ArtDto artDto;
     private BigDecimal price;
-    private Date creationDate;
-    private Date expositionSateStart;
-    private Date expositionDateEnd;
-    private String status;
+    private Status status;
 }

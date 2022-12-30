@@ -1,5 +1,6 @@
 package com.scnsoft.art.service;
 
+import org.joda.time.Instant;
 import org.springframework.stereotype.Service;
 
 import com.scnsoft.art.entity.ArtInfo;
@@ -19,6 +20,9 @@ public class ArtInfoService {
             
         //     .build();
         // TODO: write implementation
+        ArtInfo artInfo = ArtInfo.builder()
+            .creationDate(Instant.now().toDate())
+            .build();
         return null;
     }
 

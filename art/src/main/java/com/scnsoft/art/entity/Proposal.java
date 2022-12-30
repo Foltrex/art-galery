@@ -12,10 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.envers.Audited;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
+@Audited
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,16 +34,12 @@ public class Proposal {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "artist_id")
-    // @TODO Caused by: org.hibernate.AnnotationException: @Column(s) not allowed on a @ManyToOne property
-//    @Column(updatable = false)
+    @JoinColumn(name = "artist_id", updatable = false)
     private Artist artist;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "organisation_id")
-    // @TODO Caused by: org.hibernate.AnnotationException: @Column(s) not allowed on a @ManyToOne property
-//    @Column(updatable = false)
+    @JoinColumn(name = "organisation_id", updatable = false)
     private Organization organization;
 
     @ManyToOne

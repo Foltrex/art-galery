@@ -20,4 +20,8 @@ public class ProposalService {
             .orElseThrow(ArtResourceNotFoundException::new);
     }
 
+    public Proposal save(Proposal proposal) {
+        return proposalRepository.save(proposal);
+    }
+
 }
