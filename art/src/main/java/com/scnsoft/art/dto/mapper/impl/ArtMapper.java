@@ -1,18 +1,18 @@
 package com.scnsoft.art.dto.mapper.impl;
 
-import com.scnsoft.art.dto.UploadArtDto;
+import com.scnsoft.art.dto.ArtDto;
 import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.Art;
 import org.springframework.stereotype.Component;
 
 @Component
-public record UploadArtMapper(
+public record ArtMapper(
         ArtistMapper artistMapper
-) implements Mapper<Art, UploadArtDto> {
+) implements Mapper<Art, ArtDto> {
 
     @Override
-    public UploadArtDto mapToDto(Art art) {
-        return UploadArtDto.builder()
+    public ArtDto mapToDto(Art art) {
+        return ArtDto.builder()
                 .id(art.getId())
                 .imageData(art.getFilename())
                 .description(art.getDescription())
@@ -21,7 +21,7 @@ public record UploadArtMapper(
     }
 
     @Override
-    public Art mapToEntity(UploadArtDto artDto) {
+    public Art mapToEntity(ArtDto artDto) {
 
         return Art.builder()
                 .id(artDto.getId())

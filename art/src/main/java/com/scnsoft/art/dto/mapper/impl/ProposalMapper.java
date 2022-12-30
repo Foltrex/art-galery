@@ -23,12 +23,21 @@ public class ProposalMapper {
     }
 
     public Proposal mapToEntity(ProposalDto proposalDto) {
-        return Proposal.builder()
-                .id(proposalDto.getId())
-                .price(proposalDto.getPrice())
-                .commission(proposalDto.getCommission())
-                .currency(proposalDto.getCurrency())
-                // .
-                .build();
+        Proposal.ProposalBuilder proposalBuilder = Proposal.builder()
+            .id(proposalDto.getId())
+            .price(proposalDto.getPrice())
+            .commission(proposalDto.getCommission())
+            .currency(proposalDto.getCurrency());
+        
+        proposalBuilder = switch (proposalDto.getUpdateSide()) {
+            case ARTIST -> proposalBuilder
+                .artistConfirmation(true)
+                .organisationConfirmation(null);
+            case ORGANIZATION -> proposalBuilder
+                .organisationConfirmation(true)
+                .artistConfirmation(null);
+        };
+
+        return proposalBuilder.build();
     }
 }

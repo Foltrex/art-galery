@@ -3,6 +3,7 @@ package com.scnsoft.art.entity;
 import lombok.Data;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,13 +12,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.UUID;
+
+import org.hibernate.envers.Audited;
+
+import lombok.Builder;
+import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "art_info")
+@Builder
+@Audited
 public class ArtInfo {
     public enum Status {
         INACTIVE, ACTIVE, SOLD, RETURN
@@ -34,18 +38,24 @@ public class ArtInfo {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "organisation_id")
+    // @Column(updatable = false)
     private Organization organization;
 
     @ManyToOne
     @JoinColumn(name = "facility_id")
+    // @Column(updatable = false)
     private Facility facility;
 
+    @Column(updatable = false)
     private BigDecimal price;
+
+    @Column(updatable = false)
     private double commission;
 
+    @Column(updatable = false)
     private Date creationDate;
+
     private Date expositionDateStart;
     private Date expositionDateEnd;
-
     private Status status;
 }

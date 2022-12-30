@@ -31,6 +31,13 @@ public class ArtistService {
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
+    public ArtistDto findByAccountId(UUID accountId) {
+        return artistRepository
+                .findByAccountId(accountId)
+                .map(artistMapper::mapToDto)
+                .orElseThrow(ArtResourceNotFoundException::new);
+    }
+
     public ArtistDto save(ArtistDto artistDto) {
         Artist artist = artistMapper.mapToEntity(artistDto);
         return artistMapper.mapToDto(artistRepository.save(artist));

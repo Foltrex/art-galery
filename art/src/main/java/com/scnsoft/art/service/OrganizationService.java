@@ -29,6 +29,13 @@ public record OrganizationService(OrganizationRepository organizationRepository,
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
+    public OrganizationDto findByAccountId(UUID accountId) {
+        return organizationRepository
+                .findByAccountId(accountId)
+                .map(organizationMapper::mapToDto)
+                .orElseThrow(ArtResourceNotFoundException::new);
+    }
+
     public OrganizationDto save(OrganizationDto OrganizationDto) {
         Organization organization = organizationMapper.mapToEntity(OrganizationDto);
         return organizationMapper.mapToDto(organizationRepository.save(organization));

@@ -9,7 +9,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class UploadArtDto {
+public class ArtDto {
     private UUID id;
     private String imageData;
     private String description;
