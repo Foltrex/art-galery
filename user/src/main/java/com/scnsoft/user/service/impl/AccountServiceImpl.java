@@ -3,9 +3,12 @@ package com.scnsoft.user.service.impl;
 import com.scnsoft.user.dto.AccountDto;
 import com.scnsoft.user.dto.ArtistDto;
 import com.scnsoft.user.dto.AuthTokenDto;
+import com.scnsoft.user.dto.FacilityDto;
 import com.scnsoft.user.dto.LoginRequestDto;
 import com.scnsoft.user.dto.OrganizationDto;
+import com.scnsoft.user.dto.RegisterRepresentativeRequestDto;
 import com.scnsoft.user.dto.RegisterRequestDto;
+import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.dto.mapper.impl.AccountMapper;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Role;
@@ -14,6 +17,7 @@ import com.scnsoft.user.exception.LoginAlreadyExistsException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.feignclient.ArtistFeignClient;
 import com.scnsoft.user.feignclient.OrganizationFeignClient;
+import com.scnsoft.user.feignclient.RepresentativeFeignClient;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.repository.RoleRepository;
 import com.scnsoft.user.security.JwtUtils;
@@ -52,6 +56,7 @@ public class AccountServiceImpl implements AccountService {
     private final JwtUtils jwtUtils;
     private final ArtistFeignClient artistFeignClient;
     private final OrganizationFeignClient organizationFeignClient;
+    private final RepresentativeFeignClient representativeFeignClient;
     private final AccountMapper accountMapper;
 
     @Override
@@ -65,8 +70,6 @@ public class AccountServiceImpl implements AccountService {
         Account account = Account.builder()
                 .email(registerRequestDto.getEmail())
                 .password(passwordEncoder.encode(registerRequestDto.getPassword()))
-                .failCount(0)
-                .isApproved(accountType.equals(Account.AccountType.ARTIST))
                 .accountType(accountType)
                 .roles(getUserRoles())
                 .build();
@@ -82,25 +85,62 @@ public class AccountServiceImpl implements AccountService {
 
                     log.info(Objects.requireNonNull(response.getBody()).toString());
                 }
-                case ORGANIZATION -> {
-                    ResponseEntity<OrganizationDto> response =
-                            organizationFeignClient.save(OrganizationDto.builder().accountId(accountId).build());
+                case REPRESENTATIVE -> {
+                    ResponseEntity<RepresentativeDto> response =
+                            representativeFeignClient.save(RepresentativeDto.builder().accountId(accountId).build());
 
                     log.info(Objects.requireNonNull(response.getBody()).toString());
+
                 }
             }
         } catch (FeignException e) {
-            int statusCode = e.status();
             accountRepository.delete(account);
+
+            int statusCode = e.status();
             if (statusCode == -1) {
                 throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, e.getMessage());
             }
-            throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.getMessage());
+            throw new ResponseStatusException(HttpStatus.valueOf(statusCode), e.getMessage());
         }
 
         setAccountToAuthentication(registerRequestDto.getEmail(), registerRequestDto.getPassword());
         return createAuthTokenResponse(account);
     }
+
+    @Override
+    public RepresentativeDto registerRepresentativeToOrganization(RegisterRepresentativeRequestDto registerRepresentativeRequestDto) {
+        Account account = Account.builder()
+                .email(registerRepresentativeRequestDto.getEmail())
+                .password(passwordEncoder.encode(registerRepresentativeRequestDto.getPassword()))
+                .accountType(Account.AccountType.REPRESENTATIVE)
+                .roles(getUserRoles())
+                .build();
+
+        accountRepository.save(account);
+
+        try {
+            RepresentativeDto representativeDto = RepresentativeDto.builder()
+                    .accountId(account.getId())
+                    .organization(OrganizationDto.builder().id(registerRepresentativeRequestDto.getOrganizationId()).build())
+                    .facility(FacilityDto.builder().id(registerRepresentativeRequestDto.getFacilityId()).build())
+                    .build();
+
+            ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(representativeDto);
+
+            log.info(Objects.requireNonNull(response.getBody()).toString());
+        } catch (FeignException e) {
+            accountRepository.delete(account);
+
+            int statusCode = e.status();
+            if (statusCode == -1) {
+                throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, e.getMessage());
+            }
+            throw new ResponseStatusException(HttpStatus.valueOf(statusCode), e.getMessage());
+        }
+
+        return null;
+    }
+
 
     @Override
     public AuthTokenDto login(LoginRequestDto loginRequestDto) {
@@ -143,37 +183,51 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private void setAccountToAuthentication(String login, String password) {
-        Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
+        try {
+            Authentication authentication =
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
 
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authentication);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
     }
 
     private void handleEventOfBadCredentials(Account account) {
-        Integer failCount = account.getFailCount();
-        account.setFailCount(++failCount);
-        account.setLastFail(new Date());
+        if (isBruteForce(account.getLastFail())) {
+            Integer failCount = account.getFailCount();
+            account.setFailCount(++failCount);
 
-        if (failCount % 5 == 0) {
-            account.setBlockedSince(new Date());
+            if (failCount % 5 == 0) {
+                account.setBlockedSince(new Date());
+            }
+            accountRepository.save(account);
         }
-        accountRepository.save(account);
+        account.setLastFail(new Date());
     }
 
     private AuthTokenDto createAuthTokenResponse(Account account) {
         return AuthTokenDto.builder()
                 .id(account.getId())
-                .token(jwtUtils
-                        .createToken(account.getEmail(), account.getId(), account.getAccountType(), account.getRoles()))
+                .token(jwtUtils.createToken(
+                        account.getEmail(), account.getId(), account.getAccountType(), account.getRoles()))
                 .build();
     }
 
     private long calculateSecondsToUnblock(Date blockedSince) {
-        long diff = new Date().getTime() - blockedSince.getTime();
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(diff);
+        long different = new Date().getTime() - blockedSince.getTime();
+        long differentInSeconds = TimeUnit.MILLISECONDS.toSeconds(different);
 
-        return 300 - seconds;
+        return 300 - differentInSeconds;
+    }
+
+    private boolean isBruteForce(Date lastFail) {
+        long different = new Date().getTime() - lastFail.getTime();
+        long differentInSeconds = TimeUnit.MILLISECONDS.toSeconds(different);
+
+        return differentInSeconds < 30;
     }
 
 }

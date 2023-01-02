@@ -35,7 +35,7 @@ public class Account {
 
     public enum AccountType {
         ARTIST,
-        ORGANIZATION,
+//        ORGANIZATION,
         REPRESENTATIVE,
         SYSTEM
     }
@@ -57,8 +57,6 @@ public class Account {
     private Integer failCount;
 
     private Date blockedSince;
-
-    private Boolean isApproved;
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;

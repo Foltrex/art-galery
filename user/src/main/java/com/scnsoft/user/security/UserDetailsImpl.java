@@ -1,5 +1,6 @@
 package com.scnsoft.user.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.scnsoft.user.entity.Account;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -21,14 +22,18 @@ public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     private final UUID id;
     private final String email;
+    @JsonIgnore
+    private final String password;
 
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(UUID id,
                            String email,
+                           String password,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
+        this.password = password;
         this.authorities = authorities;
     }
 
@@ -40,6 +45,7 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(
                 account.getId(),
                 account.getEmail(),
+                account.getPassword(),
                 authorities);
     }
 
@@ -50,7 +56,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
