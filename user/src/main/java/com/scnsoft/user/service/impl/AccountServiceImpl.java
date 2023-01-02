@@ -109,6 +109,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public RepresentativeDto registerRepresentativeToOrganization(RegisterRepresentativeRequestDto registerRepresentativeRequestDto) {
+        log.info("AAAAAAAAAAAAAAAA=================AAAAAAAAAAAAAAAAa");
         Account account = Account.builder()
                 .email(registerRepresentativeRequestDto.getEmail())
                 .password(passwordEncoder.encode(registerRepresentativeRequestDto.getPassword()))
@@ -118,16 +119,19 @@ public class AccountServiceImpl implements AccountService {
 
         accountRepository.save(account);
 
-        try {
-            RepresentativeDto representativeDto = RepresentativeDto.builder()
-                    .accountId(account.getId())
-                    .organization(OrganizationDto.builder().id(registerRepresentativeRequestDto.getOrganizationId()).build())
-                    .facility(FacilityDto.builder().id(registerRepresentativeRequestDto.getFacilityId()).build())
-                    .build();
+        RepresentativeDto representativeDto = RepresentativeDto.builder()
+                .accountId(account.getId())
+                .organization(OrganizationDto.builder().id(registerRepresentativeRequestDto.getOrganizationId()).build())
+                .facility(FacilityDto.builder().id(registerRepresentativeRequestDto.getFacilityId()).build())
+                .build();
 
+        log.info("RESPONSE: " + representativeDto);
+        try {
             ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(representativeDto);
 
-            log.info(Objects.requireNonNull(response.getBody()).toString());
+//            log.info(Objects.requireNonNull(response.getBody()).toString());
+
+            representativeDto = response.getBody();
         } catch (FeignException e) {
             accountRepository.delete(account);
 
@@ -138,7 +142,7 @@ public class AccountServiceImpl implements AccountService {
             throw new ResponseStatusException(HttpStatus.valueOf(statusCode), e.getMessage());
         }
 
-        return null;
+        return representativeDto;
     }
 
 

@@ -3,7 +3,9 @@ package com.scnsoft.user.controller;
 import com.scnsoft.user.dto.AccountDto;
 import com.scnsoft.user.dto.AuthTokenDto;
 import com.scnsoft.user.dto.LoginRequestDto;
+import com.scnsoft.user.dto.RegisterRepresentativeRequestDto;
 import com.scnsoft.user.dto.RegisterRequestDto;
+import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,22 +25,34 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class AccountController {
 
+    /**
+     * Account service for working with account's login, register, etc.
+     * {@link com.scnsoft.user.service.impl.AccountServiceImpl}
+     */
     private final AccountService accountService;
+
+    @GetMapping("/byEmail/{email}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<AccountDto> findByEmail(@PathVariable String email) {
+        return new ResponseEntity<>(accountService.findByEmail(email), HttpStatus.OK);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<AuthTokenDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return new ResponseEntity<>(accountService.register(registerRequestDto), HttpStatus.CREATED);
     }
 
+    @PostMapping("/register-representative-to-organization")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<RepresentativeDto> registerRepresentative(
+            @RequestBody RegisterRepresentativeRequestDto registerRepresentativeRequestDto) {
+        return new ResponseEntity<>(
+                accountService.registerRepresentativeToOrganization(registerRepresentativeRequestDto), HttpStatus.CREATED);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<AuthTokenDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         return new ResponseEntity<>(accountService.login(loginRequestDto), HttpStatus.OK);
-    }
-
-    @GetMapping("/byEmail/{email}")
-    @PreAuthorize("permitAll()")
-    public ResponseEntity<AccountDto> findByEmail(@PathVariable String email) {
-        return new ResponseEntity<>(accountService.findByEmail(email), HttpStatus.OK);
     }
 
     ////////////////////////////////////// FOR TESTS ////////////////////////////////
