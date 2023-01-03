@@ -13,15 +13,14 @@ spring:
     name: art-service
   datasource:
     url: jdbc:postgresql://localhost:5432/art
-    username: postgres
-    password: 994499_ma
+    username: root
+    password: root
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
     hibernate:
       ddl-auto: update
     show-sql: true
-
 eureka:
   client:
     service-url:

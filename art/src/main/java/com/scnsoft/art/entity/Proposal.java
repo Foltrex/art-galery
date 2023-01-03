@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Audited
+// @Audited
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

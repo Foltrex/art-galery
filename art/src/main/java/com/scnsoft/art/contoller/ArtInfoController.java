@@ -19,15 +19,15 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/art-info")
 @RequiredArgsConstructor
 public class ArtInfoController {
-    private final ArtInfoService artInfoService;
-    private final ProposalService proposalService;
+    // private final ArtInfoService artInfoService;
+    // private final ProposalService proposalService;
 
-    @PostMapping
-    public ResponseEntity<ArtInfo> create(@RequestBody UUID proposalId) {
-        Proposal proposal = proposalService.findById(proposalId);
-        return Boolean.TRUE.equals(proposal.getArtistConfirmation())
-            && Boolean.TRUE.equals(proposal.getOrganisationConfirmation())
-                ? ResponseEntity.ok(artInfoService.create(proposal))
-                : ResponseEntity.badRequest().build();
-    }
+    // @PostMapping
+    // public ResponseEntity<ArtInfo> create(@RequestBody UUID proposalId) {
+    //     Proposal proposal = proposalService.findById(proposalId);
+    //     return Boolean.TRUE.equals(proposal.getArtistConfirmation())
+    //         && Boolean.TRUE.equals(proposal.getOrganisationConfirmation())
+    //             ? ResponseEntity.ok(artInfoService.create(proposal))
+    //             : ResponseEntity.badRequest().build();
+    // }
 }

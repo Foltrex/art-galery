@@ -1,6 +1,5 @@
 package com.scnsoft.art.service;
 
-import org.joda.time.Instant;
 import org.springframework.stereotype.Service;
 
 import com.scnsoft.art.entity.ArtInfo;
@@ -13,14 +12,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ArtInfoService {
 
-    private final ArtInfoRepository artInfoRepository;
+    // private final ArtInfoRepository artInfoRepository;
 
-    public ArtInfo create(Proposal proposal) {
-        // ArtInfo artInfo = ArtInfo.builder()
+    // public ArtInfo create(Proposal proposal) {
+    //     // ArtInfo artInfo = ArtInfo.builder()
             
-        //     .build();
-        // TODO: write implementation
-        return null;
-    }
+    //     //     .build();
+    //     // TODO: write implementation
+    //     return null;
+    // }
 
 }
