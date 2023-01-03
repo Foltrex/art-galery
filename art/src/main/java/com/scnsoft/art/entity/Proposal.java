@@ -14,12 +14,13 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-// @Audited
+@Audited
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,16 +33,19 @@ public class Proposal {
     private double commission;
     private long currency;
 
+    @NotAudited
     @NotNull
     @ManyToOne
     @JoinColumn(name = "artist_id", updatable = false)
     private Artist artist;
 
+    @NotAudited
     @NotNull
     @ManyToOne
     @JoinColumn(name = "organisation_id", updatable = false)
     private Organization organization;
 
+    @NotAudited
     @ManyToOne
     @JoinColumn(name = "facility_id")
     private Facility facility;
