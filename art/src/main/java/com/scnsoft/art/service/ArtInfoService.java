@@ -20,9 +20,6 @@ public class ArtInfoService {
             
         //     .build();
         // TODO: write implementation
-        ArtInfo artInfo = ArtInfo.builder()
-            .creationDate(Instant.now().toDate())
-            .build();
         return null;
     }
 
