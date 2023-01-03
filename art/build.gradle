@@ -38,8 +38,10 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
     implementation 'org.hibernate:hibernate-envers:5.5.4.Final'
+    implementation 'org.springframework.cloud:spring-cloud-sleuth-zipkin:3.0.3'
 
     runtimeOnly 'org.postgresql:postgresql'
+    // compileOnly 'org.springframework.cloud:spring-cloud-starter-sleuth'
     compileOnly 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok'

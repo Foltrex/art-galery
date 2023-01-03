@@ -22,10 +22,7 @@ services:
     ports:
       - "5050:80"
 
-# networks:
-#   postgres:
-#     driver: bridge
-
-# volumes:
-#   postgres:
-#   pgadmin:
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
