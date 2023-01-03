@@ -1,9 +1,12 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.RepresentativeDto;
+import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.service.RepresentativeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +21,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("representatives")
-public record RepresentativeController(RepresentativeService representativeService) {
+@RequiredArgsConstructor
+public class RepresentativeController {
+
+    private final RepresentativeService representativeService;
 
     @GetMapping
     public ResponseEntity<List<RepresentativeDto>> findAll() {
@@ -45,4 +51,5 @@ public record RepresentativeController(RepresentativeService representativeServi
         representativeService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
 }

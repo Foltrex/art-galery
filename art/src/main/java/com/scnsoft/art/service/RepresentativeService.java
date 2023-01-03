@@ -42,29 +42,16 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
         Representative representative = representativeMapper.mapToEntity(representativeDto);
 
         if (representative.getOrganization() == null && representative.getFacility() == null) {
-            Organization organization = Organization.builder()
-                    .build();
-
-            organization = organizationRepository.save(organization);
-
-            Facility facility = Facility.builder()
-                    .organization(organization)
-                    .build();
-
-            facility = facilityRepository.save(facility);
+            Organization organization = organizationRepository.save(Organization.builder().build());
+            Facility facility = facilityRepository.save(Facility.builder().organization(organization).build());
 
             representative.setOrganization(organization);
             representative.setFacility(facility);
-            representative.setOrganizationRole(organizationRoleRepository
-                    .findByName(OrganizationRole.RoleType.CREATOR)
-                    .orElseThrow(() -> new ArtResourceNotFoundException("OrganizationRole not found!")));
+            representative.setOrganizationRole(getOrganizationRoleByName(OrganizationRole.RoleType.CREATOR));
         } else {
-            representative.setOrganizationRole(organizationRoleRepository
-                    .findByName(OrganizationRole.RoleType.MEMBER)
-                    .orElseThrow(() -> new ArtResourceNotFoundException("OrganizationRole not found!")));
+            representative.setOrganizationRole(getOrganizationRoleByName(OrganizationRole.RoleType.MEMBER));
         }
 
-        log.info(representative.toString());
         return representativeMapper.mapToDto(representativeRepository.save(representative));
     }
 
@@ -77,4 +64,11 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
     public void deleteById(UUID id) {
         representativeRepository.deleteById(id);
     }
+
+    private OrganizationRole getOrganizationRoleByName(OrganizationRole.RoleType name) {
+        return organizationRoleRepository
+                .findByName(name)
+                .orElseThrow(() -> new ArtResourceNotFoundException("OrganizationRole not found by name: " + name));
+    }
+
 }
