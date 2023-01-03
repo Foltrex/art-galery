@@ -11,5 +11,4 @@ import java.util.stream.Stream;
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, UUID> {
 
-    Optional<Organization> findByAccountId(UUID accountId);
 }

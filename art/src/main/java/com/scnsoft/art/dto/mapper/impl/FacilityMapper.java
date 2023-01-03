@@ -16,7 +16,7 @@ public record FacilityMapper(
                 .id(facility.getId())
                 .name(facility.getName())
                 .isActive(facility.getIsActive())
-                .addressDto(addressMapper.mapToDto(facility.getAddress()))
+                .addressDto(facility.getAddress() != null ? addressMapper.mapToDto(facility.getAddress()) : null)
                 .build();
     }
 
@@ -26,7 +26,7 @@ public record FacilityMapper(
                 .id(facilityDto.getId())
                 .name(facilityDto.getName())
                 .isActive(facilityDto.getIsActive())
-                .address(addressMapper.mapToEntity(facilityDto.getAddressDto()))
+                .address(facilityDto.getAddressDto() != null? addressMapper.mapToEntity(facilityDto.getAddressDto()) : null)
                 .build();
     }
 }

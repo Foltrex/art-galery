@@ -53,7 +53,7 @@ public class ProposalController {
             artist = artistService.findByAccountId(accountId);
             organization = organizationMapper.mapToEntity(proposalDto.getOrganizationDto());
         } else {
-            organization = organizationService.findByAccountId(accountId);
+//            organization = organizationService.findByAccountId(accountId);
             artist = artistMapper.mapToEntity(proposalDto.getArtistDto());
         }
         

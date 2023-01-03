@@ -21,7 +21,6 @@ public class OrganizationMapper implements Mapper<Organization, OrganizationDto>
                 .name(organization.getName())
                 .address(mapAddressToDto(organization.getAddress()))
                 .status(mapStatusToDto(organization.getStatus()))
-                .accountId(organization.getAccountId())
                 .build();
     }
 
@@ -32,7 +31,6 @@ public class OrganizationMapper implements Mapper<Organization, OrganizationDto>
                 .name(organizationDto.getName())
                 .address(mapAddressDtoToEntity(organizationDto.getAddress()))
                 .status(mapStatusToEntity(organizationDto.getStatus()))
-                .accountId(organizationDto.getAccountId())
                 .build();
     }
 
