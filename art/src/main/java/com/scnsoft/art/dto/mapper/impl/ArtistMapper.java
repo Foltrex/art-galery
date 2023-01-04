@@ -28,14 +28,16 @@ public class ArtistMapper implements Mapper<Artist, ArtistDto> {
 
     @Override
     public Artist mapToEntity(ArtistDto artistDto) {
-        return Artist.builder()
+        return artistDto != null
+            ? Artist.builder()
                 .id(artistDto.getId())
                 .city(mapCityDtoToEntity(artistDto.getCity()))
                 .firstname(artistDto.getFirstname())
                 .lastname(artistDto.getLastname())
                 .description(artistDto.getDescription())
                 .accountId(artistDto.getAccountId())
-                .build();
+                .build()
+            : null;
     }
 
     private CityDto mapCityToDto(City city) {

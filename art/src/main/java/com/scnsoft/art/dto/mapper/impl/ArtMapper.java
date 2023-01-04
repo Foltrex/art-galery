@@ -12,22 +12,24 @@ public record ArtMapper(
 
     @Override
     public ArtDto mapToDto(Art art) {
-        return ArtDto.builder()
+        return art != null
+            ? ArtDto.builder()
                 .id(art.getId())
-                .imageData(art.getFilename())
                 .description(art.getDescription())
                 .artistDto(artistMapper.mapToDto(art.getArtist()))
-                .build();
+                .build()
+            : null;
     }
 
     @Override
     public Art mapToEntity(ArtDto artDto) {
-
-        return Art.builder()
+        return artDto != null
+            ? Art.builder()
                 .id(artDto.getId())
-                .filename(artDto.getImageData())
+                .name(artDto.getName())
                 .description(artDto.getDescription())
                 .artist(artistMapper.mapToEntity(artDto.getArtistDto()))
-                .build();
+                .build()
+            : null;
     }
 }

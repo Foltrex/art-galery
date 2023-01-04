@@ -35,8 +35,8 @@ public record ArtService(
     public ArtDto save(ArtDto artDto) {
         Art art = artMapper.mapToEntity(artDto);
         Art persistedArt = artRepository.save(art);
-        ArtDto mappedPersistedArt = artMapper.mapToDto(persistedArt);
-        return fileFeignClient.save(mappedPersistedArt);
+        artDto.setId(persistedArt.getId());
+        return fileFeignClient.save(artDto);
     }
 
     public ArtDto update(UUID id, ArtDto artDto) {
