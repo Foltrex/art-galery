@@ -49,17 +49,17 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
 
     public RepresentativeDto save(RepresentativeDto representativeDto) {
         Representative representative = representativeMapper.mapToEntity(representativeDto);
+        Organization organization = null;
+        Facility facility = null;
 
         if (representative.getOrganization() == null && representative.getFacility() == null) {
             if (representativeRepository.findByAccountId(SecurityUtil.getCurrentAccountId()).isPresent()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Representative is already exists!");
             }
 
-            Organization organization = organizationRepository.save(Organization.builder().build());
-            Facility facility = facilityRepository.save(Facility.builder().organization(organization).build());
+            organization = organizationRepository.save(Organization.builder().build());
+            facility = facilityRepository.save(Facility.builder().organization(organization).build());
 
-            representative.setOrganization(organization);
-            representative.setFacility(facility);
             representative.setOrganizationRole(getOrganizationRoleByName(OrganizationRole.RoleType.CREATOR));
         } else {
             Representative existedRepresentative = findByAccountId(SecurityUtil.getCurrentAccountId());
@@ -68,21 +68,23 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Representative is already exists!");
             }
 
-            Organization organization = getOrganizationById(representative.getOrganization().getId());
-            Facility facility = getFacilityById(representative.getFacility().getId());
+            organization = getOrganizationById(representative.getOrganization().getId());
 
             if (!organization.getId().equals(existedRepresentative.getOrganization().getId())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not valid organization!");
             }
 
-            if (!facility.getOrganization().getId().equals(organization.getId())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not valid facility!");
+            if (representative.getFacility().getId() != null) {
+                facility = getFacilityById(representative.getFacility().getId());
+                if (!facility.getOrganization().getId().equals(organization.getId())) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not valid facility!");
+                }
             }
 
-            representative.setOrganization(organization);
-            representative.setFacility(facility);
             representative.setOrganizationRole(getOrganizationRoleByName(OrganizationRole.RoleType.MEMBER));
         }
+        representative.setOrganization(organization);
+        representative.setFacility(facility);
 
         return representativeMapper.mapToDto(representativeRepository.save(representative));
     }
@@ -114,4 +116,5 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
                 .findById(id)
                 .orElseThrow(() -> new ArtResourceNotFoundException("Facility not found by id: " + id));
     }
+
 }
