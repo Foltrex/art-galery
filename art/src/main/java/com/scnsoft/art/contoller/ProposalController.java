@@ -18,10 +18,12 @@ import com.scnsoft.art.dto.mapper.impl.ProposalMapper;
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.entity.Proposal;
+import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.service.ArtistService;
 import com.scnsoft.art.service.OrganizationService;
 import com.scnsoft.art.service.ProposalService;
+import com.scnsoft.art.service.RepresentativeService;
 
 import feign.Response;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,7 @@ public class ProposalController {
 
     private final ProposalService proposalService;
     private final ArtistService artistService;
-    private final OrganizationService organizationService;
+    private final RepresentativeService representativeService;
     private final AccountFeignClient accountFeignClient;
     private final OrganizationMapper organizationMapper;
     private final ArtistMapper artistMapper;
@@ -53,7 +55,8 @@ public class ProposalController {
             artist = artistService.findByAccountId(accountId);
             organization = organizationMapper.mapToEntity(proposalDto.getOrganizationDto());
         } else {
-//            organization = organizationService.findByAccountId(accountId);
+            Representative representative = representativeService.findByAccountId(accountId);
+            organization = representative.getOrganization();
             artist = artistMapper.mapToEntity(proposalDto.getArtistDto());
         }
         

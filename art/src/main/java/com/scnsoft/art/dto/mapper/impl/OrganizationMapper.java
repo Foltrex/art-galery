@@ -26,12 +26,14 @@ public class OrganizationMapper implements Mapper<Organization, OrganizationDto>
 
     @Override
     public Organization mapToEntity(OrganizationDto organizationDto) {
-        return Organization.builder()
+        return organizationDto != null
+            ? Organization.builder()
                 .id(organizationDto.getId())
                 .name(organizationDto.getName())
                 .address(mapAddressDtoToEntity(organizationDto.getAddress()))
                 .status(mapStatusToEntity(organizationDto.getStatus()))
-                .build();
+                .build()
+            : null;
     }
 
     private AddressDto mapAddressToDto(Address address) {

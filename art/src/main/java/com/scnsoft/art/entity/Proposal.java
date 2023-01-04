@@ -36,13 +36,13 @@ public class Proposal {
     @NotAudited
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "artist_id", updatable = false)
+    @JoinColumn(name = "artist_id", updatable = false, nullable = false)
     private Artist artist;
 
     @NotAudited
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "organisation_id", updatable = false)
+    @JoinColumn(name = "organisation_id", updatable = false, nullable = false)
     private Organization organization;
 
     @NotAudited

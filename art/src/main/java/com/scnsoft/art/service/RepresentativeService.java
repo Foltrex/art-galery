@@ -71,4 +71,10 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
                 .orElseThrow(() -> new ArtResourceNotFoundException("OrganizationRole not found by name: " + name));
     }
 
+    public Representative findByAccountId(UUID accountId) {
+        return representativeRepository
+            .findByAccountId(accountId)
+            .orElseThrow(ArtResourceNotFoundException::new);
+    }
+
 }

@@ -15,29 +15,28 @@ public class ProposalMapper {
     private final FacilityMapper facilityMapper;
 
     public ProposalDto mapToDto(Proposal proposal) {
-        return ProposalDto.builder()
-            .id(proposal.getId())
-            .price(proposal.getPrice())
-            .commission(proposal.getCommission())
-            .currency(proposal.getCurrency())
-            .artistDto(artistMapper.mapToDto(proposal.getArtist()))
-            .organizationDto(organizationMapper.mapToDto(proposal.getOrganization()))
-            .facilityDto(facilityMapper.mapToDto(proposal.getFacility()))
-            .build();
+        return proposal != null
+            ? ProposalDto.builder()
+                .id(proposal.getId())
+                .price(proposal.getPrice())
+                .commission(proposal.getCommission())
+                .currency(proposal.getCurrency())
+                .artistDto(artistMapper.mapToDto(proposal.getArtist()))
+                .organizationDto(organizationMapper.mapToDto(proposal.getOrganization()))
+                .facilityDto(facilityMapper.mapToDto(proposal.getFacility()))
+                .build()
+            : null;
     }
 
     public Proposal mapToEntity(ProposalDto proposalDto) {
-        Artist artist = proposalDto.getArtistDto() != null
-            ? artistMapper.mapToEntity(proposalDto.getArtistDto())
-            : null;
-        Organization organization = proposalDto.getOrganizationDto() != null
-            ? organizationMapper.mapToEntity(proposalDto.getOrganizationDto())
-            : null;
+        if (proposalDto == null) {
+            return null;
+        }
 
         Proposal.ProposalBuilder proposalBuilder = Proposal.builder()
             .id(proposalDto.getId())
-            .artist(artist)
-            .organization(organization)
+            .artist(artistMapper.mapToEntity(proposalDto.getArtistDto()))
+            .organization(organizationMapper.mapToEntity(proposalDto.getOrganizationDto()))
             .price(proposalDto.getPrice())
             .commission(proposalDto.getCommission())
             .currency(proposalDto.getCurrency());
