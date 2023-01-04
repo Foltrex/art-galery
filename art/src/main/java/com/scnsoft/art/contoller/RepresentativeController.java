@@ -37,6 +37,7 @@ public class RepresentativeController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RepresentativeDto> save(@RequestBody RepresentativeDto RepresentativeDto) {
         return new ResponseEntity<>(representativeService.save(RepresentativeDto), HttpStatus.CREATED);
     }

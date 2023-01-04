@@ -11,8 +11,11 @@ import com.scnsoft.art.repository.FacilityRepository;
 import com.scnsoft.art.repository.OrganizationRepository;
 import com.scnsoft.art.repository.OrganizationRoleRepository;
 import com.scnsoft.art.repository.RepresentativeRepository;
+import com.scnsoft.art.security.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,10 +41,20 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
+    public Representative findByAccountId(UUID accountId) {
+        return representativeRepository
+                .findByAccountId(accountId)
+                .orElseThrow(ArtResourceNotFoundException::new);
+    }
+
     public RepresentativeDto save(RepresentativeDto representativeDto) {
         Representative representative = representativeMapper.mapToEntity(representativeDto);
 
         if (representative.getOrganization() == null && representative.getFacility() == null) {
+            if (representativeRepository.findByAccountId(SecurityUtil.getCurrentAccountId()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Representative is already exists!");
+            }
+
             Organization organization = organizationRepository.save(Organization.builder().build());
             Facility facility = facilityRepository.save(Facility.builder().organization(organization).build());
 
@@ -49,6 +62,25 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
             representative.setFacility(facility);
             representative.setOrganizationRole(getOrganizationRoleByName(OrganizationRole.RoleType.CREATOR));
         } else {
+            Representative existedRepresentative = findByAccountId(SecurityUtil.getCurrentAccountId());
+
+            if (representativeRepository.findByAccountId(representative.getAccountId()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Representative is already exists!");
+            }
+
+            Organization organization = getOrganizationById(representative.getOrganization().getId());
+            Facility facility = getFacilityById(representative.getFacility().getId());
+
+            if (!organization.getId().equals(existedRepresentative.getOrganization().getId())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not valid organization!");
+            }
+
+            if (!facility.getOrganization().getId().equals(organization.getId())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not valid facility!");
+            }
+
+            representative.setOrganization(organization);
+            representative.setFacility(facility);
             representative.setOrganizationRole(getOrganizationRoleByName(OrganizationRole.RoleType.MEMBER));
         }
 
@@ -71,10 +103,15 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
                 .orElseThrow(() -> new ArtResourceNotFoundException("OrganizationRole not found by name: " + name));
     }
 
-    public Representative findByAccountId(UUID accountId) {
-        return representativeRepository
-            .findByAccountId(accountId)
-            .orElseThrow(ArtResourceNotFoundException::new);
+    private Organization getOrganizationById(UUID id) {
+        return organizationRepository
+                .findById(id)
+                .orElseThrow(() -> new ArtResourceNotFoundException("Organization not found by id: " + id));
     }
 
+    private Facility getFacilityById(UUID id) {
+        return facilityRepository
+                .findById(id)
+                .orElseThrow(() -> new ArtResourceNotFoundException("Facility not found by id: " + id));
+    }
 }

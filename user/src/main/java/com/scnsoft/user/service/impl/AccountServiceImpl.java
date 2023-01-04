@@ -36,8 +36,11 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -76,6 +79,8 @@ public class AccountServiceImpl implements AccountService {
 
         accountRepository.save(account);
 
+        String token = jwtUtils.createToken(
+                account.getEmail(), account.getId(), account.getAccountType(), account.getRoles());
         try {
             UUID accountId = account.getId();
             switch (accountType) {
@@ -86,8 +91,8 @@ public class AccountServiceImpl implements AccountService {
                     log.info(Objects.requireNonNull(response.getBody()).toString());
                 }
                 case REPRESENTATIVE -> {
-                    ResponseEntity<RepresentativeDto> response =
-                            representativeFeignClient.save(RepresentativeDto.builder().accountId(accountId).build());
+                    ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(
+                            RepresentativeDto.builder().accountId(accountId).build(), "Bearer " + token);
 
                     log.info(Objects.requireNonNull(response.getBody()).toString());
 
@@ -109,7 +114,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public RepresentativeDto registerRepresentativeToOrganization(RegisterRepresentativeRequestDto registerRepresentativeRequestDto) {
-        log.info("AAAAAAAAAAAAAAAA=================AAAAAAAAAAAAAAAAa");
+        if (accountRepository.findByEmail(registerRepresentativeRequestDto.getEmail()).isPresent()) {
+            throw new LoginAlreadyExistsException("email is already in use!");
+        }
+
         Account account = Account.builder()
                 .email(registerRepresentativeRequestDto.getEmail())
                 .password(passwordEncoder.encode(registerRepresentativeRequestDto.getPassword()))
@@ -125,12 +133,14 @@ public class AccountServiceImpl implements AccountService {
                 .facility(FacilityDto.builder().id(registerRepresentativeRequestDto.getFacilityId()).build())
                 .build();
 
-        log.info("RESPONSE: " + representativeDto);
         try {
-            ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(representativeDto);
+            HttpServletRequest request = ((ServletRequestAttributes)
+                    Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 
-//            log.info(Objects.requireNonNull(response.getBody()).toString());
+            String authorization = request.getHeader("Authorization");
+            log.info(authorization);
 
+            ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(representativeDto, authorization);
             representativeDto = response.getBody();
         } catch (FeignException e) {
             accountRepository.delete(account);
