@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
+import com.scnsoft.art.entity.Organization;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,8 +16,11 @@ public class ArtInfoDto {
         INACTIVE, ACTIVE, SOLD, RETURN
     }
 
+    private UUID id;
     private UUID proposalId;
     private ArtDto artDto;
     private BigDecimal price;
+    private Date expositionDateStart;
+    private Date expositionDateEnd;
     private Status status;
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.scnsoft.art.dto.ArtInfoDto;
 import com.scnsoft.art.entity.ArtInfo;
 import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.service.ArtInfoService;
@@ -19,15 +20,15 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/art-info")
 @RequiredArgsConstructor
 public class ArtInfoController {
-    // private final ArtInfoService artInfoService;
-    // private final ProposalService proposalService;
+    private final ArtInfoService artInfoService;
+    private final ProposalService proposalService;
 
-    // @PostMapping
-    // public ResponseEntity<ArtInfo> create(@RequestBody UUID proposalId) {
-    //     Proposal proposal = proposalService.findById(proposalId);
-    //     return Boolean.TRUE.equals(proposal.getArtistConfirmation())
-    //         && Boolean.TRUE.equals(proposal.getOrganisationConfirmation())
-    //             ? ResponseEntity.ok(artInfoService.create(proposal))
-    //             : ResponseEntity.badRequest().build();
-    // }
+    @PostMapping
+    public ResponseEntity<ArtInfoDto> create(@RequestBody ArtInfoDto artInfoDto) {
+        Proposal proposal = proposalService.findById(artInfoDto.getProposalId());
+        return Boolean.TRUE.equals(proposal.getArtistConfirmation())
+            && Boolean.TRUE.equals(proposal.getOrganisationConfirmation())
+                ? ResponseEntity.ok(artInfoService.create(artInfoDto))
+                : ResponseEntity.badRequest().build();
+    }
 }
