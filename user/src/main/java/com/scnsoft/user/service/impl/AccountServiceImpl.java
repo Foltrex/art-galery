@@ -74,14 +74,9 @@ public class AccountServiceImpl implements AccountService {
         try {
             UUID accountId = account.getId();
             switch (accountType) {
-                case ARTIST -> {
-                    ResponseEntity<ArtistDto> response =
-                            artistFeignClient.save(ArtistDto.builder().accountId(accountId).build());
-                }
-                case REPRESENTATIVE -> {
-                    ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(
-                            RepresentativeDto.builder().accountId(accountId).build(), "Bearer " + token);
-                }
+                case ARTIST -> artistFeignClient.save(ArtistDto.builder().accountId(accountId).build());
+                case REPRESENTATIVE -> representativeFeignClient.save(
+                        RepresentativeDto.builder().accountId(accountId).build(), "Bearer " + token);
             }
         } catch (FeignException e) {
             accountRepository.delete(account);
