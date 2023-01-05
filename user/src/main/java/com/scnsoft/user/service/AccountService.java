@@ -6,6 +6,7 @@ import com.scnsoft.user.dto.LoginRequestDto;
 import com.scnsoft.user.dto.RegisterRepresentativeRequestDto;
 import com.scnsoft.user.dto.RegisterRequestDto;
 import com.scnsoft.user.dto.RepresentativeDto;
+import com.scnsoft.user.entity.Account;
 
 public interface AccountService {
 
@@ -15,5 +16,5 @@ public interface AccountService {
 
     AuthTokenDto login(LoginRequestDto loginRequestDto);
 
-    AccountDto findByEmail(String email);
+    Account findByEmail(String email);
 }

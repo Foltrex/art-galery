@@ -6,6 +6,7 @@ import com.scnsoft.user.dto.LoginRequestDto;
 import com.scnsoft.user.dto.RegisterRepresentativeRequestDto;
 import com.scnsoft.user.dto.RegisterRequestDto;
 import com.scnsoft.user.dto.RepresentativeDto;
+import com.scnsoft.user.dto.mapper.impl.AccountMapper;
 import com.scnsoft.user.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +31,12 @@ public class AccountController {
      * {@link com.scnsoft.user.service.impl.AccountServiceImpl}
      */
     private final AccountService accountService;
+    private final AccountMapper accountMapper;
 
     @GetMapping("/byEmail/{email}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<AccountDto> findByEmail(@PathVariable String email) {
-        return new ResponseEntity<>(accountService.findByEmail(email), HttpStatus.OK);
+        return new ResponseEntity<>(accountMapper.mapToDto(accountService.findByEmail(email)), HttpStatus.OK);
     }
 
     @PostMapping("/register")

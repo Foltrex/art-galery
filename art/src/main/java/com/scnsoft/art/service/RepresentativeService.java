@@ -49,7 +49,7 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
 
     public RepresentativeDto save(RepresentativeDto representativeDto) {
         Representative representative = representativeMapper.mapToEntity(representativeDto);
-        Organization organization = null;
+        Organization organization;
         Facility facility = null;
 
         if (representative.getOrganization() == null && representative.getFacility() == null) {
@@ -69,7 +69,6 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
             }
 
             organization = getOrganizationById(representative.getOrganization().getId());
-
             if (!organization.getId().equals(existedRepresentative.getOrganization().getId())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not valid organization!");
             }
