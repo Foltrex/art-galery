@@ -1,14 +1,23 @@
 package com.scnsoft.file.service;
 
-import org.springframework.stereotype.Service;
+import com.scnsoft.file.dto.FileStreamDto;
+import com.scnsoft.file.dto.UploadFileDto;
+import com.scnsoft.file.entity.FileInfo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import com.scnsoft.file.dto.ArtDto;
+import java.util.UUID;
 
-@Service
-public class FileService {
+public interface FileService {
 
-    public ArtDto save(ArtDto artDto) {
-        return null;
-    }
+    FileInfo findFileInfoById(UUID id);
+
+    Page<FileInfo> findAllFileInfoByArtId(UUID artId, Pageable pageable);
+
+    FileStreamDto getFileStream(UUID id);
+
+    FileInfo uploadFile(UploadFileDto uploadFileDto);
+
+    void removeFileById(UUID id);
 
 }

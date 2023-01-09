@@ -8,63 +8,49 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class DocumentService {
 
-//    private final UserRepository userRepository;
+    public InputStream getInputStream(String filePath) {
+        InputStream inputStream;
+        try {
+            inputStream = Files.newInputStream(Paths.get(filePath));
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Troubles with file reading", e);
+        }
 
-    public void upload(String imagePath, byte[] imageData, Long userId) {
-//        updateDatabase(imagePath, userId);
+        return inputStream;
+    }
 
-        System.out.println(imagePath);
-        File file = new File(imagePath);
-
+    public void upload(String filePath, byte[] fileData) {
+        File file = new File(filePath);
         try {
             Files.createDirectories(file.getParentFile().toPath());
-            Files.write(file.toPath(), imageData);
+            Files.write(file.toPath(), fileData, StandardOpenOption.CREATE_NEW);
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot save image to path: " + imagePath);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot save file to path: " + filePath);
         }
-
     }
 
-//    private void updateDatabase(String imagePath, Long userId) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with such id in database"));
-//        if(user.getAvatar() != null) {
-//            deleteAvatarFile(user.getAvatar());
-//        }
-//        user.setAvatar(imagePath);
-//        userRepository.save(user);
-//    }
-
-    public void deleteAvatarByUserId(Long userId) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with such id in database"));
-//        if (user.getAvatar() != null) {
-//            deleteAvatarFile(user.getAvatar());
-//            user.setAvatar(null);
-//            userRepository.save(user);
-//        } else {
-//            log.warn("Attempt to delete an avatar from a user without an avatar user id = {}", userId);
-//        }
-    }
-
-    private void deleteAvatarFile(String avatarPath) {
-        File previous = new File(avatarPath);
-
+    public void remove(String filePath) {
+        File file = new File(filePath);
         try {
-            Files.delete(previous.toPath());
+            Files.delete(file.toPath());
         } catch (NoSuchFileException e) {
-            log.warn("Tried do delete avatar, but hadn't found file with path from database: {}", avatarPath);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    (String.format("Cannot found file with path : %s", file)));
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    (String.format("Troubles with deleting avatar, path = %s", avatarPath)));
+                    (String.format("Troubles with deleting file with path = %s", filePath)));
         }
     }
+
 }

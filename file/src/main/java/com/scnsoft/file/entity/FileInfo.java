@@ -16,7 +16,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileMetaData {
+public class FileInfo {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -25,11 +25,10 @@ public class FileMetaData {
 
     private UUID artId;
 
-    private String folder;
+    private String mimeType;
 
     private String filename;
 
-    private String mimeType;
+    private String systemFileName;
 
-    private Integer number;
 }
