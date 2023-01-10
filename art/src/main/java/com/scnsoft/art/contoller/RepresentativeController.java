@@ -1,7 +1,6 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.RepresentativeDto;
-import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.service.RepresentativeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

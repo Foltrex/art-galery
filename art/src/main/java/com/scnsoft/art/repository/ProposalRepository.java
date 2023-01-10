@@ -1,10 +1,9 @@
 package com.scnsoft.art.repository;
 
-import java.util.UUID;
-
+import com.scnsoft.art.entity.Proposal;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.scnsoft.art.entity.Proposal;
+import java.util.UUID;
 
 public interface ProposalRepository extends JpaRepository<Proposal, UUID> {
 

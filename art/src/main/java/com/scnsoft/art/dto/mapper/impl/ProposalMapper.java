@@ -1,8 +1,6 @@
 package com.scnsoft.art.dto.mapper.impl;
 
 import com.scnsoft.art.dto.ProposalDto;
-import com.scnsoft.art.entity.Artist;
-import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.entity.Proposal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

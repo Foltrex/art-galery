@@ -1,14 +1,12 @@
 package com.scnsoft.art.service;
 
-import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-
 import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.ProposalRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

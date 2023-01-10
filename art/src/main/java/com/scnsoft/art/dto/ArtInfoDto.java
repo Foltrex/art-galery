@@ -1,13 +1,11 @@
 package com.scnsoft.art.dto;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
-
-import com.scnsoft.art.entity.Organization;
-
-import lombok.Builder;
-import lombok.Data;
 
 @Data
 @Builder

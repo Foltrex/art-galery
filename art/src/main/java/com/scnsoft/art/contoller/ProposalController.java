@@ -1,15 +1,5 @@
 package com.scnsoft.art.contoller;
 
-import java.util.UUID;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.ProposalDto;
 import com.scnsoft.art.dto.mapper.impl.ArtistMapper;
@@ -21,12 +11,17 @@ import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.service.ArtistService;
-import com.scnsoft.art.service.OrganizationService;
 import com.scnsoft.art.service.ProposalService;
 import com.scnsoft.art.service.RepresentativeService;
-
-import feign.Response;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor

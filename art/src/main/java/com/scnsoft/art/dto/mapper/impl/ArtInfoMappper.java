@@ -1,14 +1,11 @@
 package com.scnsoft.art.dto.mapper.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.netflix.discovery.converters.Auto;
 import com.scnsoft.art.dto.ArtInfoDto;
 import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.ArtInfo;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor

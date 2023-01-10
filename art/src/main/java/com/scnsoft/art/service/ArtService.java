@@ -1,6 +1,5 @@
 package com.scnsoft.art.service;
 
-import com.scnsoft.art.feignclient.FileFeignClient;
 import com.scnsoft.art.dto.ArtDto;
 import com.scnsoft.art.dto.mapper.impl.ArtMapper;
 import com.scnsoft.art.entity.Art;

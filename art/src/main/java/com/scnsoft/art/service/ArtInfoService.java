@@ -1,9 +1,5 @@
 package com.scnsoft.art.service;
 
-import java.util.Date;
-
-import org.springframework.stereotype.Service;
-
 import com.scnsoft.art.dto.ArtInfoDto;
 import com.scnsoft.art.dto.mapper.impl.ArtInfoMappper;
 import com.scnsoft.art.entity.ArtInfo;
@@ -11,8 +7,10 @@ import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.ArtInfoRepository;
 import com.scnsoft.art.repository.ProposalRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
