@@ -35,7 +35,6 @@ public class Account {
 
     public enum AccountType {
         ARTIST,
-        //        ORGANIZATION,
         REPRESENTATIVE,
         SYSTEM
     }
