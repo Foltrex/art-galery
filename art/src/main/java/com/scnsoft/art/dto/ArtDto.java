@@ -18,5 +18,5 @@ public class ArtDto {
     private String name;
     private String imageData;
     private String description;
-    private ArtistDto artistDto;
+    private ArtistDto artist;
 }

@@ -37,24 +37,24 @@ public class ProposalController {
     private final ProposalMapper proposalMapper;
 
     @PostMapping
-    public ResponseEntity<ProposalDto> create(@RequestBody ProposalDto proposalDto, 
-                                            Authentication authentication) {
+    public ResponseEntity<ProposalDto> create(@RequestBody ProposalDto proposalDto,
+                                              Authentication authentication) {
         ResponseEntity<AccountDto> accountResponseEntity = accountFeignClient.getAccountByEmail(authentication.getName());
         AccountDto accountDto = accountResponseEntity.getBody();
         UUID accountId = accountDto.getId();
-        
+
         Proposal proposal = proposalMapper.mapToEntity(proposalDto);
         Artist artist = null;
         Organization organization = null;
         if (artistService.existWithAccountId(accountId)) {
             artist = artistService.findByAccountId(accountId);
-            organization = organizationMapper.mapToEntity(proposalDto.getOrganizationDto());
+            organization = organizationMapper.mapToEntity(proposalDto.getOrganization());
         } else {
             Representative representative = representativeService.findByAccountId(accountId);
             organization = representative.getOrganization();
-            artist = artistMapper.mapToEntity(proposalDto.getArtistDto());
+            artist = artistMapper.mapToEntity(proposalDto.getArtist());
         }
-        
+
         proposal.setArtist(artist);
         proposal.setOrganization(organization);
 

@@ -18,7 +18,7 @@ public class ArtInfoMappper implements Mapper<ArtInfo, ArtInfoDto> {
     public ArtInfoDto mapToDto(ArtInfo artInfo) {
         return ArtInfoDto.builder()
             .id(artInfo.getId())
-            .artDto(artMapper.mapToDto(artInfo.getArt()))
+            .art(artMapper.mapToDto(artInfo.getArt()))
             .expositionDateStart(artInfo.getExpositionDateStart())
             .expositionDateEnd(artInfo.getExpositionDateEnd())
             .status(
@@ -31,7 +31,7 @@ public class ArtInfoMappper implements Mapper<ArtInfo, ArtInfoDto> {
     public ArtInfo mapToEntity(ArtInfoDto artInfoDto) {
         return ArtInfo.builder()
             .id(artInfoDto.getId())
-            .art(artMapper.mapToEntity(artInfoDto.getArtDto()))
+            .art(artMapper.mapToEntity(artInfoDto.getArt()))
             .expositionDateStart(artInfoDto.getExpositionDateStart())
             .expositionDateEnd(artInfoDto.getExpositionDateEnd())
             .status(

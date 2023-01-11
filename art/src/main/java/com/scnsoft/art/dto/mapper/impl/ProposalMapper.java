@@ -19,9 +19,9 @@ public class ProposalMapper {
                 .price(proposal.getPrice())
                 .commission(proposal.getCommission())
                 .currency(proposal.getCurrency())
-                .artistDto(artistMapper.mapToDto(proposal.getArtist()))
-                .organizationDto(organizationMapper.mapToDto(proposal.getOrganization()))
-                .facilityDto(facilityMapper.mapToDto(proposal.getFacility()))
+                .artist(artistMapper.mapToDto(proposal.getArtist()))
+                .organization(organizationMapper.mapToDto(proposal.getOrganization()))
+                .facility(facilityMapper.mapToDto(proposal.getFacility()))
                 .build()
             : null;
     }
@@ -33,8 +33,8 @@ public class ProposalMapper {
 
         Proposal.ProposalBuilder proposalBuilder = Proposal.builder()
             .id(proposalDto.getId())
-            .artist(artistMapper.mapToEntity(proposalDto.getArtistDto()))
-            .organization(organizationMapper.mapToEntity(proposalDto.getOrganizationDto()))
+            .artist(artistMapper.mapToEntity(proposalDto.getArtist()))
+            .organization(organizationMapper.mapToEntity(proposalDto.getOrganization()))
             .price(proposalDto.getPrice())
             .commission(proposalDto.getCommission())
             .currency(proposalDto.getCurrency());

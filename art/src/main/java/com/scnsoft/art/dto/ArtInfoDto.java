@@ -16,7 +16,7 @@ public class ArtInfoDto {
 
     private UUID id;
     private UUID proposalId;
-    private ArtDto artDto;
+    private ArtDto art;
     private BigDecimal price;
     private Date expositionDateStart;
     private Date expositionDateEnd;
