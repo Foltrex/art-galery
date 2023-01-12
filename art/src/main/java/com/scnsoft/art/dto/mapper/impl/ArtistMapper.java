@@ -29,7 +29,7 @@ public class ArtistMapper implements Mapper<Artist, ArtistDto> {
     @Override
     public Artist mapToEntity(ArtistDto artistDto) {
         return artistDto != null
-            ? Artist.builder()
+                ? Artist.builder()
                 .id(artistDto.getId())
                 .city(mapCityDtoToEntity(artistDto.getCity()))
                 .firstname(artistDto.getFirstname())
@@ -37,7 +37,7 @@ public class ArtistMapper implements Mapper<Artist, ArtistDto> {
                 .description(artistDto.getDescription())
                 .accountId(artistDto.getAccountId())
                 .build()
-            : null;
+                : null;
     }
 
     private CityDto mapCityToDto(City city) {

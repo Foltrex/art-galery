@@ -26,7 +26,7 @@ public record FacilityMapper(
                 .id(facilityDto.getId())
                 .name(facilityDto.getName())
                 .isActive(facilityDto.getIsActive())
-                .address(facilityDto.getAddress() != null? addressMapper.mapToEntity(facilityDto.getAddress()) : null)
+                .address(facilityDto.getAddress() != null ? addressMapper.mapToEntity(facilityDto.getAddress()) : null)
                 .build();
     }
 }

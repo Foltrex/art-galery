@@ -15,7 +15,7 @@ public class ProposalService {
 
     public Proposal findById(UUID proposalId) {
         return proposalRepository.findById(proposalId)
-            .orElseThrow(ArtResourceNotFoundException::new);
+                .orElseThrow(ArtResourceNotFoundException::new);
     }
 
     public Proposal save(Proposal proposal) {

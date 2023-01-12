@@ -34,8 +34,8 @@ public class ArtistService {
 
     public boolean existWithAccountId(UUID accountId) {
         return artistRepository
-            .findByAccountId(accountId)
-            .isPresent();
+                .findByAccountId(accountId)
+                .isPresent();
     }
 
     public Artist findByAccountId(UUID accountId) {

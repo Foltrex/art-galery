@@ -7,8 +7,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class ArtConfig implements WebMvcConfigurer  {
-    
+public class ArtConfig implements WebMvcConfigurer {
+
     @LoadBalanced
     @Bean
     RestTemplate loadBalanced() {

@@ -14,7 +14,7 @@ public class ProposalMapper {
 
     public ProposalDto mapToDto(Proposal proposal) {
         return proposal != null
-            ? ProposalDto.builder()
+                ? ProposalDto.builder()
                 .id(proposal.getId())
                 .price(proposal.getPrice())
                 .commission(proposal.getCommission())
@@ -23,7 +23,7 @@ public class ProposalMapper {
                 .organization(organizationMapper.mapToDto(proposal.getOrganization()))
                 .facility(facilityMapper.mapToDto(proposal.getFacility()))
                 .build()
-            : null;
+                : null;
     }
 
     public Proposal mapToEntity(ProposalDto proposalDto) {
@@ -32,20 +32,20 @@ public class ProposalMapper {
         }
 
         Proposal.ProposalBuilder proposalBuilder = Proposal.builder()
-            .id(proposalDto.getId())
-            .artist(artistMapper.mapToEntity(proposalDto.getArtist()))
-            .organization(organizationMapper.mapToEntity(proposalDto.getOrganization()))
-            .price(proposalDto.getPrice())
-            .commission(proposalDto.getCommission())
-            .currency(proposalDto.getCurrency());
-        
+                .id(proposalDto.getId())
+                .artist(artistMapper.mapToEntity(proposalDto.getArtist()))
+                .organization(organizationMapper.mapToEntity(proposalDto.getOrganization()))
+                .price(proposalDto.getPrice())
+                .commission(proposalDto.getCommission())
+                .currency(proposalDto.getCurrency());
+
         proposalBuilder = switch (proposalDto.getUpdateSide()) {
             case ARTIST -> proposalBuilder
-                .artistConfirmation(true)
-                .organisationConfirmation(null);
+                    .artistConfirmation(true)
+                    .organisationConfirmation(null);
             case ORGANIZATION -> proposalBuilder
-                .organisationConfirmation(true)
-                .artistConfirmation(null);
+                    .organisationConfirmation(true)
+                    .artistConfirmation(null);
         };
 
         return proposalBuilder.build();

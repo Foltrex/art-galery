@@ -13,23 +13,23 @@ public record ArtMapper(
     @Override
     public ArtDto mapToDto(Art art) {
         return art != null
-            ? ArtDto.builder()
+                ? ArtDto.builder()
                 .id(art.getId())
                 .description(art.getDescription())
                 .artist(artistMapper.mapToDto(art.getArtist()))
                 .build()
-            : null;
+                : null;
     }
 
     @Override
     public Art mapToEntity(ArtDto artDto) {
         return artDto != null
-            ? Art.builder()
+                ? Art.builder()
                 .id(artDto.getId())
                 .name(artDto.getName())
                 .description(artDto.getDescription())
                 .artist(artistMapper.mapToEntity(artDto.getArtist()))
                 .build()
-            : null;
+                : null;
     }
 }

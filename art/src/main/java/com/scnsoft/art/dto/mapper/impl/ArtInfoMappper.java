@@ -17,27 +17,27 @@ public class ArtInfoMappper implements Mapper<ArtInfo, ArtInfoDto> {
     @Override
     public ArtInfoDto mapToDto(ArtInfo artInfo) {
         return ArtInfoDto.builder()
-            .id(artInfo.getId())
-            .art(artMapper.mapToDto(artInfo.getArt()))
-            .expositionDateStart(artInfo.getExpositionDateStart())
-            .expositionDateEnd(artInfo.getExpositionDateEnd())
-            .status(
-                com.scnsoft.art.dto.ArtInfoDto.Status.valueOf(artInfo.getStatus().name())
-            )
-            .build();
+                .id(artInfo.getId())
+                .art(artMapper.mapToDto(artInfo.getArt()))
+                .expositionDateStart(artInfo.getExpositionDateStart())
+                .expositionDateEnd(artInfo.getExpositionDateEnd())
+                .status(
+                        com.scnsoft.art.dto.ArtInfoDto.Status.valueOf(artInfo.getStatus().name())
+                )
+                .build();
     }
 
     @Override
     public ArtInfo mapToEntity(ArtInfoDto artInfoDto) {
         return ArtInfo.builder()
-            .id(artInfoDto.getId())
-            .art(artMapper.mapToEntity(artInfoDto.getArt()))
-            .expositionDateStart(artInfoDto.getExpositionDateStart())
-            .expositionDateEnd(artInfoDto.getExpositionDateEnd())
-            .status(
-                com.scnsoft.art.entity.ArtInfo.Status.valueOf(artInfoDto.getStatus().name())
-            )
-            .build();
+                .id(artInfoDto.getId())
+                .art(artMapper.mapToEntity(artInfoDto.getArt()))
+                .expositionDateStart(artInfoDto.getExpositionDateStart())
+                .expositionDateEnd(artInfoDto.getExpositionDateEnd())
+                .status(
+                        com.scnsoft.art.entity.ArtInfo.Status.valueOf(artInfoDto.getStatus().name())
+                )
+                .build();
     }
-    
+
 }

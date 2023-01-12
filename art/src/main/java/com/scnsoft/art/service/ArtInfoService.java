@@ -23,15 +23,15 @@ public class ArtInfoService {
     public ArtInfoDto create(ArtInfoDto artInfoDto) {
         ArtInfo artInfo = artInfoMappper.mapToEntity(artInfoDto);
         Proposal proposal = proposalRepository
-            .findById(artInfoDto.getProposalId())
-            .orElseThrow(() -> new ArtResourceNotFoundException("Proposal not found by id: " + artInfoDto.getProposalId()));
+                .findById(artInfoDto.getProposalId())
+                .orElseThrow(() -> new ArtResourceNotFoundException("Proposal not found by id: " + artInfoDto.getProposalId()));
 
         artInfo.setOrganization(proposal.getOrganization());
         artInfo.setFacility(proposal.getFacility());
         artInfo.setPrice(proposal.getPrice());
         artInfo.setCommission(proposal.getCommission());
         artInfo.setCreationDate(new Date());
-        
+
         ArtInfo persistedArtInfo = artInfoRepository.save(artInfo);
         return artInfoMappper.mapToDto(persistedArtInfo);
     }

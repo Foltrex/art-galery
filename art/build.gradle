@@ -40,7 +40,7 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
     implementation 'org.hibernate:hibernate-envers:5.5.4.Final'
-    
+
     runtimeOnly 'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok:1.18.24'
