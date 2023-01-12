@@ -25,6 +25,8 @@ public class RepresentativeMapper implements Mapper<Representative, Representati
     public RepresentativeDto mapToDto(Representative representative) {
         return RepresentativeDto.builder()
                 .id(representative.getId())
+                .firstname(representative.getFirstname())
+                .lastname(representative.getLastname())
                 .facility(mapFacilityToDto(representative.getFacility()))
                 .organization(mapOrganizationToDto(representative.getOrganization()))
                 .organizationRole(representative.getOrganizationRole())
@@ -36,6 +38,8 @@ public class RepresentativeMapper implements Mapper<Representative, Representati
     public Representative mapToEntity(RepresentativeDto representativeDto) {
         return Representative.builder()
                 .id(representativeDto.getId())
+                .firstname(representativeDto.getFirstname())
+                .lastname(representativeDto.getLastname())
                 .facility(mapFacilityDtoToEntity(representativeDto.getFacility()))
                 .organization(mapOrganizationDtoToEntity(representativeDto.getOrganization()))
                 .organizationRole(representativeDto.getOrganizationRole())
