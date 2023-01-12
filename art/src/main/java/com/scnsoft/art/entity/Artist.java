@@ -3,7 +3,9 @@ package com.scnsoft.art.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -19,19 +21,14 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Artist {
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+public class Artist extends User{
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private UUID id;
-
-    @Size(min = 2)
-    private String firstname;
-
-    @Size(min = 2)
-    private String lastname;
 
     @Size(min = 2, max = 1024)
     private String description;
@@ -39,8 +36,5 @@ public class Artist {
     @ManyToOne
     @JoinColumn(name = "city_id", referencedColumnName = "id")
     private City city;
-
-    @NotNull
-    private UUID accountId;
 
 }

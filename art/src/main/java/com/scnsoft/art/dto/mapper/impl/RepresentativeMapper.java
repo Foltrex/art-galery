@@ -8,7 +8,11 @@ import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.entity.Representative;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -37,6 +41,13 @@ public class RepresentativeMapper implements Mapper<Representative, Representati
                 .organizationRole(representativeDto.getOrganizationRole())
                 .accountId(representativeDto.getAccountId())
                 .build();
+    }
+
+    public Page<RepresentativeDto> mapPageToDto(final Page<Representative> representativesPage) {
+        return new PageImpl<>(representativesPage.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList()), representativesPage.getPageable(), representativesPage.getTotalElements());
+
     }
 
     private FacilityDto mapFacilityToDto(Facility facility) {

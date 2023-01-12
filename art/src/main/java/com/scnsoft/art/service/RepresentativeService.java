@@ -13,11 +13,12 @@ import com.scnsoft.art.repository.OrganizationRoleRepository;
 import com.scnsoft.art.repository.RepresentativeRepository;
 import com.scnsoft.art.security.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,10 +29,8 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
                                     OrganizationRoleRepository organizationRoleRepository,
                                     RepresentativeMapper representativeMapper) {
 
-    public List<RepresentativeDto> findAll() {
-        return representativeRepository.findAll().stream()
-                .map(representativeMapper::mapToDto)
-                .toList();
+    public Page<Representative> findAll(Pageable pageable) {
+        return representativeRepository.findAll(pageable);
     }
 
     public RepresentativeDto findById(UUID id) {
