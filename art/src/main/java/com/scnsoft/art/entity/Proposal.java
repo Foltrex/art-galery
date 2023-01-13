@@ -4,18 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -36,13 +33,13 @@ public class Proposal {
     @NotAudited
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "artist_id", updatable = false)
+    @JoinColumn(name = "artist_id", updatable = false, nullable = false)
     private Artist artist;
 
     @NotAudited
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "organisation_id", updatable = false)
+    @JoinColumn(name = "organisation_id", updatable = false, nullable = false)
     private Organization organization;
 
     @NotAudited

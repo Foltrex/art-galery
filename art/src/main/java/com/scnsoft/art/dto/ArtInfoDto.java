@@ -1,11 +1,11 @@
 package com.scnsoft.art.dto;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
-
-import lombok.Builder;
-import lombok.Data;
 
 @Data
 @Builder
@@ -14,8 +14,11 @@ public class ArtInfoDto {
         INACTIVE, ACTIVE, SOLD, RETURN
     }
 
+    private UUID id;
     private UUID proposalId;
-    private ArtDto artDto;
+    private ArtDto art;
     private BigDecimal price;
+    private Date expositionDateStart;
+    private Date expositionDateEnd;
     private Status status;
 }

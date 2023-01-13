@@ -28,4 +28,8 @@ public class Facility {
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 }

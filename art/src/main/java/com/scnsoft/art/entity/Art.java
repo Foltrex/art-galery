@@ -23,7 +23,7 @@ public class Art {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private UUID id;
-    private String filename;
+    private String name;
     private String description;
     @ManyToOne
     @JoinColumn(name = "artist_id")

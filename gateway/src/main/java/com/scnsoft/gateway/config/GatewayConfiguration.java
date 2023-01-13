@@ -9,22 +9,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableDiscoveryClient
 public class GatewayConfiguration {
-    
+
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
-            .route("art-service", r -> r
-                .path("/art-service/**")
-                .filters(f -> f.rewritePath("/art-service/(?<segment>.*)", "/${segment}"))
-                .uri("lb://ART-SERVICE"))
-            .route("user-service", r -> r
-                .path("/user-service/**")
-                .filters(f -> f.rewritePath("/user-service/(?<segment>.*)", "/${segment}"))
-                .uri("lb://USER-SERVICE"))
-            .route("file-service", r -> r
-                .path("/file-service/**")
-                .filters(f -> f.rewritePath("/file-service/(?<segment>.*)", "/${segment}"))
-                .uri("lb://FILE-SERVICE"))
-            .build();
+                .route("art-service", r -> r
+                        .path("/art-service/**")
+                        .filters(f -> f.rewritePath("/art-service/(?<segment>.*)", "/${segment}"))
+                        .uri("lb://ART-SERVICE"))
+                .route("user-service", r -> r
+                        .path("/user-service/**")
+                        .filters(f -> f.rewritePath("/user-service/(?<segment>.*)", "/${segment}"))
+                        .uri("lb://USER-SERVICE"))
+                .route("file-service", r -> r
+                        .path("/file-service/**")
+                        .filters(f -> f.rewritePath("/file-service/(?<segment>.*)", "/${segment}"))
+                        .uri("lb://FILE-SERVICE"))
+                .build();
     }
 }

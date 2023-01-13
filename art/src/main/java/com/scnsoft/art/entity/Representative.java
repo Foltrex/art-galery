@@ -1,9 +1,11 @@
 package com.scnsoft.art.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -11,15 +13,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Representative {
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class Representative extends User {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -34,7 +37,8 @@ public class Representative {
     @JoinColumn(name = "facility_id", referencedColumnName = "id")
     private Facility facility;
 
-    @NotNull
-    private UUID accountId;
+    @ManyToOne
+    @JoinColumn(name = "organization_role_id", referencedColumnName = "id")
+    private OrganizationRole organizationRole;
 
 }

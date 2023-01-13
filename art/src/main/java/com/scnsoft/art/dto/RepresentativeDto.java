@@ -1,5 +1,6 @@
 package com.scnsoft.art.dto;
 
+import com.scnsoft.art.entity.OrganizationRole;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +10,10 @@ import java.util.UUID;
 @Builder
 public class RepresentativeDto {
     private UUID id;
+    private String firstname;
+    private String lastname;
     private OrganizationDto organization;
     private FacilityDto facility;
+    private OrganizationRole organizationRole;
     private UUID accountId;
 }

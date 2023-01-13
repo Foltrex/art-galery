@@ -12,12 +12,13 @@ import java.util.UUID;
 @Builder
 public class ProposalDto {
     private UUID id;
+    // TODO: price for one?
     private BigDecimal price;
     private double commission;
     private long currency;
-    private ArtistDto artistDto;
-    private OrganizationDto organizationDto;
-    private FacilityDto facilityDto;
+    private ArtistDto artist;
+    private OrganizationDto organization;
+    private FacilityDto facility;
     private UpdateSide updateSide;
 
     public enum UpdateSide {

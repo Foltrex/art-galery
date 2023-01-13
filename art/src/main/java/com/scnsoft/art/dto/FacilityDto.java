@@ -13,5 +13,5 @@ public class FacilityDto {
     UUID id;
     String name;
     Boolean isActive;
-    AddressDto addressDto;
+    AddressDto address;
 }

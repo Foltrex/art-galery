@@ -1,6 +1,5 @@
 package com.scnsoft.user.service.impl;
 
-import com.scnsoft.user.dto.AccountDto;
 import com.scnsoft.user.dto.ArtistDto;
 import com.scnsoft.user.dto.AuthTokenDto;
 import com.scnsoft.user.dto.FacilityDto;
@@ -9,14 +8,12 @@ import com.scnsoft.user.dto.OrganizationDto;
 import com.scnsoft.user.dto.RegisterRepresentativeRequestDto;
 import com.scnsoft.user.dto.RegisterRequestDto;
 import com.scnsoft.user.dto.RepresentativeDto;
-import com.scnsoft.user.dto.mapper.impl.AccountMapper;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Role;
 import com.scnsoft.user.exception.AccountBlockedException;
 import com.scnsoft.user.exception.LoginAlreadyExistsException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.feignclient.ArtistFeignClient;
-import com.scnsoft.user.feignclient.OrganizationFeignClient;
 import com.scnsoft.user.feignclient.RepresentativeFeignClient;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.repository.RoleRepository;
@@ -36,8 +33,11 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -50,14 +50,12 @@ import java.util.concurrent.TimeUnit;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
-    private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final ArtistFeignClient artistFeignClient;
-    private final OrganizationFeignClient organizationFeignClient;
     private final RepresentativeFeignClient representativeFeignClient;
-    private final AccountMapper accountMapper;
 
     @Override
     public AuthTokenDto register(RegisterRequestDto registerRequestDto) {
@@ -67,31 +65,18 @@ public class AccountServiceImpl implements AccountService {
 
         Account.AccountType accountType = Account.AccountType.valueOf(registerRequestDto.getAccountType());
 
-        Account account = Account.builder()
-                .email(registerRequestDto.getEmail())
-                .password(passwordEncoder.encode(registerRequestDto.getPassword()))
-                .accountType(accountType)
-                .roles(getUserRoles())
-                .build();
+        Account account = createAccount(registerRequestDto.getEmail(), registerRequestDto.getPassword(), accountType);
 
         accountRepository.save(account);
 
+        String token = jwtUtils.createToken(
+                account.getEmail(), account.getId(), account.getAccountType(), account.getRoles());
         try {
             UUID accountId = account.getId();
             switch (accountType) {
-                case ARTIST -> {
-                    ResponseEntity<ArtistDto> response =
-                            artistFeignClient.save(ArtistDto.builder().accountId(accountId).build());
-
-                    log.info(Objects.requireNonNull(response.getBody()).toString());
-                }
-                case REPRESENTATIVE -> {
-                    ResponseEntity<RepresentativeDto> response =
-                            representativeFeignClient.save(RepresentativeDto.builder().accountId(accountId).build());
-
-                    log.info(Objects.requireNonNull(response.getBody()).toString());
-
-                }
+                case ARTIST -> artistFeignClient.save(ArtistDto.builder().accountId(accountId).build());
+                case REPRESENTATIVE -> representativeFeignClient.save(
+                        RepresentativeDto.builder().accountId(accountId).build(), "Bearer " + token);
             }
         } catch (FeignException e) {
             accountRepository.delete(account);
@@ -104,18 +89,18 @@ public class AccountServiceImpl implements AccountService {
         }
 
         setAccountToAuthentication(registerRequestDto.getEmail(), registerRequestDto.getPassword());
-        return createAuthTokenResponse(account);
+        return createAuthTokenResponse(account.getId(), token);
     }
 
     @Override
     public RepresentativeDto registerRepresentativeToOrganization(RegisterRepresentativeRequestDto registerRepresentativeRequestDto) {
-        log.info("AAAAAAAAAAAAAAAA=================AAAAAAAAAAAAAAAAa");
-        Account account = Account.builder()
-                .email(registerRepresentativeRequestDto.getEmail())
-                .password(passwordEncoder.encode(registerRepresentativeRequestDto.getPassword()))
-                .accountType(Account.AccountType.REPRESENTATIVE)
-                .roles(getUserRoles())
-                .build();
+        if (accountRepository.findByEmail(registerRepresentativeRequestDto.getEmail()).isPresent()) {
+            throw new LoginAlreadyExistsException("email is already in use!");
+        }
+        Account account = createAccount(
+                registerRepresentativeRequestDto.getEmail(),
+                registerRepresentativeRequestDto.getPassword(),
+                Account.AccountType.REPRESENTATIVE);
 
         accountRepository.save(account);
 
@@ -125,12 +110,14 @@ public class AccountServiceImpl implements AccountService {
                 .facility(FacilityDto.builder().id(registerRepresentativeRequestDto.getFacilityId()).build())
                 .build();
 
-        log.info("RESPONSE: " + representativeDto);
         try {
-            ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(representativeDto);
+            HttpServletRequest request = ((ServletRequestAttributes)
+                    Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 
-//            log.info(Objects.requireNonNull(response.getBody()).toString());
+            String authorization = request.getHeader("Authorization");
+            log.info(authorization);
 
+            ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(representativeDto, authorization);
             representativeDto = response.getBody();
         } catch (FeignException e) {
             accountRepository.delete(account);
@@ -148,8 +135,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AuthTokenDto login(LoginRequestDto loginRequestDto) {
-        Account account = accountRepository.findByEmail(loginRequestDto.getEmail())
-                .orElseThrow(() -> new ResourseNotFoundException("Account not found!"));
+        Account account = findByEmail(loginRequestDto.getEmail());
 
         Integer failCount = account.getFailCount();
         if (failCount != 0 && failCount % 5 == 0) {
@@ -168,16 +154,26 @@ public class AccountServiceImpl implements AccountService {
             handleEventOfBadCredentials(account);
             throw new BadCredentialsException("Invalid credentials");
         }
+        String token = jwtUtils.createToken(
+                account.getEmail(), account.getId(), account.getAccountType(), account.getRoles());
 
-        return createAuthTokenResponse(account);
+        return createAuthTokenResponse(account.getId(), token);
     }
 
     @Override
-    public AccountDto findByEmail(String email) {
+    public Account findByEmail(String email) {
         return accountRepository
                 .findByEmail(email)
-                .map(accountMapper::mapToDto)
                 .orElseThrow(() -> new ResourseNotFoundException("Account not found by email: " + email));
+    }
+
+    private Account createAccount(String email, String password, Account.AccountType accountType) {
+        return Account.builder()
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .accountType(accountType)
+                .roles(getUserRoles())
+                .build();
     }
 
     private Set<Role> getUserRoles() {
@@ -212,11 +208,10 @@ public class AccountServiceImpl implements AccountService {
         account.setLastFail(new Date());
     }
 
-    private AuthTokenDto createAuthTokenResponse(Account account) {
+    private AuthTokenDto createAuthTokenResponse(UUID id, String token) {
         return AuthTokenDto.builder()
-                .id(account.getId())
-                .token(jwtUtils.createToken(
-                        account.getEmail(), account.getId(), account.getAccountType(), account.getRoles()))
+                .id(id)
+                .token(token)
                 .build();
     }
 

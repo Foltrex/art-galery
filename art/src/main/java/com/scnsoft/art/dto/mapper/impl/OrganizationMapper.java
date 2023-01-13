@@ -21,19 +21,19 @@ public class OrganizationMapper implements Mapper<Organization, OrganizationDto>
                 .name(organization.getName())
                 .address(mapAddressToDto(organization.getAddress()))
                 .status(mapStatusToDto(organization.getStatus()))
-                .accountId(organization.getAccountId())
                 .build();
     }
 
     @Override
     public Organization mapToEntity(OrganizationDto organizationDto) {
-        return Organization.builder()
+        return organizationDto != null
+                ? Organization.builder()
                 .id(organizationDto.getId())
                 .name(organizationDto.getName())
                 .address(mapAddressDtoToEntity(organizationDto.getAddress()))
                 .status(mapStatusToEntity(organizationDto.getStatus()))
-                .accountId(organizationDto.getAccountId())
-                .build();
+                .build()
+                : null;
     }
 
     private AddressDto mapAddressToDto(Address address) {
