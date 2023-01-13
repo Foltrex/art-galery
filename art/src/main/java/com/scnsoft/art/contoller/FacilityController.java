@@ -1,7 +1,11 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.FacilityDto;
-import com.scnsoft.art.service.FacilityService;
+import com.scnsoft.art.dto.mapper.impl.FacilityMapper;
+import com.scnsoft.art.service.FacilityServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,16 +17,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("facilities")
-public record FacilityController(FacilityService facilityService) {
+@RequiredArgsConstructor
+public class FacilityController {
+
+    private final FacilityServiceImpl facilityService;
+    private final FacilityMapper facilityMapper;
+
     @GetMapping
-    public ResponseEntity<List<FacilityDto>> findAll() {
-        return ResponseEntity.ok(facilityService.findAll());
+    public ResponseEntity<Page<FacilityDto>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(facilityMapper.mapPageToDto(facilityService.findAll(pageable)));
     }
+
+    @GetMapping("/organizations/{organizationId}")
+    public ResponseEntity<Page<FacilityDto>> findAllByOrganizationId(@PathVariable UUID organizationId,
+                                                                     Pageable pageable) {
+        return ResponseEntity.ok(facilityMapper.mapPageToDto(
+                facilityService.findAllByOrganizationId(organizationId, pageable)));
+    }
+
 
     @PostMapping
     public ResponseEntity<FacilityDto> save(@RequestBody FacilityDto facilityDto) {
