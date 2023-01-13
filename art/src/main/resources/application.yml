@@ -22,9 +22,12 @@ spring:
     password: root
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: true
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+    # uncomment latter
+      # ddl-auto: update
     show-sql: true
     properties:
       org:
@@ -33,6 +36,9 @@ spring:
             audit_table_suffix: _AUDIT
             revision_field_name: REVISION_ID
             revision_type_field_name: REVISION_TYPE
+  sql:
+    init:
+      mode: always
 eureka:
   client:
     service-url:
