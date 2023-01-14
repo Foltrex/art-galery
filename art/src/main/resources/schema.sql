@@ -3,8 +3,12 @@ CREATE SEQUENCE IF NOT EXISTS organization_role_id_seq
     INCREMENT 1
     START 1
     MINVALUE 1
-    CACHE 1
-    OWNED BY organization_role.id;
+    CACHE 1;
+
+
+-------------------Extension ddl---------------------
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 
 -------------------Tables ddl------------------------
 CREATE TABLE IF NOT EXISTS city (
@@ -27,7 +31,14 @@ CREATE TABLE IF NOT EXISTS artist (
     last_name VARCHAR(255),
     account_id VARCHAR(255),
     description VARCHAR(1024),
-    city_id UUID REFERENCES city(id),
+    city_id UUID REFERENCES city(id)
+);
+
+CREATE TABLE IF NOT EXISTS organization (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(255),
+    status INTEGER,
+    address_id UUID REFERENCES address(id)
 );
 
 CREATE TABLE IF NOT EXISTS facility (
@@ -42,7 +53,7 @@ CREATE TABLE IF NOT EXISTS art (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     description VARCHAR(255),
     name VARCHAR(255),
-    artist_id uuid REFERENCES artist(id)
+    artist_id UUID REFERENCES artist(id)
 );
 
 CREATE TABLE IF NOT EXISTS art_info (
@@ -55,39 +66,32 @@ CREATE TABLE IF NOT EXISTS art_info (
     status INTEGER,
     art_id UUID REFERENCES art(id),
     facility_id UUID REFERENCES facility(id),
-    organisation_id UUID NOT NULL REFERENCES organization(id),
-);
-
-CREATE TABLE IF NOT EXISTS organization (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(255),
-    status INTEGER,
-    address_id UUID REFERENCES address(id)
+    organization_id UUID NOT NULL REFERENCES organization(id)
 );
 
 CREATE TABLE IF NOT EXISTS organization_role (
-    id BIGINT PRIMARY KEY DEFAULT nextval('organization_role_id_seq'::regclass),
+    id BIGINT PRIMARY KEY DEFAULT nextval('organization_role_id_seq'),
     name INTEGER UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS proposal (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    artist_confirmation boolean,
-    commission double precision NOT NULL,
-    currency bigint NOT NULL,
-    organisation_confirmation boolean,
-    price numeric(19,2),
-    artist_id uuid NOT NULL REFERENCES artist(id),
-    facility_id uuid REFERENCES facility(id),
-    organisation_id uuid NOT NULL REFERENCES organization(id)
+    artist_confirmation BOOLEAN,
+    commission DOUBLE PRECISION NOT NULL,
+    currency BIGINT NOT NULL,
+    organisation_confirmation BOOLEAN,
+    price NUMERIC(19,2),
+    artist_id UUID NOT NULL REFERENCES artist(id),
+    facility_id UUID REFERENCES facility(id),
+    organization_id UUID NOT NULL REFERENCES organization(id)
 );
 
 CREATE TABLE IF NOT EXISTS representative (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    account_id uuid NOT NULL,
+    account_id UUID NOT NULL,
     firstname VARCHAR(255),
     lastname VARCHAR(255),
-    facility_id uuid REFERENCES facility(id),
-    organization_id uuid REFERENCES organization(id),
-    organization_role_id bigint REFERENCES organization_role(id)
+    facility_id UUID REFERENCES facility(id),
+    organization_id UUID REFERENCES organization(id),
+    organization_role_id BIGINT REFERENCES organization_role(id)
 );
