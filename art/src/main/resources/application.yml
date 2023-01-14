@@ -22,10 +22,9 @@ spring:
     password: root
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    defer-datasource-initialization: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     # uncomment latter
       # ddl-auto: update
     show-sql: true
