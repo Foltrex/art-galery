@@ -11,6 +11,8 @@ INSERT INTO address (city_id, street_name, street_number) VALUES ((SELECT id FRO
 INSERT INTO address (city_id, street_name, street_number) VALUES ((SELECT id FROM city LIMIT 1), 'Kulman', 111);
 INSERT INTO address (city_id, street_name, street_number) VALUES ((SELECT id FROM city LIMIT 1), 'Hataevicha', 51);
 
+-- artist
+
 -- facility --
 INSERT INTO facility (name, is_active, address_id) VALUES ('Lidbeer', true, (SELECT id FROM address LIMIT 1));
 INSERT INTO facility (name, is_active, address_id) VALUES ('Pinta', false, (SELECT id FROM address LIMIT 1));
