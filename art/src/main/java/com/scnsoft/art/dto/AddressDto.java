@@ -11,7 +11,7 @@ import java.util.UUID;
 @Setter
 public class AddressDto {
     UUID id;
-    CityDto cityDto;
+    CityDto city;
     String streetName;
     Integer streetNumber;
 }
