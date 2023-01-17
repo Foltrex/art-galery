@@ -1,3 +1,7 @@
+-- !! For development !! Delete later
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
 -------------------Sequence ddl----------------------
 CREATE SEQUENCE IF NOT EXISTS organization_role_id_seq
     INCREMENT 1
