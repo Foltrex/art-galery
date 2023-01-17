@@ -15,16 +15,26 @@ public class GatewayConfiguration {
         return builder.routes()
                 .route("art-service", r -> r
                         .path("/art-service/**")
-                        .filters(f -> f.rewritePath("/art-service/(?<segment>.*)", "/${segment}"))
+                        .filters(f -> f.rewritePath("/art-service/(?<segment>.*)", "/${segment}")
+                                .setResponseHeader("Access-Control-Allow-Origin", "*")
+                                .setResponseHeader("Access-Control-Allow-Methods", "*")
+                                .setResponseHeader("Access-Control-Expose-Headers", "*"))
                         .uri("lb://ART-SERVICE"))
                 .route("user-service", r -> r
                         .path("/user-service/**")
-                        .filters(f -> f.rewritePath("/user-service/(?<segment>.*)", "/${segment}"))
+                        .filters(f -> f.rewritePath("/user-service/(?<segment>.*)", "/${segment}")
+                                .setResponseHeader("Access-Control-Allow-Origin", "*")
+                                .setResponseHeader("Access-Control-Allow-Methods", "*")
+                                .setResponseHeader("Access-Control-Expose-Headers", "*"))
                         .uri("lb://USER-SERVICE"))
                 .route("file-service", r -> r
                         .path("/file-service/**")
-                        .filters(f -> f.rewritePath("/file-service/(?<segment>.*)", "/${segment}"))
+                        .filters(f -> f.rewritePath("/file-service/(?<segment>.*)", "/${segment}")
+                                .setResponseHeader("Access-Control-Allow-Origin", "*")
+                                .setResponseHeader("Access-Control-Allow-Methods", "*")
+                                .setResponseHeader("Access-Control-Expose-Headers", "*"))
                         .uri("lb://FILE-SERVICE"))
                 .build();
     }
+
 }

@@ -33,6 +33,12 @@ public class RepresentativeController {
         return "end-point is working";
     }
 
+    @PostMapping("/post")
+    @PreAuthorize("permitAll()")
+    public String post() {
+        return "POST REQUEST";
+    }
+
     @GetMapping
     public ResponseEntity<Page<RepresentativeDto>> findAll(Pageable pageable) {
         return ResponseEntity.ok(representativeMapper.mapPageToDto(representativeService.findAll(pageable)));

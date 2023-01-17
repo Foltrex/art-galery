@@ -9,6 +9,8 @@ import java.util.UUID;
 @Builder
 public class RepresentativeDto {
     private UUID id;
+    private String firstname;
+    private String lastname;
     private OrganizationDto organization;
     private FacilityDto facility;
     private UUID accountId;

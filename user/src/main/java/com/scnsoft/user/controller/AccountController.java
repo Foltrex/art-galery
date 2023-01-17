@@ -40,11 +40,12 @@ public class AccountController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<AuthTokenDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return new ResponseEntity<>(accountService.register(registerRequestDto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/register-representative-to-organization")
+    @PostMapping("/register-representative")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RepresentativeDto> registerRepresentative(
             @RequestBody RegisterRepresentativeRequestDto registerRepresentativeRequestDto) {
@@ -53,6 +54,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<AuthTokenDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         return new ResponseEntity<>(accountService.login(loginRequestDto), HttpStatus.OK);
     }
@@ -64,6 +66,19 @@ public class AccountController {
     public String test1() {
         return "PERMIT ALL";
     }
+
+    @PostMapping("/post")
+    @PreAuthorize("permitAll()")
+    public String post() {
+        return "POST REQUEST";
+    }
+
+    @PostMapping("/post1")
+    @PreAuthorize("permitAll()")
+    public String post(@RequestBody String word) {
+        return "POST REQUEST: " + word;
+    }
+
 
     @GetMapping("/2")
     @PreAuthorize("hasRole('USER')")
