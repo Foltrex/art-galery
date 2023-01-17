@@ -25,7 +25,7 @@ public class Facility {
     private UUID id;
     private String name;
     private Boolean isActive;
-    
+
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
