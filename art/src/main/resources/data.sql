@@ -20,7 +20,7 @@ VALUES ((SELECT id FROM city LIMIT 1), 'Kulman', 111);
 INSERT INTO address (city_id, street_name, street_number)
 VALUES ((SELECT id FROM city LIMIT 1), 'Hataevicha', 51);
 
--- organization
+-- organization --
 INSERT INTO organization (name, status, address_id)
 VALUES ('Roga and Kopita', 1, (SELECT id FROM address LIMIT 1 OFFSET 1) );
 
@@ -35,3 +35,17 @@ INSERT INTO facility (name, is_active, address_id, organization_id)
 VALUES ('Spichki', true, (SELECT id FROM address LIMIT 1),
        (SELECT id FROM organization LIMIT 1) );
 
+
+-- organization role --
+INSERT INTO organization_role (name) VALUES (0);
+INSERT INTO organization_role (name) VALUES (1);
+INSERT INTO organization_role (name) VALUES (2);
+
+
+-- representative --
+INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
+VALUES ('731702d5-85a1-4bf9-9157-4ebdfff185eb', 'Donald', 'Duck', (SELECT id FROM facility LIMIT 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1));
+INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
+VALUES ('d3b86b10-26f7-49d7-96b8-f8673fb4798d', 'Donald', 'Trump', (SELECT id FROM facility LIMIT 1 OFFSET 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 1));
+INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
+VALUES ('d29e36b3-8779-4f05-ae6f-f2da4ca5f65b', 'Donald', 'Tiktak', (SELECT id FROM facility LIMIT 1 OFFSET 2), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 2));
