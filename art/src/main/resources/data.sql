@@ -11,10 +11,11 @@ INSERT INTO address (city_id, street_name, street_number) VALUES ((SELECT id FRO
 INSERT INTO address (city_id, street_name, street_number) VALUES ((SELECT id FROM city LIMIT 1), 'Kulman', 111);
 INSERT INTO address (city_id, street_name, street_number) VALUES ((SELECT id FROM city LIMIT 1), 'Hataevicha', 51);
 
--- artist
+-- organization
+INSERT INTO organization (name, status, address_id) VALUES ('Roga and Kopita', 1, (SELECT id FROM address LIMIT 1 OFFSET 1));
 
 -- facility --
-INSERT INTO facility (name, is_active, address_id) VALUES ('Lidbeer', true, (SELECT id FROM address LIMIT 1));
-INSERT INTO facility (name, is_active, address_id) VALUES ('Pinta', false, (SELECT id FROM address LIMIT 1));
-INSERT INTO facility (name, is_active, address_id) VALUES ('Spichki', true, (SELECT id FROM address LIMIT 1));
+INSERT INTO facility (name, is_active, address_id, organization_id) VALUES ('Lidbeer', true, (SELECT id FROM address LIMIT 1), (SELECT id FROM organization LIMIT 1));
+INSERT INTO facility (name, is_active, address_id, organization_id) VALUES ('Pinta', false, (SELECT id FROM address LIMIT 1), (SELECT id FROM organization LIMIT 1));
+INSERT INTO facility (name, is_active, address_id, organization_id) VALUES ('Spichki', true, (SELECT id FROM address LIMIT 1), (SELECT id FROM organization LIMIT 1));
 

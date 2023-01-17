@@ -14,7 +14,7 @@ public record AddressMapper(
     public AddressDto mapToDto(Address address) {
         return AddressDto.builder()
                 .id(address.getId())
-                .cityDto(cityMapper.mapToDto(address.getCity()))
+                .city(cityMapper.mapToDto(address.getCity()))
                 .streetName(address.getStreetName())
                 .streetNumber(address.getStreetNumber())
                 .build();
@@ -24,7 +24,7 @@ public record AddressMapper(
     public Address mapToEntity(AddressDto addressDto) {
         return Address.builder()
                 .id(addressDto.getId())
-                .city(cityMapper.mapToEntity(addressDto.getCityDto()))
+                .city(cityMapper.mapToEntity(addressDto.getCity()))
                 .streetName(addressDto.getStreetName())
                 .streetNumber(addressDto.getStreetNumber())
                 .build();

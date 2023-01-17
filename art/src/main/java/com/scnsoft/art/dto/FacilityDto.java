@@ -14,4 +14,5 @@ public class FacilityDto {
     String name;
     Boolean isActive;
     AddressDto address;
+    OrganizationDto organization;
 }
