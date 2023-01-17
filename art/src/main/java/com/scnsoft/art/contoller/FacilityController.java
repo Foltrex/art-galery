@@ -32,6 +32,11 @@ public class FacilityController {
         return ResponseEntity.ok(facilityMapper.mapPageToDto(facilityService.findAll(pageable)));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FacilityDto> findById(@PathVariable UUID id) {
+        return ResponseEntity.ok(facilityMapper.mapToDto(facilityService.findById(id)));
+    }
+
     @GetMapping("/organizations/{organizationId}")
     public ResponseEntity<Page<FacilityDto>> findAllByOrganizationId(@PathVariable UUID organizationId,
                                                                      Pageable pageable) {

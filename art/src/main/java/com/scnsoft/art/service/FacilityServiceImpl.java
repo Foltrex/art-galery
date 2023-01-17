@@ -34,10 +34,9 @@ public class FacilityServiceImpl {
         return facilityRepository.findAllByOrganization(organization, pageable);
     }
 
-    public FacilityDto findById(UUID id) {
+    public Facility findById(UUID id) {
         return facilityRepository
                 .findById(id)
-                .map(facilityMapper::mapToDto)
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
