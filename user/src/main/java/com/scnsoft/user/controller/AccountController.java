@@ -1,9 +1,9 @@
 package com.scnsoft.user.controller;
 
 import com.scnsoft.user.dto.AccountDto;
-import com.scnsoft.user.dto.RegisterRepresentativeRequestDto;
 import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.dto.mapper.impl.AccountMapper;
+import com.scnsoft.user.payload.RegisterRepresentativeRequest;
 import com.scnsoft.user.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +38,8 @@ public class AccountController {
 
     @PostMapping("/register-representative")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<RepresentativeDto> registerRepresentative(
-            @RequestBody RegisterRepresentativeRequestDto registerRepresentativeRequestDto) {
-        return new ResponseEntity<>(
-                accountService.registerRepresentative(registerRepresentativeRequestDto), HttpStatus.CREATED);
+    public ResponseEntity<RepresentativeDto> registerRepresentative(@RequestBody RegisterRepresentativeRequest request) {
+        return new ResponseEntity<>(accountService.registerRepresentative(request), HttpStatus.CREATED);
     }
 
     ////////////////////////////////////// FOR TESTS ////////////////////////////////

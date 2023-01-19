@@ -1,9 +1,6 @@
 package com.scnsoft.user.service.impl;
 
 import com.scnsoft.user.dto.ArtistDto;
-import com.scnsoft.user.dto.AuthTokenDto;
-import com.scnsoft.user.dto.LoginRequestDto;
-import com.scnsoft.user.dto.RegisterRequestDto;
 import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.exception.AccountBlockedException;
@@ -11,6 +8,9 @@ import com.scnsoft.user.exception.LoginAlreadyExistsException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.feignclient.ArtistFeignClient;
 import com.scnsoft.user.feignclient.RepresentativeFeignClient;
+import com.scnsoft.user.payload.AuthToken;
+import com.scnsoft.user.payload.LoginRequest;
+import com.scnsoft.user.payload.RegisterRequest;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.security.JwtUtils;
 import com.scnsoft.user.service.AuthService;
@@ -47,15 +47,15 @@ public class AuthServiceImpl implements AuthService {
     private final ArtistFeignClient artistFeignClient;
 
     @Override
-    public AuthTokenDto register(RegisterRequestDto registerRequestDto) {
-        if (accountRepository.findByEmail(registerRequestDto.getEmail()).isPresent()) {
+    public AuthToken register(RegisterRequest registerRequest) {
+        if (accountRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
             throw new LoginAlreadyExistsException("email is already in use!");
         }
 
         Account account = accountUtil.createAccount(
-                registerRequestDto.getEmail(),
-                registerRequestDto.getPassword(),
-                Account.AccountType.valueOf(registerRequestDto.getAccountType()));
+                registerRequest.getEmail(),
+                registerRequest.getPassword(),
+                Account.AccountType.valueOf(registerRequest.getAccountType()));
 
         accountRepository.save(account);
 
@@ -79,13 +79,13 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.valueOf(statusCode), e.getMessage());
         }
 
-        setAccountToAuthentication(registerRequestDto.getEmail(), registerRequestDto.getPassword());
-        return createAuthTokenResponse(account.getId(), token);
+        setAccountToAuthentication(registerRequest.getEmail(), registerRequest.getPassword());
+        return createAuthTokenResponse(token);
     }
 
     @Override
-    public AuthTokenDto login(LoginRequestDto loginRequestDto) {
-        Account account = findByEmail(loginRequestDto.getEmail());
+    public AuthToken login(LoginRequest loginRequest) {
+        Account account = findByEmail(loginRequest.getEmail());
 
         Integer failCount = account.getFailCount();
         if (failCount != 0 && failCount % 5 == 0) {
@@ -97,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         try {
-            setAccountToAuthentication(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+            setAccountToAuthentication(loginRequest.getEmail(), loginRequest.getPassword());
             account.setFailCount(0);
             accountRepository.save(account);
         } catch (AuthenticationException e) {
@@ -107,7 +107,7 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtUtils.createToken(
                 account.getEmail(), account.getId(), account.getAccountType(), account.getRoles());
 
-        return createAuthTokenResponse(account.getId(), token);
+        return createAuthTokenResponse(token);
     }
 
     private Account findByEmail(String email) {
@@ -142,10 +142,10 @@ public class AuthServiceImpl implements AuthService {
         account.setLastFail(new Date());
     }
 
-    private AuthTokenDto createAuthTokenResponse(UUID id, String token) {
-        return AuthTokenDto.builder()
-                .id(id)
+    private AuthToken createAuthTokenResponse(String token) {
+        return AuthToken.builder()
                 .token(token)
+                .type("Bearer")
                 .build();
     }
 

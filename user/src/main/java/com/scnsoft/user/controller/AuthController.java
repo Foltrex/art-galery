@@ -1,8 +1,8 @@
 package com.scnsoft.user.controller;
 
-import com.scnsoft.user.dto.AuthTokenDto;
-import com.scnsoft.user.dto.LoginRequestDto;
-import com.scnsoft.user.dto.RegisterRequestDto;
+import com.scnsoft.user.payload.AuthToken;
+import com.scnsoft.user.payload.LoginRequest;
+import com.scnsoft.user.payload.RegisterRequest;
 import com.scnsoft.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,14 +24,14 @@ public class AuthController {
 
     @PostMapping("/register")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<AuthTokenDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
-        return new ResponseEntity<>(authService.register(registerRequestDto), HttpStatus.CREATED);
+    public ResponseEntity<AuthToken> register(@RequestBody RegisterRequest request) {
+        return new ResponseEntity<>(authService.register(request), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<AuthTokenDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        return new ResponseEntity<>(authService.login(loginRequestDto), HttpStatus.OK);
+    public ResponseEntity<AuthToken> login(@RequestBody LoginRequest request) {
+        return new ResponseEntity<>(authService.login(request), HttpStatus.OK);
     }
 
 }

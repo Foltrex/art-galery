@@ -2,12 +2,12 @@ package com.scnsoft.user.service.impl;
 
 import com.scnsoft.user.dto.FacilityDto;
 import com.scnsoft.user.dto.OrganizationDto;
-import com.scnsoft.user.dto.RegisterRepresentativeRequestDto;
 import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.exception.LoginAlreadyExistsException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.feignclient.RepresentativeFeignClient;
+import com.scnsoft.user.payload.RegisterRepresentativeRequest;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.service.AccountService;
 import com.scnsoft.user.util.AccountUtil;
@@ -33,33 +33,31 @@ public class AccountServiceImpl implements AccountService {
     private final AccountUtil accountUtil;
     private final RepresentativeFeignClient representativeFeignClient;
 
-
     @Override
-    public RepresentativeDto registerRepresentative(RegisterRepresentativeRequestDto registerRepresentativeRequestDto) {
-        if (accountRepository.findByEmail(registerRepresentativeRequestDto.getEmail()).isPresent()) {
+    public RepresentativeDto registerRepresentative(RegisterRepresentativeRequest registerRepresentativeRequest) {
+        if (accountRepository.findByEmail(registerRepresentativeRequest.getEmail()).isPresent()) {
             throw new LoginAlreadyExistsException("email is already in use!");
         }
         Account account = accountUtil.createAccount(
-                registerRepresentativeRequestDto.getEmail(),
-                registerRepresentativeRequestDto.getPassword(),
+                registerRepresentativeRequest.getEmail(),
+                registerRepresentativeRequest.getPassword(),
                 Account.AccountType.REPRESENTATIVE);
 
         accountRepository.save(account);
 
         RepresentativeDto representativeDto = RepresentativeDto.builder()
                 .accountId(account.getId())
-                .organization(OrganizationDto.builder().id(registerRepresentativeRequestDto.getOrganizationId()).build())
-                .facility(FacilityDto.builder().id(registerRepresentativeRequestDto.getFacilityId()).build())
+                .organization(OrganizationDto.builder().id(registerRepresentativeRequest.getOrganizationId()).build())
+                .facility(FacilityDto.builder().id(registerRepresentativeRequest.getFacilityId()).build())
                 .build();
 
         try {
             HttpServletRequest request = ((ServletRequestAttributes)
                     Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 
-            String authorization = request.getHeader("Authorization");
-            log.info(authorization);
+            String token = request.getHeader("Authorization");
 
-            ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(representativeDto, authorization);
+            ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(representativeDto, token);
             representativeDto = response.getBody();
         } catch (FeignException e) {
             accountRepository.delete(account);

@@ -1,12 +1,12 @@
 package com.scnsoft.user.service;
 
-import com.scnsoft.user.dto.AuthTokenDto;
-import com.scnsoft.user.dto.LoginRequestDto;
-import com.scnsoft.user.dto.RegisterRequestDto;
+import com.scnsoft.user.payload.AuthToken;
+import com.scnsoft.user.payload.LoginRequest;
+import com.scnsoft.user.payload.RegisterRequest;
 
 public interface AuthService {
 
-    AuthTokenDto register(RegisterRequestDto registerRequestDto);
+    AuthToken register(RegisterRequest registerRequest);
 
-    AuthTokenDto login(LoginRequestDto loginRequestDto);
+    AuthToken login(LoginRequest loginRequest);
 }

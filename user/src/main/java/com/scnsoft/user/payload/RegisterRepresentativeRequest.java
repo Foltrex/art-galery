@@ -1,4 +1,4 @@
-package com.scnsoft.user.dto;
+package com.scnsoft.user.payload;
 
 
 import lombok.Builder;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class RegisterRepresentativeRequestDto {
+public class RegisterRepresentativeRequest {
 
     @NotEmpty
     private String email;

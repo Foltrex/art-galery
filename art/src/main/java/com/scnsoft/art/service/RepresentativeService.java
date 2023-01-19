@@ -1,6 +1,5 @@
 package com.scnsoft.art.service;
 
-import com.scnsoft.art.dto.RepresentativeDto;
 import com.scnsoft.art.dto.mapper.impl.RepresentativeMapper;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
@@ -33,10 +32,9 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
         return representativeRepository.findAll(pageable);
     }
 
-    public RepresentativeDto findById(UUID id) {
+    public Representative findById(UUID id) {
         return representativeRepository
                 .findById(id)
-                .map(representativeMapper::mapToDto)
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
@@ -46,29 +44,23 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
-    public RepresentativeDto save(RepresentativeDto representativeDto) {
-        Representative representative = representativeMapper.mapToEntity(representativeDto);
+    public Representative save(Representative representative) {
+        if (representativeRepository.findByAccountId(representative.getAccountId()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Representative is already exists!");
+        }
+
         Organization organization;
         Facility facility = null;
 
         if (representative.getOrganization() == null && representative.getFacility() == null) {
-            if (representativeRepository.findByAccountId(SecurityUtil.getCurrentAccountId()).isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Representative is already exists!");
-            }
-
             organization = organizationRepository.save(Organization.builder().build());
             facility = facilityRepository.save(Facility.builder().organization(organization).build());
-
             representative.setOrganizationRole(getOrganizationRoleByName(OrganizationRole.RoleType.CREATOR));
         } else {
-            Representative existedRepresentative = findByAccountId(SecurityUtil.getCurrentAccountId());
-
-            if (representativeRepository.findByAccountId(representative.getAccountId()).isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Representative is already exists!");
-            }
-
+            Representative currentAuthorizedRepresentative = findByAccountId(SecurityUtil.getCurrentAccountId());
             organization = getOrganizationById(representative.getOrganization().getId());
-            if (!organization.getId().equals(existedRepresentative.getOrganization().getId())) {
+
+            if (!organization.getId().equals(currentAuthorizedRepresentative.getOrganization().getId())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not valid organization!");
             }
 
@@ -78,19 +70,21 @@ public record RepresentativeService(RepresentativeRepository representativeRepos
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not valid facility!");
                 }
             }
-
             representative.setOrganizationRole(getOrganizationRoleByName(OrganizationRole.RoleType.MEMBER));
         }
+
         representative.setOrganization(organization);
         representative.setFacility(facility);
 
-        return representativeMapper.mapToDto(representativeRepository.save(representative));
+        return representativeRepository.save(representative);
     }
 
-    public RepresentativeDto update(UUID id, RepresentativeDto representativeDto) {
-        Representative representative = representativeMapper.mapToEntity(representativeDto);
+    public Representative update(UUID id, Representative representative) {
+        Representative existedRepresentative = findById(id);
         representative.setId(id);
-        return representativeMapper.mapToDto(representativeRepository.save(representative));
+        representative.setOrganization(existedRepresentative.getOrganization());
+
+        return representativeRepository.save(representative);
     }
 
     public void deleteById(UUID id) {

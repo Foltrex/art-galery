@@ -35,12 +35,6 @@ public class RepresentativeController {
         return "end-point is working";
     }
 
-    @PostMapping("/post")
-    @PreAuthorize("permitAll()")
-    public String post() {
-        return "POST REQUEST";
-    }
-
     @GetMapping
     public ResponseEntity<Page<RepresentativeDto>> findAll(Pageable pageable) {
         return ResponseEntity.ok(representativeMapper.mapPageToDto(representativeService.findAll(pageable)));
@@ -54,18 +48,22 @@ public class RepresentativeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<RepresentativeDto> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(representativeService.findById(id));
+        return ResponseEntity.ok(representativeMapper.mapToDto(representativeService.findById(id)));
     }
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<RepresentativeDto> save(@RequestBody RepresentativeDto RepresentativeDto) {
-        return new ResponseEntity<>(representativeService.save(RepresentativeDto), HttpStatus.CREATED);
+    public ResponseEntity<RepresentativeDto> save(@RequestBody RepresentativeDto representativeDto) {
+        return new ResponseEntity<>(representativeMapper.mapToDto(
+                representativeService.save(representativeMapper.mapToEntity(representativeDto))),
+                HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RepresentativeDto> update(@PathVariable UUID id, @RequestBody RepresentativeDto RepresentativeDto) {
-        return ResponseEntity.ok(representativeService.update(id, RepresentativeDto));
+    public ResponseEntity<RepresentativeDto> update(@PathVariable UUID id,
+                                                    @RequestBody RepresentativeDto representativeDto) {
+        return ResponseEntity.ok(representativeMapper.mapToDto(
+                representativeService.update(id, representativeMapper.mapToEntity(representativeDto))));
     }
 
     @DeleteMapping("/{id}")
