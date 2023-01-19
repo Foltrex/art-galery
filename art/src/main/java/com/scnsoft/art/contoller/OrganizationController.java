@@ -40,6 +40,11 @@ public record OrganizationController(
         return ResponseEntity.ok(organizationMapper.mapToDto(organizationService.findById(id)));
     }
 
+    @GetMapping("/accounts/{accountId}")
+    public ResponseEntity<OrganizationDto> findByAccountId(@PathVariable UUID accountId) {
+        return ResponseEntity.ok(organizationMapper.mapToDto(organizationService.findByAccountId(accountId)));
+    }
+
     @PostMapping
     public ResponseEntity<OrganizationDto> save(@RequestBody OrganizationDto organizationDto) {
         Organization organization = organizationService.save(organizationMapper.mapToEntity(organizationDto));

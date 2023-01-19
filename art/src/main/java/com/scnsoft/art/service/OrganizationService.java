@@ -2,8 +2,10 @@ package com.scnsoft.art.service;
 
 import com.scnsoft.art.dto.mapper.impl.OrganizationMapper;
 import com.scnsoft.art.entity.Organization;
+import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.OrganizationRepository;
+import com.scnsoft.art.repository.RepresentativeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 public record OrganizationService(OrganizationRepository organizationRepository,
+                                  RepresentativeRepository representativeRepository,
                                   OrganizationMapper organizationMapper) {
 
     public List<Organization> findAll() {
@@ -25,11 +28,10 @@ public record OrganizationService(OrganizationRepository organizationRepository,
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
-//    public Organization findByAccountId(UUID accountId) {
-//        return organizationRepository
-//                .findByAccountId(accountId)
-//                .orElseThrow(ArtResourceNotFoundException::new);
-//    }
+    public Organization findByAccountId(UUID accountId) {
+        Representative representative = getRepresentativeByAccountId(accountId);
+        return representative.getOrganization();
+    }
 
     public Organization save(Organization organization) {
         return organizationRepository.save(organization);
@@ -42,5 +44,11 @@ public record OrganizationService(OrganizationRepository organizationRepository,
 
     public void deleteById(UUID id) {
         organizationRepository.deleteById(id);
+    }
+
+    private Representative getRepresentativeByAccountId(UUID accountId) {
+        return representativeRepository
+                .findByAccountId(accountId)
+                .orElseThrow(ArtResourceNotFoundException::new);
     }
 }
