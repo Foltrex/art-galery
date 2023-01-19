@@ -1,9 +1,7 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.RepresentativeDto;
-import com.scnsoft.art.dto.mapper.impl.RepresentativeMapper;
 import com.scnsoft.art.facade.RepresentativeServiceFacade;
-import com.scnsoft.art.service.RepresentativeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

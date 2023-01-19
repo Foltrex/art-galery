@@ -21,16 +21,16 @@ import java.util.UUID;
 @RestController
 @RequestMapping("organizations")
 public record OrganizationController(
-    OrganizationService organizationService, 
-    OrganizationMapper organizationMapper
+        OrganizationService organizationService,
+        OrganizationMapper organizationMapper
 ) {
 
     @GetMapping
     public ResponseEntity<List<OrganizationDto>> findAll() {
         List<OrganizationDto> organizationDtos = organizationService.findAll()
-            .stream()
-            .map(organizationMapper::mapToDto)
-            .toList();
+                .stream()
+                .map(organizationMapper::mapToDto)
+                .toList();
 
         return ResponseEntity.ok(organizationDtos);
     }

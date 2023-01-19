@@ -1,6 +1,5 @@
 package com.scnsoft.art.service;
 
-import com.scnsoft.art.dto.OrganizationDto;
 import com.scnsoft.art.dto.mapper.impl.OrganizationMapper;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
