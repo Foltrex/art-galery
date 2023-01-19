@@ -1,6 +1,8 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.OrganizationDto;
+import com.scnsoft.art.dto.mapper.impl.OrganizationMapper;
+import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.service.OrganizationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,26 +20,36 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("organizations")
-public record OrganizationController(OrganizationService organizationService) {
+public record OrganizationController(
+    OrganizationService organizationService, 
+    OrganizationMapper organizationMapper
+) {
 
     @GetMapping
     public ResponseEntity<List<OrganizationDto>> findAll() {
-        return ResponseEntity.ok(organizationService.findAll());
+        List<OrganizationDto> organizationDtos = organizationService.findAll()
+            .stream()
+            .map(organizationMapper::mapToDto)
+            .toList();
+
+        return ResponseEntity.ok(organizationDtos);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrganizationDto> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(organizationService.findById(id));
+        return ResponseEntity.ok(organizationMapper.mapToDto(organizationService.findById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<OrganizationDto> save(@RequestBody OrganizationDto OrganizationDto) {
-        return new ResponseEntity<>(organizationService.save(OrganizationDto), HttpStatus.CREATED);
+    public ResponseEntity<OrganizationDto> save(@RequestBody OrganizationDto organizationDto) {
+        Organization organization = organizationService.save(organizationMapper.mapToEntity(organizationDto));
+        return new ResponseEntity<>(organizationMapper.mapToDto(organization), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrganizationDto> update(@PathVariable UUID id, @RequestBody OrganizationDto OrganizationDto) {
-        return ResponseEntity.ok(organizationService.update(id, OrganizationDto));
+    public ResponseEntity<OrganizationDto> update(@PathVariable UUID id, @RequestBody OrganizationDto organizationDto) {
+        Organization organization = organizationService.update(id, organizationMapper.mapToEntity(organizationDto));
+        return ResponseEntity.ok(organizationMapper.mapToDto(organization));
     }
 
     @DeleteMapping("/{id}")

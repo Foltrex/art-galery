@@ -94,7 +94,8 @@ CREATE TABLE IF NOT EXISTS representative (
     account_id UUID NOT NULL,
     firstname VARCHAR (255),
     lastname VARCHAR (255),
-    facility_id UUID REFERENCES facility (id),
+    -- MAY BE SET NULL LATTER
+    facility_id UUID REFERENCES facility (id) ON DELETE CASCADE,
     organization_id UUID REFERENCES organization (id),
     organization_role_id BIGINT REFERENCES organization_role (id)
 );

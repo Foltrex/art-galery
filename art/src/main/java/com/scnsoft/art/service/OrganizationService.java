@@ -16,16 +16,13 @@ import java.util.UUID;
 public record OrganizationService(OrganizationRepository organizationRepository,
                                   OrganizationMapper organizationMapper) {
 
-    public List<OrganizationDto> findAll() {
-        return organizationRepository.findAll().stream()
-                .map(organizationMapper::mapToDto)
-                .toList();
+    public List<Organization> findAll() {
+        return organizationRepository.findAll();
     }
 
-    public OrganizationDto findById(UUID id) {
+    public Organization findById(UUID id) {
         return organizationRepository
                 .findById(id)
-                .map(organizationMapper::mapToDto)
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
@@ -35,15 +32,13 @@ public record OrganizationService(OrganizationRepository organizationRepository,
 //                .orElseThrow(ArtResourceNotFoundException::new);
 //    }
 
-    public OrganizationDto save(OrganizationDto OrganizationDto) {
-        Organization organization = organizationMapper.mapToEntity(OrganizationDto);
-        return organizationMapper.mapToDto(organizationRepository.save(organization));
+    public Organization save(Organization organization) {
+        return organizationRepository.save(organization);
     }
 
-    public OrganizationDto update(UUID id, OrganizationDto OrganizationDto) {
-        Organization organization = organizationMapper.mapToEntity(OrganizationDto);
+    public Organization update(UUID id, Organization organization) {
         organization.setId(id);
-        return organizationMapper.mapToDto(organizationRepository.save(organization));
+        return organizationRepository.save(organization);
     }
 
     public void deleteById(UUID id) {
