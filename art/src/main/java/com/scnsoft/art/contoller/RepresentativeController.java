@@ -2,6 +2,7 @@ package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.RepresentativeDto;
 import com.scnsoft.art.dto.mapper.impl.RepresentativeMapper;
+import com.scnsoft.art.facade.RepresentativeServiceFacade;
 import com.scnsoft.art.service.RepresentativeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +28,7 @@ import java.util.UUID;
 @Slf4j
 public class RepresentativeController {
 
-    private final RepresentativeService representativeService;
-    private final RepresentativeMapper representativeMapper;
+    private final RepresentativeServiceFacade representativeServiceFacade;
 
     @GetMapping("/end-point")
     public String test() {
@@ -37,39 +37,29 @@ public class RepresentativeController {
 
     @GetMapping
     public ResponseEntity<Page<RepresentativeDto>> findAll(Pageable pageable) {
-        return ResponseEntity.ok(representativeMapper.mapPageToDto(representativeService.findAll(pageable)));
+        return ResponseEntity.ok(representativeServiceFacade.findAll(pageable));
     }
-
-//    @GetMapping("/organizations/{organizationId}")
-//    public ResponseEntity<List<RepresentativeDto>> findAllByOrganizationId(@PathVariable String organizationId,
-//                                                                           Pageable pageable) {
-//        return ResponseEntity.ok(representativeService.findAll());
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<RepresentativeDto> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(representativeMapper.mapToDto(representativeService.findById(id)));
+        return ResponseEntity.ok(representativeServiceFacade.findById(id));
     }
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RepresentativeDto> save(@RequestBody RepresentativeDto representativeDto) {
-        return new ResponseEntity<>(representativeMapper.mapToDto(
-                representativeService.save(representativeMapper.mapToEntity(representativeDto))),
-                HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(representativeServiceFacade.create(representativeDto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<RepresentativeDto> update(@PathVariable UUID id,
                                                     @RequestBody RepresentativeDto representativeDto) {
-        return ResponseEntity.ok(representativeMapper.mapToDto(
-                representativeService.update(id, representativeMapper.mapToEntity(representativeDto))));
+        return ResponseEntity.ok(representativeServiceFacade.update(id, representativeDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        representativeService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(representativeServiceFacade.delete(id));
     }
 
 }
