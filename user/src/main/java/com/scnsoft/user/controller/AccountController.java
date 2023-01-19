@@ -1,10 +1,7 @@
 package com.scnsoft.user.controller;
 
 import com.scnsoft.user.dto.AccountDto;
-import com.scnsoft.user.dto.AuthTokenDto;
-import com.scnsoft.user.dto.LoginRequestDto;
 import com.scnsoft.user.dto.RegisterRepresentativeRequestDto;
-import com.scnsoft.user.dto.RegisterRequestDto;
 import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.dto.mapper.impl.AccountMapper;
 import com.scnsoft.user.service.AccountService;
@@ -27,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountController {
 
     /**
-     * Account service for working with account's login, register, etc.
+     * Account service for working with account's business logic.
      * {@link com.scnsoft.user.service.impl.AccountServiceImpl}
      */
     private final AccountService accountService;
@@ -39,24 +36,12 @@ public class AccountController {
         return new ResponseEntity<>(accountMapper.mapToDto(accountService.findByEmail(email)), HttpStatus.OK);
     }
 
-    @PostMapping("/register")
-    @PreAuthorize("permitAll()")
-    public ResponseEntity<AuthTokenDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
-        return new ResponseEntity<>(accountService.register(registerRequestDto), HttpStatus.CREATED);
-    }
-
     @PostMapping("/register-representative")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RepresentativeDto> registerRepresentative(
             @RequestBody RegisterRepresentativeRequestDto registerRepresentativeRequestDto) {
         return new ResponseEntity<>(
-                accountService.registerRepresentativeToOrganization(registerRepresentativeRequestDto), HttpStatus.CREATED);
-    }
-
-    @PostMapping("/login")
-    @PreAuthorize("permitAll()")
-    public ResponseEntity<AuthTokenDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        return new ResponseEntity<>(accountService.login(loginRequestDto), HttpStatus.OK);
+                accountService.registerRepresentative(registerRepresentativeRequestDto), HttpStatus.CREATED);
     }
 
     ////////////////////////////////////// FOR TESTS ////////////////////////////////
