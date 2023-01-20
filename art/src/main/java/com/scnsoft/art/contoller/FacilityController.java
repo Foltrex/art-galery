@@ -1,8 +1,7 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.FacilityDto;
-import com.scnsoft.art.dto.mapper.impl.FacilityMapper;
-import com.scnsoft.art.service.FacilityServiceImpl;
+import com.scnsoft.art.facade.FacilityServiceFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,40 +23,35 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FacilityController {
 
-    private final FacilityServiceImpl facilityService;
-    private final FacilityMapper facilityMapper;
+    private final FacilityServiceFacade facilityServiceFacade;
 
     @GetMapping
     public ResponseEntity<Page<FacilityDto>> findAll(Pageable pageable) {
-        return ResponseEntity.ok(facilityMapper.mapPageToDto(facilityService.findAll(pageable)));
+        return ResponseEntity.ok(facilityServiceFacade.findAll(pageable));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FacilityDto> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(facilityMapper.mapToDto(facilityService.findById(id)));
+        return ResponseEntity.ok(facilityServiceFacade.findById(id));
     }
 
     @GetMapping("/organizations/{organizationId}")
-    public ResponseEntity<Page<FacilityDto>> findAllByOrganizationId(@PathVariable UUID organizationId,
-                                                                     Pageable pageable) {
-        return ResponseEntity.ok(facilityMapper.mapPageToDto(
-                facilityService.findAllByOrganizationId(organizationId, pageable)));
+    public ResponseEntity<Page<FacilityDto>> findAllByOrganizationId(@PathVariable UUID organizationId, Pageable pageable) {
+        return ResponseEntity.ok(facilityServiceFacade.findAllByOrganizationId(organizationId, pageable));
     }
-
 
     @PostMapping
     public ResponseEntity<FacilityDto> save(@RequestBody FacilityDto facilityDto) {
-        return new ResponseEntity<>(facilityService.save(facilityDto), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(facilityServiceFacade.save(facilityDto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<FacilityDto> update(@PathVariable UUID id, @RequestBody FacilityDto facilityDto) {
-        return ResponseEntity.ok(facilityService.update(id, facilityDto));
+        return ResponseEntity.ok(facilityServiceFacade.updateById(id, facilityDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        facilityService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(facilityServiceFacade.deleteById(id));
     }
 }

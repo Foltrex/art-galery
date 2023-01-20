@@ -1,7 +1,5 @@
 package com.scnsoft.art.service;
 
-import com.scnsoft.art.dto.FacilityDto;
-import com.scnsoft.art.dto.mapper.impl.FacilityMapper;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
@@ -16,16 +14,24 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class FacilityServiceImpl {
+public class FacilityServiceImpl implements FacilityService {
 
     private final FacilityRepository facilityRepository;
     private final OrganizationRepository organizationRepository;
-    private final FacilityMapper facilityMapper;
 
+    @Override
+    public Facility findById(UUID id) {
+        return facilityRepository
+                .findById(id)
+                .orElseThrow(ArtResourceNotFoundException::new);
+    }
+
+    @Override
     public Page<Facility> findAll(Pageable pageable) {
         return facilityRepository.findAll(pageable);
     }
 
+    @Override
     public Page<Facility> findAllByOrganizationId(UUID id, Pageable pageable) {
         Organization organization = organizationRepository
                 .findById(id)
@@ -34,23 +40,14 @@ public class FacilityServiceImpl {
         return facilityRepository.findAllByOrganization(organization, pageable);
     }
 
-    public Facility findById(UUID id) {
-        return facilityRepository
-                .findById(id)
-                .orElseThrow(ArtResourceNotFoundException::new);
+    public Facility save(Facility facility) {
+        return facilityRepository.save(facility);
     }
 
-    public FacilityDto save(FacilityDto facilityDto) {
-        Facility facility = facilityMapper.mapToEntity(facilityDto);
-        Facility persistedFacility = facilityRepository.save(facility);
-        return facilityMapper.mapToDto(persistedFacility);
-    }
-
-    public FacilityDto update(UUID id, FacilityDto facilityDto) {
-        Facility facility = facilityMapper.mapToEntity(facilityDto);
+    @Override
+    public Facility updateById(UUID id, Facility facility) {
         facility.setId(id);
-        Facility updatedFacility = facilityRepository.save(facility);
-        return facilityMapper.mapToDto(updatedFacility);
+        return facilityRepository.save(facility);
     }
 
     public void deleteById(UUID id) {

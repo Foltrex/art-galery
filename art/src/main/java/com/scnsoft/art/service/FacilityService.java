@@ -8,13 +8,15 @@ import java.util.UUID;
 
 public interface FacilityService {
 
+    Facility findById(UUID id);
+
     Page<Facility> findAll(Pageable pageable);
 
     Page<Facility> findAllByOrganizationId(UUID organizationId, Pageable pageable);
 
-    Facility create(Facility facility);
+    Facility save(Facility facility);
 
-    Facility updateById(Facility facility);
+    Facility updateById(UUID id, Facility facility);
 
     void deleteById(UUID id);
 }
