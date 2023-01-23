@@ -31,7 +31,6 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
-    show-sql: true
   # sql:
   #   init:
   #    mode: always
