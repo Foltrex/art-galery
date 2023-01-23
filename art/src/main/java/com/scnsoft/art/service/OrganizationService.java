@@ -25,7 +25,7 @@ public record OrganizationService(OrganizationRepository organizationRepository,
     public Organization findById(UUID id) {
         return organizationRepository
                 .findById(id)
-                .orElseThrow(ArtResourceNotFoundException::new);
+                .orElseThrow(() -> new ArtResourceNotFoundException("Organization not found by id!"));
     }
 
     public Organization findByAccountId(UUID accountId) {
@@ -49,6 +49,6 @@ public record OrganizationService(OrganizationRepository organizationRepository,
     private Representative getRepresentativeByAccountId(UUID accountId) {
         return representativeRepository
                 .findByAccountId(accountId)
-                .orElseThrow(ArtResourceNotFoundException::new);
+                .orElseThrow(() -> new ArtResourceNotFoundException("Representative not found by accountId!"));
     }
 }

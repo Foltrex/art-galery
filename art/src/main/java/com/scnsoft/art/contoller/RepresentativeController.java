@@ -3,7 +3,6 @@ package com.scnsoft.art.contoller;
 import com.scnsoft.art.dto.RepresentativeDto;
 import com.scnsoft.art.facade.RepresentativeServiceFacade;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,15 +22,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("representatives")
 @RequiredArgsConstructor
-@Slf4j
 public class RepresentativeController {
 
     private final RepresentativeServiceFacade representativeServiceFacade;
-
-    @GetMapping("/end-point")
-    public String test() {
-        return "end-point is working";
-    }
 
     @GetMapping
     public ResponseEntity<Page<RepresentativeDto>> findAll(Pageable pageable) {
@@ -50,8 +43,7 @@ public class RepresentativeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RepresentativeDto> update(@PathVariable UUID id,
-                                                    @RequestBody RepresentativeDto representativeDto) {
+    public ResponseEntity<RepresentativeDto> update(@PathVariable UUID id, @RequestBody RepresentativeDto representativeDto) {
         return ResponseEntity.ok(representativeServiceFacade.update(id, representativeDto));
     }
 

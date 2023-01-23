@@ -12,5 +12,4 @@ public class OrganizationDto {
     private String name;
     private AddressDto address;
     private String status;
-    private UUID accountId;
 }
