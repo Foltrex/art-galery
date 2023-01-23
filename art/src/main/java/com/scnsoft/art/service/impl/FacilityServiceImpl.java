@@ -1,16 +1,21 @@
-package com.scnsoft.art.service;
+package com.scnsoft.art.service.impl;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.FacilityRepository;
 import com.scnsoft.art.repository.OrganizationRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import com.scnsoft.art.service.FacilityService;
 
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,28 +23,29 @@ public class FacilityServiceImpl implements FacilityService {
 
     private final FacilityRepository facilityRepository;
     private final OrganizationRepository organizationRepository;
-
-    @Override
-    public Facility findById(UUID id) {
-        return facilityRepository
-                .findById(id)
-                .orElseThrow(ArtResourceNotFoundException::new);
-    }
-
+    
+    
     @Override
     public Page<Facility> findAll(Pageable pageable) {
         return facilityRepository.findAll(pageable);
     }
-
+    
     @Override
     public Page<Facility> findAllByOrganizationId(UUID id, Pageable pageable) {
         Organization organization = organizationRepository
                 .findById(id)
                 .orElseThrow(ArtResourceNotFoundException::new);
-
         return facilityRepository.findAllByOrganization(organization, pageable);
     }
 
+    @Override
+    public Facility findById(UUID id) {
+        return facilityRepository
+            .findById(id)
+            .orElseThrow(ArtResourceNotFoundException::new);
+    }
+
+    @Override
     public Facility save(Facility facility) {
         return facilityRepository.save(facility);
     }
@@ -50,7 +56,14 @@ public class FacilityServiceImpl implements FacilityService {
         return facilityRepository.save(facility);
     }
 
+    @Override
+    public List<Facility> findAll() {
+        return facilityRepository.findAll();
+    }
+
+    @Override
     public void deleteById(UUID id) {
         facilityRepository.deleteById(id);
     }
+    
 }
