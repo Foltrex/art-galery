@@ -1,14 +1,12 @@
 package com.scnsoft.art.service;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-
 import com.scnsoft.art.entity.Address;
 import com.scnsoft.art.repository.AddressRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

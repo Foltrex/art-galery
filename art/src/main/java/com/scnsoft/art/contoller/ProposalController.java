@@ -12,7 +12,7 @@ import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.service.ArtistService;
 import com.scnsoft.art.service.ProposalService;
-import com.scnsoft.art.service.RepresentativeService;
+import com.scnsoft.art.service.impl.RepresentativeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,7 +30,7 @@ public class ProposalController {
 
     private final ProposalService proposalService;
     private final ArtistService artistService;
-    private final RepresentativeService representativeService;
+    private final RepresentativeServiceImpl representativeService;
     private final AccountFeignClient accountFeignClient;
     private final OrganizationMapper organizationMapper;
     private final ArtistMapper artistMapper;

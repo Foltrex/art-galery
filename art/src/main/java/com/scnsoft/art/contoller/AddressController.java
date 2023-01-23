@@ -1,19 +1,16 @@
 package com.scnsoft.art.contoller;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.scnsoft.art.dto.AddressDto;
+import com.scnsoft.art.facade.AddressServiceFacade;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scnsoft.art.dto.AddressDto;
-import com.scnsoft.art.facade.AddressServiceFacade;
-import com.scnsoft.art.service.AddressService;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("addresses")

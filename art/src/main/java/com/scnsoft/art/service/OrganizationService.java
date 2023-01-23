@@ -1,54 +1,22 @@
 package com.scnsoft.art.service;
 
-import com.scnsoft.art.dto.mapper.impl.OrganizationMapper;
 import com.scnsoft.art.entity.Organization;
-import com.scnsoft.art.entity.Representative;
-import com.scnsoft.art.exception.ArtResourceNotFoundException;
-import com.scnsoft.art.repository.OrganizationRepository;
-import com.scnsoft.art.repository.RepresentativeRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
-@Service
-@Slf4j
-public record OrganizationService(OrganizationRepository organizationRepository,
-                                  RepresentativeRepository representativeRepository,
-                                  OrganizationMapper organizationMapper) {
+public interface OrganizationService {
 
-    public List<Organization> findAll() {
-        return organizationRepository.findAll();
-    }
+    Page<Organization> findAll(Pageable pageable);
 
-    public Organization findById(UUID id) {
-        return organizationRepository
-                .findById(id)
-                .orElseThrow(() -> new ArtResourceNotFoundException("Organization not found by id!"));
-    }
+    Organization findById(UUID id);
 
-    public Organization findByAccountId(UUID accountId) {
-        Representative representative = getRepresentativeByAccountId(accountId);
-        return representative.getOrganization();
-    }
+    Organization findByAccountId(UUID accountId);
 
-    public Organization save(Organization organization) {
-        return organizationRepository.save(organization);
-    }
+    Organization save(Organization organization);
 
-    public Organization update(UUID id, Organization organization) {
-        organization.setId(id);
-        return organizationRepository.save(organization);
-    }
+    Organization update(UUID id, Organization organization);
 
-    public void deleteById(UUID id) {
-        organizationRepository.deleteById(id);
-    }
-
-    private Representative getRepresentativeByAccountId(UUID accountId) {
-        return representativeRepository
-                .findByAccountId(accountId)
-                .orElseThrow(() -> new ArtResourceNotFoundException("Representative not found by accountId!"));
-    }
+    void deleteById(UUID id);
 }

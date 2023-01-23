@@ -39,17 +39,17 @@ public class RepresentativeController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RepresentativeDto> save(@RequestBody RepresentativeDto representativeDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(representativeServiceFacade.create(representativeDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(representativeServiceFacade.save(representativeDto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<RepresentativeDto> update(@PathVariable UUID id, @RequestBody RepresentativeDto representativeDto) {
-        return ResponseEntity.ok(representativeServiceFacade.update(id, representativeDto));
+        return ResponseEntity.ok(representativeServiceFacade.updateById(id, representativeDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        return ResponseEntity.ok(representativeServiceFacade.delete(id));
+        return ResponseEntity.ok(representativeServiceFacade.deleteById(id));
     }
 
 }

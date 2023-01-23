@@ -1,9 +1,10 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.OrganizationDto;
-import com.scnsoft.art.dto.mapper.impl.OrganizationMapper;
-import com.scnsoft.art.entity.Organization;
-import com.scnsoft.art.service.OrganizationService;
+import com.scnsoft.art.facade.OrganizationServiceFacade;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,52 +16,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("organizations")
-public record OrganizationController(
-        OrganizationService organizationService,
-        OrganizationMapper organizationMapper
-) {
+@RequiredArgsConstructor
+public class OrganizationController {
+
+    private final OrganizationServiceFacade organizationServiceFacade;
 
     @GetMapping
-    public ResponseEntity<List<OrganizationDto>> findAll() {
-        List<OrganizationDto> organizationDtos = organizationService.findAll()
-                .stream()
-                .map(organizationMapper::mapToDto)
-                .toList();
-
-        return ResponseEntity.ok(organizationDtos);
+    public ResponseEntity<Page<OrganizationDto>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(organizationServiceFacade.findAll(pageable));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrganizationDto> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(organizationMapper.mapToDto(organizationService.findById(id)));
+        return ResponseEntity.ok(organizationServiceFacade.findById(id));
     }
 
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<OrganizationDto> findByAccountId(@PathVariable UUID accountId) {
-        return ResponseEntity.ok(organizationMapper.mapToDto(organizationService.findByAccountId(accountId)));
+        return ResponseEntity.ok(organizationServiceFacade.findByAccountId(accountId));
     }
 
     @PostMapping
     public ResponseEntity<OrganizationDto> save(@RequestBody OrganizationDto organizationDto) {
-        Organization organization = organizationService.save(organizationMapper.mapToEntity(organizationDto));
-        return new ResponseEntity<>(organizationMapper.mapToDto(organization), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(organizationServiceFacade.save(organizationDto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<OrganizationDto> update(@PathVariable UUID id, @RequestBody OrganizationDto organizationDto) {
-        Organization organization = organizationService.update(id, organizationMapper.mapToEntity(organizationDto));
-        return ResponseEntity.ok(organizationMapper.mapToDto(organization));
+        return ResponseEntity.ok(organizationServiceFacade.updateById(id, organizationDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        organizationService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(organizationServiceFacade.deleteById(id));
     }
 
 }

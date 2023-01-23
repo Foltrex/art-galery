@@ -1,9 +1,10 @@
-package com.scnsoft.art.service;
+package com.scnsoft.art.service.impl;
 
 import com.scnsoft.art.dto.mapper.impl.CityMapper;
 import com.scnsoft.art.entity.City;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.CityRepository;
+import com.scnsoft.art.service.CityService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

@@ -1,20 +1,17 @@
 package com.scnsoft.art.service.impl;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.FacilityRepository;
-import com.scnsoft.art.repository.OrganizationRepository;
 import com.scnsoft.art.service.FacilityService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -22,27 +19,24 @@ import lombok.RequiredArgsConstructor;
 public class FacilityServiceImpl implements FacilityService {
 
     private final FacilityRepository facilityRepository;
-    private final OrganizationRepository organizationRepository;
-    
-    
+    private final OrganizationServiceImpl organizationService;
+
     @Override
     public Page<Facility> findAll(Pageable pageable) {
         return facilityRepository.findAll(pageable);
     }
-    
+
     @Override
     public Page<Facility> findAllByOrganizationId(UUID id, Pageable pageable) {
-        Organization organization = organizationRepository
-                .findById(id)
-                .orElseThrow(ArtResourceNotFoundException::new);
+        Organization organization = organizationService.findById(id);
         return facilityRepository.findAllByOrganization(organization, pageable);
     }
 
     @Override
     public Facility findById(UUID id) {
         return facilityRepository
-            .findById(id)
-            .orElseThrow(ArtResourceNotFoundException::new);
+                .findById(id)
+                .orElseThrow(ArtResourceNotFoundException::new);
     }
 
     @Override
@@ -65,5 +59,5 @@ public class FacilityServiceImpl implements FacilityService {
     public void deleteById(UUID id) {
         facilityRepository.deleteById(id);
     }
-    
+
 }

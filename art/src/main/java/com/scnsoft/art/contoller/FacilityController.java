@@ -1,7 +1,6 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.FacilityDto;
-import com.scnsoft.art.dto.mapper.impl.FacilityMapper;
 import com.scnsoft.art.facade.FacilityServiceFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,22 +44,21 @@ public class FacilityController {
     @GetMapping("/organizations/{organizationId}")
     public ResponseEntity<Page<FacilityDto>> findAllByOrganizationId(@PathVariable UUID organizationId,
                                                                      Pageable pageable) {
-        return ResponseEntity.ok(
-                facilityServiceFacade.findAllByOrganizationId(organizationId, pageable));
+        return ResponseEntity.ok(facilityServiceFacade.findAllByOrganizationId(organizationId, pageable));
     }
 
     @PostMapping
     public ResponseEntity<FacilityDto> save(@RequestBody FacilityDto facilityDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(facilityServiceFacade.create(facilityDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(facilityServiceFacade.save(facilityDto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<FacilityDto> update(@PathVariable UUID id, @RequestBody FacilityDto facilityDto) {
-        return ResponseEntity.ok(facilityServiceFacade.update(id, facilityDto));
+        return ResponseEntity.ok(facilityServiceFacade.updateById(id, facilityDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        return ResponseEntity.ok(facilityServiceFacade.delete(id));
+        return ResponseEntity.ok(facilityServiceFacade.deleteById(id));
     }
 }

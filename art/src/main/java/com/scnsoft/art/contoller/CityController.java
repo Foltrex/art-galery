@@ -33,7 +33,7 @@ public record CityController(CityServiceFacade cityServiceFacade) {
 
     @PutMapping("/{id}")
     public ResponseEntity<CityDto> update(@PathVariable UUID id, @RequestBody CityDto cityDto) {
-        return ResponseEntity.ok(cityServiceFacade.update(id, cityDto));
+        return ResponseEntity.ok(cityServiceFacade.updateById(id, cityDto));
     }
 
     @DeleteMapping("/{id}")

@@ -1,6 +1,5 @@
-package com.scnsoft.art.service;
+package com.scnsoft.art.service.impl;
 
-import com.scnsoft.art.dto.mapper.impl.RepresentativeMapper;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.entity.OrganizationRole;
@@ -9,6 +8,8 @@ import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.OrganizationRoleRepository;
 import com.scnsoft.art.repository.RepresentativeRepository;
 import com.scnsoft.art.security.SecurityUtil;
+import com.scnsoft.art.service.FacilityService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,12 +20,14 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
-public record RepresentativeService(RepresentativeRepository representativeRepository,
-                                    OrganizationService organizationService,
-                                    FacilityService facilityService,
-                                    OrganizationRoleRepository organizationRoleRepository,
-                                    RepresentativeMapper representativeMapper) {
+public class RepresentativeServiceImpl {
+
+    private final RepresentativeRepository representativeRepository;
+    private final OrganizationServiceImpl organizationService;
+    private final FacilityService facilityService;
+    private final OrganizationRoleRepository organizationRoleRepository;
 
     public Page<Representative> findAll(Pageable pageable) {
         return representativeRepository.findAll(pageable);

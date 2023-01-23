@@ -6,7 +6,11 @@ import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.Address;
 import com.scnsoft.art.entity.Organization;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -34,6 +38,13 @@ public class OrganizationMapper implements Mapper<Organization, OrganizationDto>
                 .status(mapStatusToEntity(organizationDto.getStatus()))
                 .build()
                 : null;
+    }
+
+    public Page<OrganizationDto> mapPageToDto(final Page<Organization> organizationPage) {
+        return new PageImpl<>(organizationPage.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList()), organizationPage.getPageable(), organizationPage.getTotalElements());
+
     }
 
     private AddressDto mapAddressToDto(Address address) {

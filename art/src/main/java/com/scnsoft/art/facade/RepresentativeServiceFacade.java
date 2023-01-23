@@ -3,7 +3,7 @@ package com.scnsoft.art.facade;
 import com.scnsoft.art.dto.RepresentativeDto;
 import com.scnsoft.art.dto.mapper.impl.RepresentativeMapper;
 import com.scnsoft.art.entity.Representative;
-import com.scnsoft.art.service.RepresentativeService;
+import com.scnsoft.art.service.impl.RepresentativeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RepresentativeServiceFacade {
 
-    private final RepresentativeService representativeService;
+    private final RepresentativeServiceImpl representativeService;
     private final RepresentativeMapper representativeMapper;
 
 
@@ -28,17 +28,17 @@ public class RepresentativeServiceFacade {
         return representativeMapper.mapToDto(representativeService.findById(id));
     }
 
-    public RepresentativeDto create(RepresentativeDto representativeDto) {
+    public RepresentativeDto save(RepresentativeDto representativeDto) {
         Representative representative = representativeMapper.mapToEntity(representativeDto);
         return representativeMapper.mapToDto(representativeService.save(representative));
     }
 
-    public RepresentativeDto update(UUID id, RepresentativeDto representativeDto) {
+    public RepresentativeDto updateById(UUID id, RepresentativeDto representativeDto) {
         Representative representative = representativeMapper.mapToEntity(representativeDto);
         return representativeMapper.mapToDto(representativeService.update(id, representative));
     }
 
-    public Void delete(@PathVariable UUID id) {
+    public Void deleteById(@PathVariable UUID id) {
         representativeService.deleteById(id);
         return null;
     }

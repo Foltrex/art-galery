@@ -3,7 +3,7 @@ package com.scnsoft.art.facade;
 import com.scnsoft.art.dto.CityDto;
 import com.scnsoft.art.dto.mapper.impl.CityMapper;
 import com.scnsoft.art.entity.City;
-import com.scnsoft.art.service.CityServiceImpl;
+import com.scnsoft.art.service.impl.CityServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +33,7 @@ public class CityServiceFacade {
         return cityMapper.mapToDto(cityService.save(city));
     }
 
-    public CityDto update(UUID id, CityDto cityDto) {
+    public CityDto updateById(UUID id, CityDto cityDto) {
         City city = cityMapper.mapToEntity(cityDto);
         return cityMapper.mapToDto(cityService.updateById(id, city));
     }
