@@ -16,13 +16,15 @@ VALUES ('Minsk', 53.9006, 27.5590);
 INSERT INTO address (city_id, street_name, street_number)
 VALUES ((SELECT id FROM city LIMIT 1), 'Bogdanovicha', 120);
 INSERT INTO address (city_id, street_name, street_number)
-VALUES ((SELECT id FROM city LIMIT 1), 'Kulman', 111);
+VALUES ((SELECT id FROM city LIMIT 1 OFFSET 1), 'Kulman', 111);
 INSERT INTO address (city_id, street_name, street_number)
-VALUES ((SELECT id FROM city LIMIT 1), 'Hataevicha', 51);
+VALUES ((SELECT id FROM city LIMIT 1 OFFSET 2), 'Hataevicha', 51);
 
 -- organization --
 INSERT INTO organization (name, status, address_id)
-VALUES ('Roga and Kopita', 1, (SELECT id FROM address LIMIT 1 OFFSET 1) );
+VALUES ('Roga and Kopita', 1, (SELECT id FROM address LIMIT 1 OFFSET 1));
+INSERT INTO organization (name, status, address_id)
+VALUES ('Miaso i salo', 0, (SELECT id FROM address LIMIT 1 OFFSET 2));
 
 -- facility --
 INSERT INTO facility (name, is_active, address_id, organization_id)
