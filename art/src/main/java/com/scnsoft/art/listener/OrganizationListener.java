@@ -10,5 +10,6 @@ public class OrganizationListener {
     private void beforePersist(Organization organization) {
         organization.setStatus(Organization.Status.NEW);
     }
+
 }
 

@@ -41,7 +41,6 @@ public class AuthServiceImpl implements AuthService {
     private final AccountRepository accountRepository;
     private final AccountUtil accountUtil;
     private final JwtUtils jwtUtils;
-    private final AuthUtil authUtil;
     private final AuthenticationManager authenticationManager;
     private final RepresentativeFeignClient representativeFeignClient;
     private final ArtistFeignClient artistFeignClient;
@@ -80,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         setAccountToAuthentication(registerRequest.getEmail(), registerRequest.getPassword());
-        return createAuthTokenResponse(token);
+        return AuthUtil.createAuthTokenResponse(token);
     }
 
     @Override
@@ -89,17 +88,17 @@ public class AuthServiceImpl implements AuthService {
 
         Integer failCount = account.getFailCount();
         if (failCount != 0 && failCount % 5 == 0) {
-            long secondsToUnblock = authUtil.calculateSecondsToUnblock(account.getBlockedSince());
+            long secondsToUnblock = AuthUtil.calculateSecondsToUnblock(account.getBlockedSince());
 
             if (secondsToUnblock > 0) {
                 throw new AccountBlockedException("Account blocked on " + secondsToUnblock + " seconds");
+            } else {
+                account.setFailCount(0);
             }
         }
 
         try {
             setAccountToAuthentication(loginRequest.getEmail(), loginRequest.getPassword());
-            account.setFailCount(0);
-            accountRepository.save(account);
         } catch (AuthenticationException e) {
             handleEventOfBadCredentials(account);
             throw new BadCredentialsException("Invalid credentials");
@@ -107,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtUtils.createToken(
                 account.getEmail(), account.getId(), account.getAccountType(), account.getRoles());
 
-        return createAuthTokenResponse(token);
+        return AuthUtil.createAuthTokenResponse(token);
     }
 
     private Account findByEmail(String email) {
@@ -117,20 +116,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void setAccountToAuthentication(String login, String password) {
-        try {
-            Authentication authentication =
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
 
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            context.setAuthentication(authentication);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong with authorization");
-        }
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
     }
 
     private void handleEventOfBadCredentials(Account account) {
-        if (authUtil.isBruteForce(account.getLastFail())) {
+        account.setLastFail(new Date());
+        if (AuthUtil.isBruteForce(account.getLastFail())) {
             Integer failCount = account.getFailCount();
             account.setFailCount(++failCount);
 
@@ -139,14 +134,6 @@ public class AuthServiceImpl implements AuthService {
             }
             accountRepository.save(account);
         }
-        account.setLastFail(new Date());
-    }
-
-    private AuthToken createAuthTokenResponse(String token) {
-        return AuthToken.builder()
-                .token(token)
-                .type("Bearer")
-                .build();
     }
 
 }

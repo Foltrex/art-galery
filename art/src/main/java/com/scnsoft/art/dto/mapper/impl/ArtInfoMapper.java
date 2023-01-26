@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ArtInfoMappper implements Mapper<ArtInfo, ArtInfoDto> {
+public class ArtInfoMapper implements Mapper<ArtInfo, ArtInfoDto> {
 
     @Autowired
     private ArtMapper artMapper;
@@ -21,9 +21,7 @@ public class ArtInfoMappper implements Mapper<ArtInfo, ArtInfoDto> {
                 .art(artMapper.mapToDto(artInfo.getArt()))
                 .expositionDateStart(artInfo.getExpositionDateStart())
                 .expositionDateEnd(artInfo.getExpositionDateEnd())
-                .status(
-                        com.scnsoft.art.dto.ArtInfoDto.Status.valueOf(artInfo.getStatus().name())
-                )
+                .status(com.scnsoft.art.dto.ArtInfoDto.Status.valueOf(artInfo.getStatus().name()))
                 .build();
     }
 
@@ -34,9 +32,7 @@ public class ArtInfoMappper implements Mapper<ArtInfo, ArtInfoDto> {
                 .art(artMapper.mapToEntity(artInfoDto.getArt()))
                 .expositionDateStart(artInfoDto.getExpositionDateStart())
                 .expositionDateEnd(artInfoDto.getExpositionDateEnd())
-                .status(
-                        com.scnsoft.art.entity.ArtInfo.Status.valueOf(artInfoDto.getStatus().name())
-                )
+                .status(com.scnsoft.art.entity.ArtInfo.Status.valueOf(artInfoDto.getStatus().name()))
                 .build();
     }
 

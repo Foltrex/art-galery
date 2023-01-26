@@ -51,7 +51,6 @@ public class RepresentativeMapper implements Mapper<Representative, Representati
         return new PageImpl<>(representativesPage.stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList()), representativesPage.getPageable(), representativesPage.getTotalElements());
-
     }
 
     private FacilityDto mapFacilityToDto(Facility facility) {

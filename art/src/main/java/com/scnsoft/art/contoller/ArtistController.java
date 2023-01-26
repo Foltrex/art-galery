@@ -1,8 +1,10 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.ArtistDto;
-import com.scnsoft.art.service.ArtistService;
+import com.scnsoft.art.facade.ArtistServiceFacade;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,32 +24,31 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ArtistController {
 
-    private final ArtistService artistService;
+    private final ArtistServiceFacade artistServiceFacade;
 
     @GetMapping
-    public ResponseEntity<List<ArtistDto>> findAll() {
-        return ResponseEntity.ok(artistService.findAll());
+    public ResponseEntity<Page<ArtistDto>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(artistServiceFacade.findAll(pageable));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ArtistDto> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(artistService.findById(id));
+        return ResponseEntity.ok(artistServiceFacade.findById(id));
     }
 
     @PostMapping
     public ResponseEntity<ArtistDto> save(@RequestBody ArtistDto artistDto) {
-        return new ResponseEntity<>(artistService.save(artistDto), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(artistServiceFacade.save(artistDto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ArtistDto> update(@PathVariable UUID id, @RequestBody ArtistDto artistDto) {
-        return ResponseEntity.ok(artistService.update(id, artistDto));
+        return ResponseEntity.ok(artistServiceFacade.updateById(id, artistDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        artistService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(artistServiceFacade.deleteById(id));
     }
 
     ////////////////////////////////////// FOR TESTS ////////////////////////////////

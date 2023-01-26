@@ -2,6 +2,7 @@ package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.CityDto;
 import com.scnsoft.art.facade.CityServiceFacade;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("cities")
-public record CityController(CityServiceFacade cityServiceFacade) {
+@RequiredArgsConstructor
+public class CityController {
+
+    private final CityServiceFacade cityServiceFacade;
 
     @GetMapping
     public ResponseEntity<Page<CityDto>> findAll(Pageable pageable) {

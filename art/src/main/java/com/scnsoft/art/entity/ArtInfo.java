@@ -1,7 +1,9 @@
 package com.scnsoft.art.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,6 +21,8 @@ import java.util.UUID;
 @Entity
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArtInfo {
     public enum Status {
         INACTIVE, ACTIVE, SOLD, RETURN

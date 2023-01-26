@@ -1,61 +1,24 @@
 package com.scnsoft.art.service;
 
-import com.scnsoft.art.dto.ArtistDto;
-import com.scnsoft.art.dto.mapper.impl.ArtistMapper;
 import com.scnsoft.art.entity.Artist;
-import com.scnsoft.art.exception.ArtResourceNotFoundException;
-import com.scnsoft.art.repository.ArtistRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
-@Service
-@RequiredArgsConstructor
-public class ArtistService {
+public interface ArtistService {
 
-    private final ArtistRepository artistRepository;
-    private final ArtistMapper artistMapper;
+    Page<Artist> findAll(Pageable pageable);
 
-    public List<ArtistDto> findAll() {
-        return artistRepository.findAll().stream()
-                .map(artistMapper::mapToDto)
-                .toList();
-    }
+    Artist findById(UUID id);
 
-    public ArtistDto findById(UUID id) {
-        return artistRepository
-                .findById(id)
-                .map(artistMapper::mapToDto)
-                .orElseThrow(ArtResourceNotFoundException::new);
-    }
+    boolean existWithAccountId(UUID accountId);
 
+    Artist findByAccountId(UUID accountId);
 
-    public boolean existWithAccountId(UUID accountId) {
-        return artistRepository
-                .findByAccountId(accountId)
-                .isPresent();
-    }
+    Artist save(Artist artist);
 
-    public Artist findByAccountId(UUID accountId) {
-        return artistRepository
-                .findByAccountId(accountId)
-                .orElseThrow(ArtResourceNotFoundException::new);
-    }
+    Artist update(UUID id, Artist artist);
 
-    public ArtistDto save(ArtistDto artistDto) {
-        Artist artist = artistMapper.mapToEntity(artistDto);
-        return artistMapper.mapToDto(artistRepository.save(artist));
-    }
-
-    public ArtistDto update(UUID id, ArtistDto artistDto) {
-        Artist artist = artistMapper.mapToEntity(artistDto);
-        artist.setId(id);
-        return artistMapper.mapToDto(artistRepository.save(artist));
-    }
-
-    public void deleteById(UUID id) {
-        artistRepository.deleteById(id);
-    }
+    void deleteById(UUID id);
 }

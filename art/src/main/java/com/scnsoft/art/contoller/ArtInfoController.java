@@ -2,8 +2,8 @@ package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.ArtInfoDto;
 import com.scnsoft.art.entity.Proposal;
-import com.scnsoft.art.service.ArtInfoService;
-import com.scnsoft.art.service.ProposalService;
+import com.scnsoft.art.service.impl.ArtInfoServiceImpl;
+import com.scnsoft.art.service.impl.ProposalServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/art-info")
 @RequiredArgsConstructor
 public class ArtInfoController {
-    private final ArtInfoService artInfoService;
-    private final ProposalService proposalService;
+    private final ArtInfoServiceImpl artInfoService;
+    private final ProposalServiceImpl proposalService;
 
     @PostMapping
     public ResponseEntity<ArtInfoDto> create(@RequestBody ArtInfoDto artInfoDto) {

@@ -4,6 +4,7 @@ package com.scnsoft.user.payload;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotEmpty;
 public class RegisterRequest {
 
     @NotEmpty
+    @Email
     private String email;
 
     @NotEmpty

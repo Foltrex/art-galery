@@ -1,19 +1,13 @@
 package com.scnsoft.art.service;
 
 import com.scnsoft.art.entity.Address;
-import com.scnsoft.art.repository.AddressRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
-@Service
-@RequiredArgsConstructor
-public class AddressService {
-    private final AddressRepository addressRepository;
+public interface AddressService {
 
-    public List<Address> findAllByCityId(UUID cityId) {
-        return addressRepository.findAllByCityId(cityId);
-    }
+    Page<Address> findAllByCityId(UUID cityId, Pageable pageable);
+
 }

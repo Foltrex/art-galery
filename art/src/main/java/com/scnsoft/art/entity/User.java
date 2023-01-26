@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @ToString
-public class User {
+public abstract class User {
 
     @Size(min = 2)
     private String firstname;

@@ -9,6 +9,7 @@ import com.scnsoft.art.repository.OrganizationRoleRepository;
 import com.scnsoft.art.repository.RepresentativeRepository;
 import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.service.FacilityService;
+import com.scnsoft.art.service.RepresentativeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,29 +23,33 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RepresentativeServiceImpl {
+public class RepresentativeServiceImpl implements RepresentativeService {
 
     private final RepresentativeRepository representativeRepository;
     private final OrganizationServiceImpl organizationService;
     private final FacilityService facilityService;
     private final OrganizationRoleRepository organizationRoleRepository;
 
+    @Override
     public Page<Representative> findAll(Pageable pageable) {
         return representativeRepository.findAll(pageable);
     }
 
+    @Override
     public Representative findById(UUID id) {
         return representativeRepository
                 .findById(id)
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
+    @Override
     public Representative findByAccountId(UUID accountId) {
         return representativeRepository
                 .findByAccountId(accountId)
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
+    @Override
     public Representative save(Representative representative) {
         if (representativeRepository.findByAccountId(representative.getAccountId()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Representative is already exists!");
@@ -80,6 +85,7 @@ public class RepresentativeServiceImpl {
         return representativeRepository.save(representative);
     }
 
+    @Override
     public Representative update(UUID id, Representative representative) {
         Representative existedRepresentative = findById(id);
         representative.setId(id);
@@ -88,6 +94,7 @@ public class RepresentativeServiceImpl {
         return representativeRepository.save(representative);
     }
 
+    @Override
     public void deleteById(UUID id) {
         representativeRepository.deleteById(id);
     }

@@ -10,8 +10,8 @@ import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.feignclient.AccountFeignClient;
-import com.scnsoft.art.service.ArtistService;
-import com.scnsoft.art.service.ProposalService;
+import com.scnsoft.art.service.impl.ArtistServiceImpl;
+import com.scnsoft.art.service.impl.ProposalServiceImpl;
 import com.scnsoft.art.service.impl.RepresentativeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +28,8 @@ import java.util.UUID;
 @RequestMapping("/proposal")
 public class ProposalController {
 
-    private final ProposalService proposalService;
-    private final ArtistService artistService;
+    private final ProposalServiceImpl proposalService;
+    private final ArtistServiceImpl artistService;
     private final RepresentativeServiceImpl representativeService;
     private final AccountFeignClient accountFeignClient;
     private final OrganizationMapper organizationMapper;

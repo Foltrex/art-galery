@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -48,7 +50,13 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Organization update(UUID id, Organization organization) {
+        Organization existedOrganization = findById(id);
+        if (organization.getStatus().equals(Organization.Status.NEW)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid organization status");
+        }
+
         organization.setId(id);
+        organization.setFacilities(existedOrganization.getFacilities());
         return organizationRepository.save(organization);
     }
 

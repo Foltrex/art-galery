@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("accounts")
 @RequiredArgsConstructor
@@ -33,13 +35,14 @@ public class AccountController {
     @GetMapping("/byEmail/{email}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<AccountDto> findByEmail(@PathVariable String email) {
-        return new ResponseEntity<>(accountMapper.mapToDto(accountService.findByEmail(email)), HttpStatus.OK);
+        return ResponseEntity.ok(accountMapper.mapToDto(accountService.findByEmail(email)));
     }
 
     @PostMapping("/register-representative")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<RepresentativeDto> registerRepresentative(@RequestBody RegisterRepresentativeRequest request) {
-        return new ResponseEntity<>(accountService.registerRepresentative(request), HttpStatus.CREATED);
+    public ResponseEntity<RepresentativeDto> registerRepresentative(
+            @Valid @RequestBody RegisterRepresentativeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.registerRepresentative(request));
     }
 
     ////////////////////////////////////// FOR TESTS ////////////////////////////////

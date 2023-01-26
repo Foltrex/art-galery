@@ -6,7 +6,11 @@ import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.entity.City;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -38,6 +42,12 @@ public class ArtistMapper implements Mapper<Artist, ArtistDto> {
                 .accountId(artistDto.getAccountId())
                 .build()
                 : null;
+    }
+
+    public Page<ArtistDto> mapPageToDto(final Page<Artist> artistPage) {
+        return new PageImpl<>(artistPage.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList()), artistPage.getPageable(), artistPage.getTotalElements());
     }
 
     private CityDto mapCityToDto(City city) {
