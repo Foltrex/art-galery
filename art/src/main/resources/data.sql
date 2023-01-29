@@ -13,12 +13,12 @@ INSERT INTO city (name, latitude, longitude)
 VALUES ('Minsk', 53.9006, 27.5590);
 
 -- addresses --
-INSERT INTO address (city_id, street_name, street_number)
-VALUES ((SELECT id FROM city LIMIT 1), 'Bogdanovicha', 120);
-INSERT INTO address (city_id, street_name, street_number)
-VALUES ((SELECT id FROM city LIMIT 1 OFFSET 1), 'Kulman', 111);
-INSERT INTO address (city_id, street_name, street_number)
-VALUES ((SELECT id FROM city LIMIT 1 OFFSET 2), 'Hataevicha', 51);
+INSERT INTO address (city_id, full_name)
+VALUES ((SELECT id FROM city LIMIT 1), 'Bogdanovicha');
+INSERT INTO address (city_id, full_name)
+VALUES ((SELECT id FROM city LIMIT 1 OFFSET 1), 'Kulman');
+INSERT INTO address (city_id, full_name)
+VALUES ((SELECT id FROM city LIMIT 1 OFFSET 2), 'Hataevicha');
 
 -- organization --
 INSERT INTO organization (name, status, address_id)

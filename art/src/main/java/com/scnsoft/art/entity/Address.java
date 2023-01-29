@@ -25,6 +25,5 @@ public class Address {
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
-    private String streetName;
-    private Integer streetNumber;
+    private String fullName;
 }

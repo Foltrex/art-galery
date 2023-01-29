@@ -17,8 +17,7 @@ public record AddressMapper(CityMapper cityMapper) implements Mapper<Address, Ad
         return AddressDto.builder()
                 .id(address.getId())
                 .city(cityMapper.mapToDto(address.getCity()))
-                .streetName(address.getStreetName())
-                .streetNumber(address.getStreetNumber())
+                .fullName(address.getFullName())
                 .build();
     }
 
@@ -27,8 +26,7 @@ public record AddressMapper(CityMapper cityMapper) implements Mapper<Address, Ad
         return Address.builder()
                 .id(addressDto.getId())
                 .city(cityMapper.mapToEntity(addressDto.getCity()))
-                .streetName(addressDto.getStreetName())
-                .streetNumber(addressDto.getStreetNumber())
+                .fullName(addressDto.getFullName())
                 .build();
     }
 

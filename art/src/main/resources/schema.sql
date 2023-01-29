@@ -24,8 +24,7 @@ CREATE TABLE IF NOT EXISTS city (
 CREATE TABLE IF NOT EXISTS address (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     city_id UUID REFERENCES city (id),
-    street_name VARCHAR NOT NULL,
-    street_number INTEGER NOT NULL
+    full_name VARCHAR NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS artist (

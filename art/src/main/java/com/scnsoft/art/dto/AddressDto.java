@@ -12,6 +12,5 @@ import java.util.UUID;
 public class AddressDto {
     UUID id;
     CityDto city;
-    String streetName;
-    Integer streetNumber;
+    String fullName;
 }
