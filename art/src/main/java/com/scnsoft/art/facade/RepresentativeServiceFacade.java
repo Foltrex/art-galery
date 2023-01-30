@@ -43,4 +43,8 @@ public class RepresentativeServiceFacade {
         return null;
     }
 
+    public Page<RepresentativeDto> findAllByAccountId(UUID accountId, Pageable pageable) {
+        return representativeMapper.mapPageToDto(representativeService.findAllByAccountId(accountId, pageable));
+    }
+
 }

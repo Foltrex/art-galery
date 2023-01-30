@@ -32,8 +32,13 @@ public class RepresentativeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RepresentativeDto> findById(@PathVariable UUID id) {
+    public ResponseEntity<RepresentativeDto> findkById(@PathVariable UUID id) {
         return ResponseEntity.ok(representativeServiceFacade.findById(id));
+    }
+
+    @GetMapping("/account/{accountId}")
+    public ResponseEntity<Page<RepresentativeDto>> findAllByAccountId(@PathVariable UUID accountId, Pageable pageable) {
+        return ResponseEntity.ok(representativeServiceFacade.findAllByAccountId(accountId, pageable));
     }
 
     @PostMapping
@@ -51,5 +56,4 @@ public class RepresentativeController {
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         return ResponseEntity.ok(representativeServiceFacade.deleteById(id));
     }
-
 }

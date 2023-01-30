@@ -47,6 +47,11 @@ public class FacilityController {
         return ResponseEntity.ok(facilityServiceFacade.findAllByOrganizationId(organizationId, pageable));
     }
 
+    @GetMapping("/account/{accountId}")
+    public ResponseEntity<Page<FacilityDto>> findAllByAccountId(@PathVariable UUID accountId, Pageable pageable) {
+        return ResponseEntity.ok(facilityServiceFacade.findAllByAccountId(accountId, pageable));
+    }
+
     @PostMapping
     public ResponseEntity<FacilityDto> save(@RequestBody FacilityDto facilityDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(facilityServiceFacade.save(facilityDto));

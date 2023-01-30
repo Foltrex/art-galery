@@ -2,9 +2,13 @@ package com.scnsoft.art.service.impl;
 
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
+import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.FacilityRepository;
+import com.scnsoft.art.repository.RepresentativeRepository;
 import com.scnsoft.art.service.FacilityService;
+import com.scnsoft.art.service.RepresentativeService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +23,7 @@ import java.util.UUID;
 public class FacilityServiceImpl implements FacilityService {
 
     private final FacilityRepository facilityRepository;
+    private final RepresentativeRepository representativeRepository;
     private final OrganizationServiceImpl organizationService;
 
     @Override
@@ -58,6 +63,16 @@ public class FacilityServiceImpl implements FacilityService {
     @Override
     public void deleteById(UUID id) {
         facilityRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Facility> findAllByAccountId(UUID accountId, Pageable pageable) {
+        Representative representative = representativeRepository
+            .findByAccountId(accountId)
+            .orElseThrow(IllegalArgumentException::new);
+            
+        Organization organization = representative.getOrganization();
+        return facilityRepository.findAllByOrganization(organization, pageable);
     }
 
 }

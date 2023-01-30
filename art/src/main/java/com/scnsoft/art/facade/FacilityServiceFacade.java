@@ -54,4 +54,8 @@ public class FacilityServiceFacade {
         facilityService.deleteById(id);
         return null;
     }
+
+    public Page<FacilityDto> findAllByAccountId(UUID accountId, Pageable pageable) {
+        return facilityMapper.mapPageToDto(facilityService.findAllByAccountId(accountId, pageable));
+    }
 }

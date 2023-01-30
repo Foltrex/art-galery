@@ -22,4 +22,6 @@ public interface FacilityService {
     List<Facility> findAll();
 
     void deleteById(UUID id);
+
+    Page<Facility> findAllByAccountId(UUID accountId, Pageable pageable);
 }

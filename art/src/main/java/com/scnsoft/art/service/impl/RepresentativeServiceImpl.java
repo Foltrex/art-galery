@@ -105,4 +105,12 @@ public class RepresentativeServiceImpl implements RepresentativeService {
                 .orElseThrow(() -> new ArtResourceNotFoundException("OrganizationRole not found by name: " + name));
     }
 
+    public Page<Representative> findAllByAccountId(UUID accountId, Pageable pageable) {
+        Representative representative = representativeRepository
+            .findByAccountId(accountId)
+            .orElseThrow(IllegalArgumentException::new);
+        
+        return representativeRepository.findAllByOrganization(representative.getOrganization(), pageable);
+    }
+
 }
