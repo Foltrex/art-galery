@@ -38,6 +38,7 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Override
     public Artist findByAccountId(UUID accountId) {
+        System.out.println(accountId);
         return artistRepository
                 .findByAccountId(accountId)
                 .orElseThrow(() -> new ArtResourceNotFoundException("Artist not found by accountId"));

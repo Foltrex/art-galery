@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS artist (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     first_name VARCHAR (255),
     last_name VARCHAR (255),
-    account_id VARCHAR (255),
+    account_id UUID (255),
     description VARCHAR (1024),
-    city_id UUID REFERENCES city (id)
+    address_id UUID REFERENCES address (id)
 );
 
 CREATE TABLE IF NOT EXISTS organization (

@@ -17,5 +17,5 @@ public class ArtistDto {
     private String lastname;
     private String description;
     private UUID accountId;
-    private CityDto city;
+    private AddressDto address;
 }
