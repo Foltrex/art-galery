@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS facility (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     is_active BOOLEAN DEFAULT true,
     name VARCHAR (255),
-    address_id UUID REFERENCES address (id),
+    address_id UUID REFERENCES address (id) ON DELETE SET NULL,
     organization_id UUID REFERENCES organization (id)
 );
 
@@ -93,7 +93,6 @@ CREATE TABLE IF NOT EXISTS representative (
     account_id UUID NOT NULL,
     firstname VARCHAR (255),
     lastname VARCHAR (255),
-    -- MAY BE SET NULL LATTER
     facility_id UUID REFERENCES facility (id) ON DELETE SET NULL,
     organization_id UUID REFERENCES organization (id),
     organization_role_id BIGINT REFERENCES organization_role (id)
