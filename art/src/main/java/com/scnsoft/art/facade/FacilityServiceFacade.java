@@ -58,4 +58,11 @@ public class FacilityServiceFacade {
     public Page<FacilityDto> findAllByAccountId(UUID accountId, Pageable pageable) {
         return facilityMapper.mapPageToDto(facilityService.findAllByAccountId(accountId, pageable));
     }
+
+    public List<FacilityDto> findAllByAccountId(UUID accountId) {
+        return facilityService.findAllByAccountId(accountId)
+            .stream()
+            .map(facilityMapper::mapToDto)
+            .toList();
+    }
 }

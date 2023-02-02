@@ -24,4 +24,6 @@ public interface FacilityService {
     void deleteById(UUID id);
 
     Page<Facility> findAllByAccountId(UUID accountId, Pageable pageable);
+
+    List<Facility> findAllByAccountId(UUID accountId);
 }

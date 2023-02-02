@@ -36,6 +36,33 @@ VALUES ('Pinta', false, (SELECT id FROM address LIMIT 1),
 INSERT INTO facility (name, is_active, address_id, organization_id)
 VALUES ('Spichki', true, (SELECT id FROM address LIMIT 1),
        (SELECT id FROM organization LIMIT 1) );
+INSERT INTO facility (name, is_active, address_id, organization_id)
+VALUES ('HookahPlace Yakuba Kolasa', true, (SELECT id FROM address LIMIT 1),
+       (SELECT id FROM organization LIMIT 1) );
+INSERT INTO facility (name, is_active, address_id, organization_id)
+VALUES ('Private House Bar', true, (SELECT id FROM address LIMIT 1),
+       (SELECT id FROM organization LIMIT 1) );
+INSERT INTO facility (name, is_active, address_id, organization_id)
+VALUES ('Nuahule Krasnaya', true, (SELECT id FROM address LIMIT 1),
+       (SELECT id FROM organization LIMIT 1) );
+INSERT INTO facility (name, is_active, address_id, organization_id)
+VALUES ('Dictator Bar', true, (SELECT id FROM address LIMIT 1),
+       (SELECT id FROM organization LIMIT 1) );
+INSERT INTO facility (name, is_active, address_id, organization_id)
+VALUES ('TNT Rock Club', true, (SELECT id FROM address LIMIT 1),
+       (SELECT id FROM organization LIMIT 1) );
+INSERT INTO facility (name, is_active, address_id, organization_id)
+VALUES ('Pub 82 on Dinamo', true, (SELECT id FROM address LIMIT 1),
+       (SELECT id FROM organization LIMIT 1) );
+INSERT INTO facility (name, is_active, address_id, organization_id)
+VALUES ('Banki-Butylki', true, (SELECT id FROM address LIMIT 1),
+       (SELECT id FROM organization LIMIT 1) );
+INSERT INTO facility (name, is_active, address_id, organization_id)
+VALUES ('MADMEN', true, (SELECT id FROM address LIMIT 1),
+       (SELECT id FROM organization LIMIT 1) );
+INSERT INTO facility (name, is_active, address_id, organization_id)
+VALUES ('Bootlegger Bar', true, (SELECT id FROM address LIMIT 1),
+       (SELECT id FROM organization LIMIT 1) );
 
 
 -- organization role --
@@ -46,8 +73,8 @@ INSERT INTO organization_role (name) VALUES (2);
 
 -- representative --
 INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('6b223764-491e-484b-ad89-93280fdaafaa', 'Donald', 'Duck', (SELECT id FROM facility LIMIT 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1));
+VALUES ('25fa19a6-6367-4fe1-a194-983fa28d24fc', 'Donald', 'Duck', (SELECT id FROM facility LIMIT 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1));
 INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('a98b17a0-ff58-4473-b514-55b0afeb62e8', 'Donald', 'Trump', (SELECT id FROM facility LIMIT 1 OFFSET 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 1));
+VALUES ('42400536-1fd7-4072-8819-e6fb657fdde1', 'Donald', 'Trump', (SELECT id FROM facility LIMIT 1 OFFSET 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 1));
 INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('d6a4df13-14ed-47b4-a331-af9f37ef713d', 'Donald', 'Tiktak', (SELECT id FROM facility LIMIT 1 OFFSET 2), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 2));
+VALUES ('5a1a1ec6-cf8a-470e-b728-5a7dfb1a81e2', 'Donald', 'Tiktak', (SELECT id FROM facility LIMIT 1 OFFSET 2), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 2));

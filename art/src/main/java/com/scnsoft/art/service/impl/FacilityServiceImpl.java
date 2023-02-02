@@ -75,4 +75,13 @@ public class FacilityServiceImpl implements FacilityService {
         return facilityRepository.findAllByOrganization(organization, pageable);
     }
 
+    @Override
+    public List<Facility> findAllByAccountId(UUID accountId) {
+        Representative representative = representativeRepository.findByAccountId(accountId)
+            .orElseThrow(IllegalArgumentException::new);
+
+        Organization organization = representative.getOrganization();
+        return facilityRepository.findAllByOrganization(organization);
+    }
+
 }

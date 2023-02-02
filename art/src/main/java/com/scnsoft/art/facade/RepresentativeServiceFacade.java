@@ -5,6 +5,8 @@ import com.scnsoft.art.dto.mapper.impl.RepresentativeMapper;
 import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.service.impl.RepresentativeServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RepresentativeServiceFacade {
 
     private final RepresentativeServiceImpl representativeService;

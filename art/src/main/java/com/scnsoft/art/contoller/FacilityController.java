@@ -1,6 +1,7 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.FacilityDto;
+import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.facade.FacilityServiceFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,9 +48,14 @@ public class FacilityController {
         return ResponseEntity.ok(facilityServiceFacade.findAllByOrganizationId(organizationId, pageable));
     }
 
-    @GetMapping("/account/{accountId}")
+    @GetMapping("/accounts/{accountId}")
     public ResponseEntity<Page<FacilityDto>> findAllByAccountId(@PathVariable UUID accountId, Pageable pageable) {
         return ResponseEntity.ok(facilityServiceFacade.findAllByAccountId(accountId, pageable));
+    }
+
+    @GetMapping("list/accounts/{accountId}")
+    public ResponseEntity<List<FacilityDto>> findAllByAccountId(@PathVariable UUID accountId) {
+        return ResponseEntity.ok(facilityServiceFacade.findAllByAccountId(accountId));
     }
 
     @PostMapping

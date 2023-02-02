@@ -2,10 +2,12 @@ package com.scnsoft.art.dto.mapper.impl;
 
 import com.scnsoft.art.dto.FacilityDto;
 import com.scnsoft.art.dto.OrganizationDto;
+import com.scnsoft.art.dto.OrganizationRoleDto;
 import com.scnsoft.art.dto.RepresentativeDto;
 import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
+import com.scnsoft.art.entity.OrganizationRole;
 import com.scnsoft.art.entity.Representative;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ public class RepresentativeMapper implements Mapper<Representative, Representati
 
     private final FacilityMapper facilityMapper;
     private final OrganizationMapper organizationMapper;
+    private final OrganizationRoleMapper organizationRoleMapper;
 
     @Override
     public RepresentativeDto mapToDto(Representative representative) {
@@ -29,7 +32,7 @@ public class RepresentativeMapper implements Mapper<Representative, Representati
                 .lastname(representative.getLastname())
                 .facility(mapFacilityToDto(representative.getFacility()))
                 .organization(mapOrganizationToDto(representative.getOrganization()))
-                .organizationRole(representative.getOrganizationRole())
+                .organizationRole(mapOrganizationRoleToDto(representative.getOrganizationRole()))
                 .accountId(representative.getAccountId())
                 .build();
     }
@@ -42,7 +45,7 @@ public class RepresentativeMapper implements Mapper<Representative, Representati
                 .lastname(representativeDto.getLastname())
                 .facility(mapFacilityDtoToEntity(representativeDto.getFacility()))
                 .organization(mapOrganizationDtoToEntity(representativeDto.getOrganization()))
-                .organizationRole(representativeDto.getOrganizationRole())
+                .organizationRole(mapOrganizationRoleDtoToEntity(representativeDto.getOrganizationRole()))
                 .accountId(representativeDto.getAccountId())
                 .build();
     }
@@ -67,5 +70,17 @@ public class RepresentativeMapper implements Mapper<Representative, Representati
 
     private Organization mapOrganizationDtoToEntity(OrganizationDto organizationDto) {
         return organizationDto != null ? organizationMapper.mapToEntity(organizationDto) : null;
+    }
+
+    private OrganizationRoleDto mapOrganizationRoleToDto(OrganizationRole organizationRole) {
+        return organizationRole != null 
+            ? organizationRoleMapper.mapToDto(organizationRole) 
+            : null;
+    }
+
+    private OrganizationRole mapOrganizationRoleDtoToEntity(OrganizationRoleDto organizationRoleDto) {
+        return organizationRoleDto != null
+            ? organizationRoleMapper.mapToEntity(organizationRoleDto)
+            : null;
     }
 }
