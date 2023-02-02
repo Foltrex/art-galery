@@ -1,7 +1,9 @@
 package com.scnsoft.user.controller;
 
+import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.payload.AuthToken;
 import com.scnsoft.user.payload.LoginRequest;
+import com.scnsoft.user.payload.RegisterRepresentativeRequest;
 import com.scnsoft.user.payload.RegisterRequest;
 import com.scnsoft.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,13 @@ public class AuthController {
     @PreAuthorize("permitAll()")
     public ResponseEntity<AuthToken> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/register-representative")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<RepresentativeDto> registerRepresentative(
+            @Valid @RequestBody RegisterRepresentativeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerRepresentative(request));
     }
 
 }

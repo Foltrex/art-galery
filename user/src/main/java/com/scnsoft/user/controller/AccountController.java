@@ -38,49 +38,4 @@ public class AccountController {
         return ResponseEntity.ok(accountMapper.mapToDto(accountService.findByEmail(email)));
     }
 
-    @PostMapping("/register-representative")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<RepresentativeDto> registerRepresentative(
-            @Valid @RequestBody RegisterRepresentativeRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.registerRepresentative(request));
-    }
-
-    ////////////////////////////////////// FOR TESTS ////////////////////////////////
-
-    @GetMapping("/1")
-    @PreAuthorize("permitAll()")
-    public String test1() {
-        return "PERMIT ALL";
-    }
-
-    @PostMapping("/post")
-    @PreAuthorize("permitAll()")
-    public String post() {
-        return "POST REQUEST";
-    }
-
-    @PostMapping("/post1")
-    @PreAuthorize("permitAll()")
-    public String post(@RequestBody String word) {
-        return "POST REQUEST: " + word;
-    }
-
-
-    @GetMapping("/2")
-    @PreAuthorize("hasRole('USER')")
-    public String test2() {
-        return "PERMIT USER";
-    }
-
-    @GetMapping("/3")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String test3() {
-        return "PERMIT ADMIN";
-    }
-
-    @GetMapping("/4")
-    @PreAuthorize("@accountSecurityHandler.isHasType('ARTIST, SYSTEM')")
-    public String test4() {
-        return "PERMIT ARTIST";
-    }
 }
