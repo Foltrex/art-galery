@@ -3,6 +3,7 @@ package com.scnsoft.user.feignclient;
 import com.scnsoft.user.dto.ArtistDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,5 +19,8 @@ public interface ArtistFeignClient {
 
     @PostMapping()
     ResponseEntity<ArtistDto> save(@RequestBody ArtistDto artistDto);
+
+    @DeleteMapping("accounts/{accountId}")
+    ResponseEntity<ArtistDto> deleteByAccountId(@PathVariable("accountId") UUID accountId);
 
 }
