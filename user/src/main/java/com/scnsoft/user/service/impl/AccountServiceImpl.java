@@ -38,7 +38,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
-
     @Override
     @Transactional
     public void deleteAccountById(DeleteAccountRequest deleteAccountRequest) {

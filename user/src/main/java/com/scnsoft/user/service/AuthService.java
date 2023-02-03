@@ -14,4 +14,5 @@ public interface AuthService {
 
     RepresentativeDto registerRepresentative(RegisterRepresentativeRequest registerRepresentativeRequest);
 
+    void logout();
 }
