@@ -1,0 +1,70 @@
+package com.scnsoft.user.util;
+
+import com.scnsoft.user.entity.Account;
+import com.scnsoft.user.entity.Role;
+import com.scnsoft.user.exception.ResourseNotFoundException;
+import com.scnsoft.user.payload.AuthToken;
+import com.scnsoft.user.repository.RoleRepository;
+import com.scnsoft.user.security.JwtUtils;
+import com.scnsoft.user.security.UserDetailsServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import java.util.Set;
+
+@Component
+@RequiredArgsConstructor
+public class AccountAuthenticationUtil {
+
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+    private final JwtUtils jwtUtils;
+
+    public void setAccountToAuthentication(String login, String password) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(userDetails, userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    public Account createAccount(String email, String password, Account.AccountType accountType) {
+        return Account.builder()
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .accountType(accountType)
+                .roles(getUserRoles())
+                .build();
+    }
+
+    public AuthToken createAuthTokenResponse(Account account) {
+        return AuthToken.builder()
+                .token(createToken(account))
+                .type("Bearer")
+                .build();
+    }
+
+    private Set<Role> getUserRoles() {
+        return Set.of(roleRepository
+                .findByName(Role.RoleType.ROLE_USER)
+                .orElseThrow(() -> new ResourseNotFoundException("Role not found!")));
+    }
+
+    private String createToken(Account account) {
+        return jwtUtils.createToken(
+                account.getEmail(),
+                account.getId(),
+                account.getAccountType(),
+                account.getRoles()
+        );
+    }
+
+}

@@ -1,6 +1,5 @@
 package com.scnsoft.user.util;
 
-import com.scnsoft.user.payload.AuthToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-public class AuthUtil {
+public class TimeUtil {
 
     public static long calculateSecondsToUnblock(Date blockedSince) {
         long different = new Date().getTime() - blockedSince.getTime();
@@ -23,13 +22,6 @@ public class AuthUtil {
         long differentInSeconds = TimeUnit.MILLISECONDS.toSeconds(different);
 
         return differentInSeconds < 30;
-    }
-
-    public static AuthToken createAuthTokenResponse(String token) {
-        return AuthToken.builder()
-                .token(token)
-                .type("Bearer")
-                .build();
     }
 
 }
