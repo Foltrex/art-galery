@@ -57,6 +57,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         organization.setId(id);
         organization.setFacilities(existedOrganization.getFacilities());
+
         return organizationRepository.save(organization);
     }
 

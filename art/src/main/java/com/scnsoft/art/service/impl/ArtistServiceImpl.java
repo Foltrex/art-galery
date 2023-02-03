@@ -51,7 +51,10 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Override
     public Artist update(UUID id, Artist artist) {
+        Artist existedArtist = findById(id);
         artist.setId(id);
+        artist.setAccountId(existedArtist.getAccountId());
+
         return artistRepository.save(artist);
     }
 

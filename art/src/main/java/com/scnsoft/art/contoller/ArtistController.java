@@ -42,6 +42,7 @@ public class ArtistController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ArtistDto> save(@RequestBody ArtistDto artistDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(artistServiceFacade.save(artistDto));
     }
@@ -56,31 +57,9 @@ public class ArtistController {
         return ResponseEntity.ok(artistServiceFacade.deleteById(id));
     }
 
-    ////////////////////////////////////// FOR TESTS ////////////////////////////////
-
-    @GetMapping("/1")
-    @PreAuthorize("permitAll()")
-    public String test1() {
-        return "PERMIT ALL";
+    @DeleteMapping("/accounts/{id}")
+    public ResponseEntity<Void> deleteByAccountId(@PathVariable UUID id) {
+        return ResponseEntity.ok(artistServiceFacade.deleteById(id));
     }
-
-
-    @GetMapping("/2")
-    @PreAuthorize("hasRole('USER')")
-    public String test2() {
-        return "PERMIT USER";
-    }
-
-    @GetMapping("/3")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String test3() {
-        return "PERMIT ADMIN";
-    }
-
-//    @GetMapping("/4")
-//    @PreAuthorize("@accountSecurityHandler.isHasType('ARTIST, SYSTEM')")
-//    public String test4() {
-//        return "PERMIT ARTIST";
-//    }
 
 }

@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ArtistMapper implements Mapper<Artist, ArtistDto> {
 
-    private final CityMapper cityMapper;
     private final AddressMapper addressMapper;
 
     @Override

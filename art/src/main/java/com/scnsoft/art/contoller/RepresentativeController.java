@@ -32,7 +32,7 @@ public class RepresentativeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RepresentativeDto> findkById(@PathVariable UUID id) {
+    public ResponseEntity<RepresentativeDto> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(representativeServiceFacade.findById(id));
     }
 

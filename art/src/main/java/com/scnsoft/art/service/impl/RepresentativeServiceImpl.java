@@ -89,6 +89,7 @@ public class RepresentativeServiceImpl implements RepresentativeService {
     public Representative update(UUID id, Representative representative) {
         Representative existedRepresentative = findById(id);
         representative.setId(id);
+        representative.setAccountId(existedRepresentative.getAccountId());
         representative.setOrganization(existedRepresentative.getOrganization());
 
         return representativeRepository.save(representative);

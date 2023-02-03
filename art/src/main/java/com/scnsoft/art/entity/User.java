@@ -2,6 +2,7 @@ package com.scnsoft.art.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @Getter
+@Setter
 @ToString
 public abstract class User {
 
