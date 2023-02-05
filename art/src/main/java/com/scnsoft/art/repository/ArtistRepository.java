@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface ArtistRepository extends JpaRepository<Artist, UUID> {
 
     Optional<Artist> findByAccountId(UUID accountId);
+
+    void deleteArtistByAccountId(UUID accountId);
 }

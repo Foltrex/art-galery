@@ -56,4 +56,11 @@ public class RepresentativeController {
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         return ResponseEntity.ok(representativeServiceFacade.deleteById(id));
     }
+
+    @DeleteMapping("/accounts/{accountId}")
+    @PreAuthorize("isAuthenticated() and #accountId == authentication.principal.id")
+    public ResponseEntity<Void> deleteByAccountId(@PathVariable UUID accountId) {
+        return ResponseEntity.ok(representativeServiceFacade.deleteByAccountId(accountId));
+    }
+
 }

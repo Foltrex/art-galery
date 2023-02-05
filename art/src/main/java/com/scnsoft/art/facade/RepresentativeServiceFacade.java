@@ -27,6 +27,10 @@ public class RepresentativeServiceFacade {
         return representativeMapper.mapPageToDto(representativeService.findAll(pageable));
     }
 
+    public Page<RepresentativeDto> findAllByAccountId(UUID accountId, Pageable pageable) {
+        return representativeMapper.mapPageToDto(representativeService.findAllByAccountId(accountId, pageable));
+    }
+
     public RepresentativeDto findById(UUID id) {
         return representativeMapper.mapToDto(representativeService.findById(id));
     }
@@ -46,8 +50,9 @@ public class RepresentativeServiceFacade {
         return null;
     }
 
-    public Page<RepresentativeDto> findAllByAccountId(UUID accountId, Pageable pageable) {
-        return representativeMapper.mapPageToDto(representativeService.findAllByAccountId(accountId, pageable));
+    public Void deleteByAccountId(@PathVariable UUID accountId) {
+        representativeService.deleteByAccountId(accountId);
+        return null;
     }
 
 }

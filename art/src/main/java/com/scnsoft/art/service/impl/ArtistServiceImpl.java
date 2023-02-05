@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -61,5 +62,11 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public void deleteById(UUID id) {
         artistRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByAccountId(UUID accountId) {
+        artistRepository.deleteArtistByAccountId(accountId);
     }
 }

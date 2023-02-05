@@ -57,9 +57,10 @@ public class ArtistController {
         return ResponseEntity.ok(artistServiceFacade.deleteById(id));
     }
 
-    @DeleteMapping("/accounts/{id}")
-    public ResponseEntity<Void> deleteByAccountId(@PathVariable UUID id) {
-        return ResponseEntity.ok(artistServiceFacade.deleteById(id));
+    @DeleteMapping("/accounts/{accountId}")
+    @PreAuthorize("isAuthenticated() and #accountId == authentication.principal.id")
+    public ResponseEntity<Void> deleteByAccountId(@PathVariable UUID accountId) {
+        return ResponseEntity.ok(artistServiceFacade.deleteByAccountId(accountId));
     }
 
 }

@@ -100,6 +100,16 @@ public class RepresentativeServiceImpl implements RepresentativeService {
         representativeRepository.deleteById(id);
     }
 
+    @Override
+    public void deleteByAccountId(UUID accountId) {
+        Representative representative = findByAccountId(accountId);
+        if (representative.getOrganizationRole().getName().equals(OrganizationRole.RoleType.CREATOR)) {
+            Organization organization = organizationService.findByAccountId(accountId);
+            organization.setStatus(Organization.Status.INACTIVE);
+        }
+        deleteById(representative.getId());
+    }
+
     private OrganizationRole getOrganizationRoleByName(OrganizationRole.RoleType name) {
         return organizationRoleRepository
                 .findByName(name)

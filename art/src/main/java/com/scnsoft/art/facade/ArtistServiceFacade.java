@@ -46,4 +46,10 @@ public class ArtistServiceFacade {
         artistService.deleteById(id);
         return null;
     }
+
+    public Void deleteByAccountId(@PathVariable UUID accountId) {
+        artistService.deleteByAccountId(accountId);
+        return null;
+    }
+
 }

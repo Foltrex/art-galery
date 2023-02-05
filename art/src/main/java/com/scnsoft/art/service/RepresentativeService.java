@@ -20,4 +20,6 @@ public interface RepresentativeService {
 
     void deleteById(UUID id);
 
+    void deleteByAccountId(UUID accountId);
+
 }

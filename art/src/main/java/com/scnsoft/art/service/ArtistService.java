@@ -21,4 +21,6 @@ public interface ArtistService {
     Artist update(UUID id, Artist artist);
 
     void deleteById(UUID id);
+
+    void deleteByAccountId(UUID accountId);
 }
