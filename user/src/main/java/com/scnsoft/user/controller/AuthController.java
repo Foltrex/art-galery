@@ -44,7 +44,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerRepresentative(request));
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     @PreAuthorize("isAuthenticated()")
     public void logout() {
         authService.logout();

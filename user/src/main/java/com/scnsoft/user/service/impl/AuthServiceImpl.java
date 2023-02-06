@@ -6,6 +6,7 @@ import com.scnsoft.user.dto.OrganizationDto;
 import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.exception.AccountBlockedException;
+import com.scnsoft.user.exception.FeignResponseException;
 import com.scnsoft.user.exception.LoginAlreadyExistsException;
 import com.scnsoft.user.feignclient.ArtistFeignClient;
 import com.scnsoft.user.feignclient.RepresentativeFeignClient;
@@ -21,13 +22,11 @@ import com.scnsoft.user.util.TimeUtil;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.UUID;
@@ -66,12 +65,7 @@ public class AuthServiceImpl implements AuthService {
         } catch (FeignException e) {
             logout();
             accountRepository.delete(account);
-
-            int statusCode = e.status();
-            if (statusCode == -1) {
-                throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, e.getMessage());
-            }
-            throw new ResponseStatusException(HttpStatus.valueOf(statusCode), e.getMessage());
+            throw new FeignResponseException(e);
         }
 
         return accountAuthenticationUtil.createAuthTokenResponse(account);
@@ -125,12 +119,7 @@ public class AuthServiceImpl implements AuthService {
             representativeDto = response.getBody();
         } catch (FeignException e) {
             accountRepository.delete(account);
-
-            int statusCode = e.status();
-            if (statusCode == -1) {
-                throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, e.getMessage());
-            }
-            throw new ResponseStatusException(HttpStatus.valueOf(statusCode), e.getMessage());
+            throw new FeignResponseException(e);
         }
 
         return representativeDto;

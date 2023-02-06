@@ -1,12 +1,13 @@
 package com.scnsoft.user.service.impl;
 
 import com.scnsoft.user.entity.Account;
+import com.scnsoft.user.exception.FeignResponseException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.feignclient.ArtistFeignClient;
 import com.scnsoft.user.feignclient.RepresentativeFeignClient;
-import com.scnsoft.user.payload.DeleteAccountRequest;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.service.AccountService;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,19 +38,18 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new ResourseNotFoundException("Account not found by email: " + email));
     }
 
-
     @Override
     @Transactional
-    public void deleteAccountById(DeleteAccountRequest deleteAccountRequest) {
-        Account account = findById(deleteAccountRequest.getAccountId());
-
-        switch (account.getAccountType()) {
-            case REPRESENTATIVE -> {
-
+    public void deleteById(UUID id) {
+        Account account = findById(id);
+        accountRepository.delete(account);
+        try {
+            switch (account.getAccountType()) {
+                case REPRESENTATIVE -> representativeFeignClient.deleteByAccountId(account.getId());
+                case ARTIST -> artistFeignClient.deleteByAccountId(account.getId());
             }
-            case ARTIST -> {
-
-            }
+        } catch (FeignException e) {
+            throw new FeignResponseException(e);
         }
     }
 

@@ -21,6 +21,6 @@ public interface ArtistFeignClient {
     ResponseEntity<ArtistDto> save(@RequestBody ArtistDto artistDto);
 
     @DeleteMapping("accounts/{accountId}")
-    ResponseEntity<ArtistDto> deleteByAccountId(@PathVariable("accountId") UUID accountId);
+    ResponseEntity<Void> deleteByAccountId(@PathVariable("accountId") UUID accountId);
 
 }
