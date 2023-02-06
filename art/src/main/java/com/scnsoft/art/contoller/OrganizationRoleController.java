@@ -1,17 +1,14 @@
 package com.scnsoft.art.contoller;
 
-import java.util.List;
-
+import com.scnsoft.art.dto.OrganizationRoleDto;
+import com.scnsoft.art.facade.OrganizationRoleServiceFacade;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scnsoft.art.dto.OrganizationRoleDto;
-import com.scnsoft.art.entity.OrganizationRole;
-import com.scnsoft.art.facade.OrganizationRoleServiceFacade;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @RestController
 @RequestMapping("organization-roles")

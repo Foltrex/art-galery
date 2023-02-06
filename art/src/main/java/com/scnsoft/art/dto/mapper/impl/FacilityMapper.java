@@ -3,9 +3,6 @@ package com.scnsoft.art.dto.mapper.impl;
 import com.scnsoft.art.dto.FacilityDto;
 import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.Facility;
-
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
@@ -32,7 +29,7 @@ public record FacilityMapper(
     }
 
     @Override
-    public Facility mapToEntity(FacilityDto facilityDto) {  
+    public Facility mapToEntity(FacilityDto facilityDto) {
         return facilityDto != null
                 ? Facility.builder()
                 .id(facilityDto.getId())

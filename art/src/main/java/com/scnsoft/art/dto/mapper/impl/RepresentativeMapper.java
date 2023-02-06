@@ -73,14 +73,14 @@ public class RepresentativeMapper implements Mapper<Representative, Representati
     }
 
     private OrganizationRoleDto mapOrganizationRoleToDto(OrganizationRole organizationRole) {
-        return organizationRole != null 
-            ? organizationRoleMapper.mapToDto(organizationRole) 
-            : null;
+        return organizationRole != null
+                ? organizationRoleMapper.mapToDto(organizationRole)
+                : null;
     }
 
     private OrganizationRole mapOrganizationRoleDtoToEntity(OrganizationRoleDto organizationRoleDto) {
         return organizationRoleDto != null
-            ? organizationRoleMapper.mapToEntity(organizationRoleDto)
-            : null;
+                ? organizationRoleMapper.mapToEntity(organizationRoleDto)
+                : null;
     }
 }

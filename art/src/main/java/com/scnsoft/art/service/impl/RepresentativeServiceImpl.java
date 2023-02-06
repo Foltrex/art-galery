@@ -118,9 +118,9 @@ public class RepresentativeServiceImpl implements RepresentativeService {
 
     public Page<Representative> findAllByAccountId(UUID accountId, Pageable pageable) {
         Representative representative = representativeRepository
-            .findByAccountId(accountId)
-            .orElseThrow(IllegalArgumentException::new);
-        
+                .findByAccountId(accountId)
+                .orElseThrow(IllegalArgumentException::new);
+
         return representativeRepository.findAllByOrganization(representative.getOrganization(), pageable);
     }
 

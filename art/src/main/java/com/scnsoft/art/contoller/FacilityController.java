@@ -1,7 +1,6 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.FacilityDto;
-import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.facade.FacilityServiceFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

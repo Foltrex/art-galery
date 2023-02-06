@@ -61,8 +61,8 @@ public class FacilityServiceFacade {
 
     public List<FacilityDto> findAllByAccountId(UUID accountId) {
         return facilityService.findAllByAccountId(accountId)
-            .stream()
-            .map(facilityMapper::mapToDto)
-            .toList();
+                .stream()
+                .map(facilityMapper::mapToDto)
+                .toList();
     }
 }
