@@ -16,6 +16,7 @@ public record ArtMapper(
                 ? ArtDto.builder()
                 .id(art.getId())
                 .description(art.getDescription())
+                .fileId(art.getFileId())
                 .artist(artistMapper.mapToDto(art.getArtist()))
                 .build()
                 : null;
@@ -28,6 +29,7 @@ public record ArtMapper(
                 .id(artDto.getId())
                 .name(artDto.getName())
                 .description(artDto.getDescription())
+                .fileId(artDto.getFileId())
                 .artist(artistMapper.mapToEntity(artDto.getArtist()))
                 .build()
                 : null;

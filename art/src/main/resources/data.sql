@@ -73,8 +73,9 @@ INSERT INTO organization_role (name) VALUES (2);
 
 -- representative --
 INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('17309a9f-888a-493d-96c0-8b4204977c87', 'Donald', 'Duck', (SELECT id FROM facility LIMIT 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1));
+VALUES ('934b1a9c-3650-4612-b9b9-aeaa38c621a0', 'Donald', 'Duck', (SELECT id FROM facility LIMIT 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1));
 INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('db0e12a6-efb8-4995-af02-843aad3abadc', 'Donald', 'Trump', (SELECT id FROM facility LIMIT 1 OFFSET 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 1));
+VALUES ('cc55d0d3-a215-42f6-9f47-9bd3b3eb5202', 'Donald', 'Trump', (SELECT id FROM facility LIMIT 1 OFFSET 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 1));
 INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('deab9226-8822-4c75-a59a-d9b001bd91d7', 'Donald', 'Tiktak', (SELECT id FROM facility LIMIT 1 OFFSET 2), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 2));
+VALUES ('a895b016-c472-4a58-9bb1-25656c42ed43', 'Donald', 'Tiktak', (SELECT id FROM facility LIMIT 1 OFFSET 2), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 2));
+
