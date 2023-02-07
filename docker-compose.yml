@@ -26,3 +26,15 @@ services:
     image: openzipkin/zipkin
     ports:
       - "9411:9411"
+
+  rabbitmq:
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    volumes:
+      - '/C//rabbitmq/data:/var/lib/rabbitmq/mnesia'
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+    image: 'rabbitmq:3-management'
