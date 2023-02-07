@@ -3,9 +3,12 @@ package com.scnsoft.art.service.impl;
 import com.scnsoft.art.dto.ArtDto;
 import com.scnsoft.art.dto.mapper.impl.ArtMapper;
 import com.scnsoft.art.entity.Art;
+import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.FileFeignClient;
 import com.scnsoft.art.repository.ArtRepository;
+import com.scnsoft.art.repository.ArtistRepository;
+import com.scnsoft.art.service.ArtService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,38 +17,46 @@ import java.util.UUID;
 @Service
 public record ArtServiceImpl(
         ArtRepository artRepository,
+        ArtistRepository artistRepository,
         ArtMapper artMapper,
         FileFeignClient fileFeignClient
-) {
-    public List<ArtDto> findAll() {
-        return artRepository.findAll()
-                .stream()
-                .map(artMapper::mapToDto)
-                .toList();
+) implements ArtService {
+    public List<Art> findAll() {
+        return artRepository.findAll();
     }
 
-    public ArtDto findById(UUID id) {
+    public Art findById(UUID id) {
         return artRepository
                 .findById(id)
-                .map(artMapper::mapToDto)
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
 
-    public ArtDto save(ArtDto artDto) {
-        Art art = artMapper.mapToEntity(artDto);
-        Art persistedArt = artRepository.save(art);
-        artDto.setId(persistedArt.getId());
-        return fileFeignClient.save(artDto);
+    // public ArtDto save(ArtDto artDto) {
+    //     Art art = artMapper.mapToEntity(artDto);
+    //     Art persistedArt = artRepository.save(art);
+    //     artDto.setId(persistedArt.getId());
+    //     return fileFeignClient.save(artDto);
+    // }
+
+    public Art save(Art art) {
+        return artRepository.save(art);
     }
 
-    public ArtDto update(UUID id, ArtDto artDto) {
-        Art art = artMapper.mapToEntity(artDto);
+    public Art update(UUID id, Art art) {
         art.setId(id);
-        Art updatedArt = artRepository.save(art);
-        return artMapper.mapToDto(updatedArt);
+        return artRepository.save(art);
     }
 
     public void deleteById(UUID id) {
         artRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Art> findAllByAccountId(UUID accountId) {
+        Artist artist = artistRepository
+            .findByAccountId(accountId)
+            .orElseThrow(ArtResourceNotFoundException::new);
+        
+        return artRepository.findByArtist(artist);
     }
 }

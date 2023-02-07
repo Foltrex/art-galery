@@ -4,6 +4,6 @@ public interface Mapper<T, V> {
 
     V mapToDto(T t);
 
-    public T mapToEntity(V v);
+    T mapToEntity(V v);
 
 }
