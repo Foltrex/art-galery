@@ -5,12 +5,15 @@ import com.scnsoft.user.dto.FacilityDto;
 import com.scnsoft.user.dto.OrganizationDto;
 import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.entity.Account;
+import com.scnsoft.user.entity.constant.TemplateFile;
 import com.scnsoft.user.exception.AccountBlockedException;
 import com.scnsoft.user.exception.FeignResponseException;
 import com.scnsoft.user.exception.LoginAlreadyExistsException;
 import com.scnsoft.user.feignclient.ArtistFeignClient;
+import com.scnsoft.user.feignclient.NotificationFeignClient;
 import com.scnsoft.user.feignclient.RepresentativeFeignClient;
 import com.scnsoft.user.payload.AuthToken;
+import com.scnsoft.user.payload.EmailMessagePayload;
 import com.scnsoft.user.payload.LoginRequest;
 import com.scnsoft.user.payload.RegisterRepresentativeRequest;
 import com.scnsoft.user.payload.RegisterRequest;
@@ -18,6 +21,7 @@ import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.service.AccountService;
 import com.scnsoft.user.service.AuthService;
 import com.scnsoft.user.util.AccountAuthenticationUtil;
+import com.scnsoft.user.util.PasswordGeneratorUtil;
 import com.scnsoft.user.util.TimeUtil;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -37,22 +43,23 @@ import java.util.UUID;
 public class AuthServiceImpl implements AuthService {
 
     private final AccountRepository accountRepository;
+    private final AccountService accountService;
     private final AccountAuthenticationUtil accountAuthenticationUtil;
     private final RepresentativeFeignClient representativeFeignClient;
     private final ArtistFeignClient artistFeignClient;
-    private final AccountService accountService;
+    private final NotificationFeignClient notificationFeignClient;
 
     @Override
     public AuthToken register(RegisterRequest registerRequest) {
         if (accountRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-            throw new LoginAlreadyExistsException("email is already in use!");
+            throw new LoginAlreadyExistsException("Email is already in use!");
         }
 
         Account account = accountAuthenticationUtil.createAccount(
                 registerRequest.getEmail(),
                 registerRequest.getPassword(),
                 Account.AccountType.valueOf(registerRequest.getAccountType()));
-
+        account.setIsOneTimePassword(false);
         accountRepository.save(account);
         accountAuthenticationUtil.setAccountToAuthentication(registerRequest.getEmail(), registerRequest.getPassword());
 
@@ -88,6 +95,10 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             accountAuthenticationUtil.setAccountToAuthentication(loginRequest.getEmail(), loginRequest.getPassword());
+            if (account.getIsOneTimePassword()) {
+                account.setPassword(null);
+                accountRepository.save(account);
+            }
         } catch (AuthenticationException e) {
             handleEventOfBadCredentials(account);
             throw new BadCredentialsException("Invalid credentials");
@@ -99,12 +110,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public RepresentativeDto registerRepresentative(RegisterRepresentativeRequest registerRepresentativeRequest) {
         if (accountRepository.findByEmail(registerRepresentativeRequest.getEmail()).isPresent()) {
-            throw new LoginAlreadyExistsException("email is already in use!");
+            throw new LoginAlreadyExistsException("Email is already in use!");
         }
+
+        String password = PasswordGeneratorUtil.generate(10);
+
         Account account = accountAuthenticationUtil.createAccount(
-                registerRepresentativeRequest.getEmail(),
-                registerRepresentativeRequest.getPassword(),
-                Account.AccountType.REPRESENTATIVE);
+                registerRepresentativeRequest.getEmail(), password, Account.AccountType.REPRESENTATIVE);
+
+        account.setIsOneTimePassword(true);
 
         accountRepository.save(account);
 
@@ -117,12 +131,30 @@ public class AuthServiceImpl implements AuthService {
         try {
             ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(representativeDto);
             representativeDto = response.getBody();
+
+            Map<String, String> properties = new HashMap<>();
+            properties.put("firstname", registerRepresentativeRequest.getFirstname());
+            properties.put("lastname", registerRepresentativeRequest.getLastname());
+            properties.put("password", password);
+
+            notificationFeignClient.sendMessage(EmailMessagePayload.builder()
+                    .receiver(registerRepresentativeRequest.getEmail())
+                    .subject("Account registration")
+                    .templateFile(TemplateFile.REPRESENTATIVE_REGISTRATION)
+                    .properties(properties)
+                    .build()
+            );
         } catch (FeignException e) {
             accountRepository.delete(account);
             throw new FeignResponseException(e);
         }
 
         return representativeDto;
+    }
+
+    @Override
+    public void passwordRecovery() {
+
     }
 
     @Override

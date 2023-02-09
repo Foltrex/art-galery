@@ -60,6 +60,8 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
+    private Boolean isOneTimePassword = false;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "accounts_m2m_roles",

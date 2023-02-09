@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +41,12 @@ public class AuthController {
     public ResponseEntity<RepresentativeDto> registerRepresentative(
             @Valid @RequestBody RegisterRepresentativeRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerRepresentative(request));
+    }
+
+    @PostMapping("/password-recovery")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<RepresentativeDto> passwordRecovery(@Valid @RequestBody RegisterRepresentativeRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.registerRepresentative(request));
     }
 
     @PostMapping("/logout")

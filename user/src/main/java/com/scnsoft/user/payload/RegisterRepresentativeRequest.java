@@ -18,7 +18,10 @@ public class RegisterRepresentativeRequest {
     private String email;
 
     @NotEmpty
-    private String password;
+    private String firstname;
+
+    @NotEmpty
+    private String lastname;
 
     @NotNull
     private UUID organizationId;
