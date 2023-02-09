@@ -1,7 +1,7 @@
 package com.scnsoft.notification.service;
 
 import com.scnsoft.notification.config.MessagingConfig;
-import com.scnsoft.notification.payload.NotificationRequest;
+import com.scnsoft.notification.payload.EmailMessagePayload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -12,11 +12,11 @@ public class NotificationService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void sendToQueue(NotificationRequest notificationRequest) {
+    public void sendToQueue(EmailMessagePayload emailMessagePayload) {
         rabbitTemplate.convertAndSend(
                 MessagingConfig.EXCHANGE,
                 MessagingConfig.KEY,
-                notificationRequest);
+                emailMessagePayload);
     }
 
 }

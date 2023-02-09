@@ -45,9 +45,8 @@ public class MessagingConfig {
     @Bean
     public ConnectionFactory factory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-            // host rabbitmq - if app starts in docker
+//        host: rabbitmq - if app starts in docker
 //        connectionFactory.setHost("localhost");
-//        connectionFactory.setPort(5673);
         connectionFactory.setUsername("user");
         connectionFactory.setPassword("password");
 
