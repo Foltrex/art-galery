@@ -106,7 +106,9 @@ public class RepresentativeServiceImpl implements RepresentativeService {
         if (representative.getOrganizationRole().getName().equals(OrganizationRole.RoleType.CREATOR)) {
             Organization organization = organizationService.findByAccountId(accountId);
             organization.setStatus(Organization.Status.INACTIVE);
+            organizationService.update(organization.getId(), organization);
         }
+
         deleteById(representative.getId());
     }
 
