@@ -3,6 +3,8 @@ package com.scnsoft.art.contoller;
 import java.util.UUID;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +37,7 @@ public class ArtController {
     }
 
     @GetMapping("/accounts/{accountId}")
-    public ResponseEntity<List<ArtDto>> findAllByAccountId(@PathVariable UUID accountId) {
-        return ResponseEntity.ok(artServiceFacade.findAllByAccountId(accountId));
+    public ResponseEntity<Page<ArtDto>> findAllByAccountId(@PathVariable UUID accountId, Pageable pageable) {
+        return ResponseEntity.ok(artServiceFacade.findAllByAccountId(accountId, pageable));
     }
 }

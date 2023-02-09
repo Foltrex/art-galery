@@ -73,9 +73,32 @@ INSERT INTO organization_role (name) VALUES (2);
 
 -- representative --
 INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('934b1a9c-3650-4612-b9b9-aeaa38c621a0', 'Donald', 'Duck', (SELECT id FROM facility LIMIT 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1));
+VALUES ('d10a5761-6821-4766-aa6e-48834324c778', 'Donald', 'Trump', (SELECT id FROM facility LIMIT 1 OFFSET 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 1));
 INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('cc55d0d3-a215-42f6-9f47-9bd3b3eb5202', 'Donald', 'Trump', (SELECT id FROM facility LIMIT 1 OFFSET 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 1));
-INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('a895b016-c472-4a58-9bb1-25656c42ed43', 'Donald', 'Tiktak', (SELECT id FROM facility LIMIT 1 OFFSET 2), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 2));
+VALUES ('ab3d1286-6549-409a-826f-cde9c4431026', 'Donald', 'Tiktak', (SELECT id FROM facility LIMIT 1 OFFSET 2), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 2));
 
+
+-- artist --
+INSERT INTO artist (account_id, firstname, lastname, description, address_id) 
+VALUES ('860ee90a-fc73-4f45-adc1-2b20278a0bb0', 'Donald', 'Duck', 'Hop hey lala ley', (SELECT id FROM address LIMIT 1));
+
+
+-- arts --
+INSERT INTO art (description, name, artist_id)
+VALUES ('Super art', 'First', (SELECT id FROM artist LIMIT 1));
+INSERT INTO art (description, name, artist_id)
+VALUES ('Super art', 'Second', (SELECT id FROM artist LIMIT 1));
+INSERT INTO art (description, name, artist_id)
+VALUES ('Super art', 'Third', (SELECT id FROM artist LIMIT 1));
+INSERT INTO art (description, name, artist_id)
+VALUES ('Super art', 'Fourth', (SELECT id FROM artist LIMIT 1));
+INSERT INTO art (description, name, artist_id)
+VALUES ('Super art', 'Fifth', (SELECT id FROM artist LIMIT 1));
+INSERT INTO art (description, name, artist_id)
+VALUES ('Super art', 'Sixth', (SELECT id FROM artist LIMIT 1));
+INSERT INTO art (description, name, artist_id)
+VALUES ('Super art', 'Seventh', (SELECT id FROM artist LIMIT 1));
+INSERT INTO art (description, name, artist_id)
+VALUES ('Super art', 'Eights', (SELECT id FROM artist LIMIT 1));
+INSERT INTO art (description, name, artist_id)
+VALUES ('Super art', 'Ninth', (SELECT id FROM artist LIMIT 1));

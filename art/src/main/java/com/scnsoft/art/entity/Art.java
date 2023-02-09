@@ -25,7 +25,6 @@ public class Art {
     private UUID id;
     private String name;
     private String description;
-    private UUID fileId;
 
     @ManyToOne
     @JoinColumn(name = "artist_id")

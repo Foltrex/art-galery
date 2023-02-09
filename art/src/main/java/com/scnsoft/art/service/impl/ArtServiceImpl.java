@@ -1,25 +1,26 @@
 package com.scnsoft.art.service.impl;
 
-import com.scnsoft.art.dto.ArtDto;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import com.scnsoft.art.dto.mapper.impl.ArtMapper;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
-import com.scnsoft.art.feignclient.FileFeignClient;
 import com.scnsoft.art.repository.ArtRepository;
 import com.scnsoft.art.repository.ArtistRepository;
 import com.scnsoft.art.service.ArtService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public record ArtServiceImpl(
         ArtRepository artRepository,
         ArtistRepository artistRepository,
-        ArtMapper artMapper,
-        FileFeignClient fileFeignClient
+        ArtMapper artMapper
 ) implements ArtService {
     public List<Art> findAll() {
         return artRepository.findAll();
@@ -52,11 +53,11 @@ public record ArtServiceImpl(
     }
 
     @Override
-    public List<Art> findAllByAccountId(UUID accountId) {
+    public Page<Art> findAllByAccountId(UUID accountId, Pageable pageable) {
         Artist artist = artistRepository
             .findByAccountId(accountId)
             .orElseThrow(ArtResourceNotFoundException::new);
         
-        return artRepository.findByArtist(artist);
+        return artRepository.findAllByArtist(artist, pageable);
     }
 }

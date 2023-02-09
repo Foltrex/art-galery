@@ -1,13 +1,9 @@
 package com.scnsoft.file.controller;
 
-import com.scnsoft.file.dto.FileInfoDto;
-import com.scnsoft.file.dto.UploadFileDto;
-import com.scnsoft.file.dto.mapper.impl.FileInfoMapper;
-import com.scnsoft.file.service.impl.FileServiceImpl;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +13,37 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
+import com.scnsoft.file.dto.FileInfoDto;
+import com.scnsoft.file.dto.UploadFileDto;
+import com.scnsoft.file.dto.mapper.impl.FileInfoMapper;
+import com.scnsoft.file.facade.FileInfoServiceFacade;
+import com.scnsoft.file.service.impl.FileServiceImpl;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("files")
 @RequiredArgsConstructor
+@Slf4j
 public class FileController {
 
     private final FileServiceImpl fileService;
     private final FileInfoMapper fileInfoMapper;
+    private final FileInfoServiceFacade fileInfoServiceFacade;
 
-    @GetMapping(value = "/{id}/data", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public ResponseEntity<InputStreamResource> getFileStreamById(@PathVariable UUID id) {
-        return ResponseEntity.ok().body(new InputStreamResource(fileService.getFileStream(id).getInputStream()));
+    @GetMapping(value = "/data", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public ResponseEntity<List<InputStreamResource>> getFileStreamById(@RequestParam List<UUID> ids) {  
+        List<InputStreamResource> resources = fileService.getFileStream(ids)
+            .stream()
+            .map(fileStream -> new InputStreamResource(fileStream.getInputStream()))
+            .toList();
+
+        log.info(resources.toString());
+        return ResponseEntity.ok(resources);
     }
 
     @GetMapping("/{id}")
@@ -40,9 +52,20 @@ public class FileController {
     }
 
     @GetMapping("/arts/{artId}")
-    public ResponseEntity<Page<FileInfoDto>> findAllFileInfoByArtId(@PathVariable UUID artId, Pageable pageable) {
-        return ResponseEntity.ok().body(fileInfoMapper.mapPageToDto(fileService.findAllFileInfoByArtId(artId, pageable)));
+    public ResponseEntity<List<FileInfoDto>> findAllByArtId(@PathVariable UUID  artId) {
+        return ResponseEntity.ok(fileInfoServiceFacade.findAllByArtId(artId));
     }
+
+    @GetMapping("/arts/first")
+    public ResponseEntity<List<FileInfoDto>> findAllFirstByArtId(@RequestParam List<UUID> artId) {
+        log.info(artId.toString());
+        return ResponseEntity.ok(fileInfoServiceFacade.findAllFirstByArtIds(artId));
+    }
+
+    // @GetMapping("/arts/{artId}")
+    // public ResponseEntity<Page<FileInfoDto>> findAllFileInfoByArtId(@PathVariable UUID artId, Pageable pageable) {
+    //     return ResponseEntity.ok().body(fileInfoMapper.mapPageToDto(fileService.findAllFileInfoByArtId(artId, pageable)));
+    // }
 
     @PostMapping
     public ResponseEntity<FileInfoDto> uploadFile(@RequestBody UploadFileDto uploadFileDto) {

@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS address (
 
 CREATE TABLE IF NOT EXISTS artist (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
-    first_name VARCHAR (255),
-    last_name VARCHAR (255),
+    firstname VARCHAR (255),
+    lastname VARCHAR (255),
     account_id UUID,
     description VARCHAR (1024),
     address_id UUID REFERENCES address (id)

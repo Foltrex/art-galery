@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -44,13 +45,18 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public FileStreamDto getFileStream(UUID id) {
-        FileInfo fileInfo = findFileInfoById(id);
-        String filePath = buildFilePath(fileInfo);
+    public List<FileStreamDto> getFileStream(List<UUID> ids) {
+        return ids
+            .stream()
+            .map(id -> {
+                FileInfo fileInfo = findFileInfoById(id);
+                String filePath = buildFilePath(fileInfo);
 
-        InputStream inputStream = documentService.getInputStream(filePath);
-
-        return FileStreamDto.builder().inputStream(inputStream).build();
+                return FileStreamDto.builder()
+                    .inputStream(documentService.getInputStream(filePath))
+                    .build();
+            })
+            .toList();
     }
 
     @Override
@@ -91,4 +97,16 @@ public class FileServiceImpl implements FileService {
                 pathToFiles);
     }
 
+    @Override
+    public List<FileInfo> findAllByArtId(UUID artId) {
+        return fileInfoRepository.findAllByArtId(artId);
+    }
+
+    @Override
+    public List<FileInfo> findAllFirstByArtId(List<UUID> artIds) {
+        return artIds
+            .stream()
+            .map(id -> fileInfoRepository.findFirstByArtId(id).orElseThrow())
+            .toList();
+    }
 }

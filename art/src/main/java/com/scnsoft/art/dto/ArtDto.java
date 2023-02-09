@@ -1,5 +1,6 @@
 package com.scnsoft.art.dto;
 
+import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +18,5 @@ public class ArtDto {
     private UUID id;
     private String name;
     private String description;
-    private FileInfoDto file;
     private ArtistDto artist;
 }

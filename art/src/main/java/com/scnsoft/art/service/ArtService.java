@@ -3,10 +3,13 @@ package com.scnsoft.art.service;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.scnsoft.art.entity.Art;
 
 public interface ArtService {
-    List<Art> findAllByAccountId(UUID accountId);
+    Page<Art> findAllByAccountId(UUID accountId, Pageable pageable);
 
     List<Art> findAll();
 
