@@ -73,14 +73,14 @@ INSERT INTO organization_role (name) VALUES (2);
 
 -- representative --
 INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('d10a5761-6821-4766-aa6e-48834324c778', 'Donald', 'Trump', (SELECT id FROM facility LIMIT 1 OFFSET 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 1));
+VALUES ('6b57d38e-249e-41a4-b582-3b70f832bd4c', 'Donald', 'Trump', (SELECT id FROM facility LIMIT 1 OFFSET 1), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 1));
 INSERT INTO representative (account_id, firstname, lastname, facility_id, organization_id, organization_role_id)
-VALUES ('ab3d1286-6549-409a-826f-cde9c4431026', 'Donald', 'Tiktak', (SELECT id FROM facility LIMIT 1 OFFSET 2), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 2));
+VALUES ('a5c69fef-1234-431e-99d9-e92b3f79de67', 'Donald', 'Tiktak', (SELECT id FROM facility LIMIT 1 OFFSET 2), (SELECT id FROM organization LIMIT 1), (SELECT id FROM organization_role LIMIT 1 OFFSET 2));
 
 
 -- artist --
 INSERT INTO artist (account_id, firstname, lastname, description, address_id) 
-VALUES ('860ee90a-fc73-4f45-adc1-2b20278a0bb0', 'Donald', 'Duck', 'Hop hey lala ley', (SELECT id FROM address LIMIT 1));
+VALUES ('c8e12447-0815-49e5-b48f-3262664063a2', 'Donald', 'Duck', 'Hop hey lala ley', (SELECT id FROM address LIMIT 1));
 
 
 -- arts --

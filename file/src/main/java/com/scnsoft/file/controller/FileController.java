@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scnsoft.file.dto.FileInfoDto;
+import com.scnsoft.file.dto.FileStreamDto;
 import com.scnsoft.file.dto.UploadFileDto;
 import com.scnsoft.file.dto.mapper.impl.FileInfoMapper;
 import com.scnsoft.file.facade.FileInfoServiceFacade;
@@ -37,7 +38,9 @@ public class FileController {
 
     @GetMapping(value = "/data", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<List<InputStreamResource>> getFileStreamById(@RequestParam List<UUID> ids) {  
-        List<InputStreamResource> resources = fileService.getFileStream(ids)
+        log.info("Ids values: {}", ids);
+        List<FileStreamDto> dtos = fileService.getFileStream(ids);
+        List<InputStreamResource> resources = dtos
             .stream()
             .map(fileStream -> new InputStreamResource(fileStream.getInputStream()))
             .toList();
