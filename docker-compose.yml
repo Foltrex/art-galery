@@ -32,7 +32,7 @@ services:
       - '15672:15672'
       - '5672:5672'
     volumes:
-      - '/C//rabbitmq/data:/var/lib/rabbitmq/mnesia'
+      - './data:/var/lib/rabbitmq/mnesia'
     container_name: rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=user
