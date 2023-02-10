@@ -27,7 +27,7 @@ public class FileUtil {
         String pathWithoutFileExtension = filePath.substring(0, indexPoint);
         String[] array = pathWithoutFileExtension.split("/");
 
-        return array[1];
+        return array[array.length - 1];
     }
 
     public static String retrieveFolderPath(UUID artId, String defaultPath) {
