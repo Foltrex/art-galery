@@ -3,6 +3,7 @@ package com.scnsoft.user.controller;
 import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.payload.AuthToken;
 import com.scnsoft.user.payload.LoginRequest;
+import com.scnsoft.user.payload.PasswordRecoveryRequest;
 import com.scnsoft.user.payload.RegisterRepresentativeRequest;
 import com.scnsoft.user.payload.RegisterRequest;
 import com.scnsoft.user.service.AuthService;
@@ -45,8 +46,9 @@ public class AuthController {
 
     @PostMapping("/password-recovery")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<RepresentativeDto> passwordRecovery(@Valid @RequestBody RegisterRepresentativeRequest request) {
-        return ResponseEntity.status(HttpStatus.OK).body(authService.registerRepresentative(request));
+    public ResponseEntity<Void> passwordRecovery(@Valid @RequestBody PasswordRecoveryRequest request) {
+        authService.passwordRecovery(request);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/logout")

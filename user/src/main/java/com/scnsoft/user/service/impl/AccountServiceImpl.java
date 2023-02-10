@@ -5,6 +5,7 @@ import com.scnsoft.user.exception.FeignResponseException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.feignclient.ArtistFeignClient;
 import com.scnsoft.user.feignclient.RepresentativeFeignClient;
+import com.scnsoft.user.payload.UpdatePasswordRequest;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.service.AccountService;
 import feign.FeignException;
@@ -36,6 +37,21 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new ResourseNotFoundException("Account not found by email: " + email));
+    }
+
+    @Override
+    public void updatePasswordById(UUID id, UpdatePasswordRequest updatePasswordRequest) {
+        String oldPassword = updatePasswordRequest.getOldPassword();
+        String newPassword = updatePasswordRequest.getNewPassword();
+        Account account = findById(id);
+
+//        if (!passwordEncoder.matches(oldPassword, account.getPassword())) {
+//            throw new UserPasswordNotMatchesException("User password not matches!");
+//        }
+//
+//        existUser.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+
     }
 
     @Override

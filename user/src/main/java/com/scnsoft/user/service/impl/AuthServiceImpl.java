@@ -15,6 +15,7 @@ import com.scnsoft.user.feignclient.RepresentativeFeignClient;
 import com.scnsoft.user.payload.AuthToken;
 import com.scnsoft.user.payload.EmailMessagePayload;
 import com.scnsoft.user.payload.LoginRequest;
+import com.scnsoft.user.payload.PasswordRecoveryRequest;
 import com.scnsoft.user.payload.RegisterRepresentativeRequest;
 import com.scnsoft.user.payload.RegisterRequest;
 import com.scnsoft.user.repository.AccountRepository;
@@ -153,7 +154,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void passwordRecovery() {
+    public void passwordRecovery(PasswordRecoveryRequest passwordRecoveryRequest) {
 
     }
 
