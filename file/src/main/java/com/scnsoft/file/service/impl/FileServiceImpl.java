@@ -45,18 +45,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<FileStreamDto> getFileStream(List<UUID> ids) {
-        return ids
-            .stream()
-            .map(id -> {
-                FileInfo fileInfo = findFileInfoById(id);
-                String filePath = buildFilePath(fileInfo);
+    public FileStreamDto getFileStream(UUID id) {
+        FileInfo fileInfo = findFileInfoById(id);
+        String filePath = buildFilePath(fileInfo);
 
-                return FileStreamDto.builder()
-                    .inputStream(documentService.getInputStream(filePath))
-                    .build();
-            })
-            .toList();
+        return FileStreamDto.builder()
+            .inputStream(documentService.getInputStream(filePath))
+            .build();
     }
 
     @Override

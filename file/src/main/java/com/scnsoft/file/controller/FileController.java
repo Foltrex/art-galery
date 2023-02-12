@@ -36,17 +36,9 @@ public class FileController {
     private final FileInfoMapper fileInfoMapper;
     private final FileInfoServiceFacade fileInfoServiceFacade;
 
-    @GetMapping(value = "/data", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public ResponseEntity<List<InputStreamResource>> getFileStreamById(@RequestParam List<UUID> ids) {  
-        log.info("Ids values: {}", ids);
-        List<FileStreamDto> dtos = fileService.getFileStream(ids);
-        List<InputStreamResource> resources = dtos
-            .stream()
-            .map(fileStream -> new InputStreamResource(fileStream.getInputStream()))
-            .toList();
-
-        log.info(resources.toString());
-        return ResponseEntity.ok(resources);
+    @GetMapping(value = "/{id}/data", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public ResponseEntity<InputStreamResource> getFileStreamById(@PathVariable UUID id) {
+        return ResponseEntity.ok(new InputStreamResource(fileService.getFileStream(id).getInputStream()));
     }
 
     @GetMapping("/{id}")

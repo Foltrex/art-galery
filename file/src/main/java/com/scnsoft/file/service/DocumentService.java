@@ -1,7 +1,6 @@
 package com.scnsoft.file.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,23 +10,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class DocumentService {
 
     public InputStream getInputStream(String filePath) {
-        InputStream inputStream;
         try {
-            inputStream = Files.newInputStream(Paths.get(filePath));
+            return Files.newInputStream(Paths.get(filePath));
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Troubles with file reading", e);
         }
-
-        return inputStream;
     }
 
     public void upload(String filePath, byte[] fileData) {

@@ -1,7 +1,7 @@
 app:
   props:
     images:
-      path: src/main/resources/storage
+      path: file/src/main/resources/storage
       width: 300
       height: 300
 

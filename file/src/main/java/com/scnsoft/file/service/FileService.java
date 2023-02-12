@@ -19,7 +19,7 @@ public interface FileService {
 
     List<FileInfo> findAllFirstByArtId(List<UUID> artId);
 
-    List<FileStreamDto> getFileStream(List<UUID> ids);
+    FileStreamDto getFileStream(UUID ids);
 
     FileInfo uploadFile(UploadFileDto uploadFileDto);
 
