@@ -15,6 +15,8 @@ public interface AuthService {
 
     RepresentativeDto registerRepresentative(RegisterRepresentativeRequest registerRepresentativeRequest);
 
+    void sendPasswordRecoveryCode(String receiver);
+
     void passwordRecovery(PasswordRecoveryRequest passwordRecoveryRequest);
 
     void logout();

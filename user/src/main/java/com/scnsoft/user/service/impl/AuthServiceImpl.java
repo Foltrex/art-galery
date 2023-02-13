@@ -5,6 +5,7 @@ import com.scnsoft.user.dto.FacilityDto;
 import com.scnsoft.user.dto.OrganizationDto;
 import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.entity.Account;
+import com.scnsoft.user.entity.EmailMessageCode;
 import com.scnsoft.user.entity.constant.TemplateFile;
 import com.scnsoft.user.exception.AccountBlockedException;
 import com.scnsoft.user.exception.FeignResponseException;
@@ -21,7 +22,9 @@ import com.scnsoft.user.payload.RegisterRequest;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.service.AccountService;
 import com.scnsoft.user.service.AuthService;
+import com.scnsoft.user.service.EmailMessageCodeService;
 import com.scnsoft.user.util.AccountAuthenticationUtil;
+import com.scnsoft.user.util.NumberGeneratorUtil;
 import com.scnsoft.user.util.PasswordGeneratorUtil;
 import com.scnsoft.user.util.TimeUtil;
 import feign.FeignException;
@@ -49,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
     private final RepresentativeFeignClient representativeFeignClient;
     private final ArtistFeignClient artistFeignClient;
     private final NotificationFeignClient notificationFeignClient;
+    private final EmailMessageCodeService emailMessageService;
 
     @Override
     public AuthToken register(RegisterRequest registerRequest) {
@@ -151,6 +155,32 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return representativeDto;
+    }
+
+    @Override
+    public void sendPasswordRecoveryCode(String receiver) {
+        Account account = accountService.findByEmail(receiver);
+        Integer emailCode = NumberGeneratorUtil.generateCode(100000, 999999);
+        Map<String, String> properties = new HashMap<>();
+        properties.put("email", account.getEmail());
+        properties.put("code", emailCode.toString());
+
+        try {
+            notificationFeignClient.sendMessage(EmailMessagePayload.builder()
+                    .receiver(receiver)
+                    .subject("Password recovery")
+                    .templateFile(TemplateFile.PASSWORD_RECOVERY)
+                    .properties(properties)
+                    .build());
+
+            emailMessageService.save(EmailMessageCode.builder()
+                    .account(account)
+                    .code(emailCode)
+                    .build());
+        } catch (FeignException e) {
+            throw new FeignResponseException(e);
+        }
+
     }
 
     @Override

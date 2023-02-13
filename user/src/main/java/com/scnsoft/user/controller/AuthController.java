@@ -6,6 +6,7 @@ import com.scnsoft.user.payload.LoginRequest;
 import com.scnsoft.user.payload.PasswordRecoveryRequest;
 import com.scnsoft.user.payload.RegisterRepresentativeRequest;
 import com.scnsoft.user.payload.RegisterRequest;
+import com.scnsoft.user.payload.SendEmailMessageRequest;
 import com.scnsoft.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,13 @@ public class AuthController {
     public ResponseEntity<RepresentativeDto> registerRepresentative(
             @Valid @RequestBody RegisterRepresentativeRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerRepresentative(request));
+    }
+
+    @PostMapping("/password-recovery-code")
+    @PreAuthorize("permitAll()")
+    public void sendPasswordRecoveryCode(@Valid @RequestBody SendEmailMessageRequest sendEmailMessageRequest) {
+        System.out.println(sendEmailMessageRequest.getReceiver());
+        authService.sendPasswordRecoveryCode(sendEmailMessageRequest.getReceiver());
     }
 
     @PostMapping("/password-recovery")
