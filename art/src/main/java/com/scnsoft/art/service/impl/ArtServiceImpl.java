@@ -1,6 +1,7 @@
 package com.scnsoft.art.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +17,9 @@ import com.scnsoft.art.repository.ArtRepository;
 import com.scnsoft.art.repository.ArtistRepository;
 import com.scnsoft.art.service.ArtService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public record ArtServiceImpl(
         ArtRepository artRepository,

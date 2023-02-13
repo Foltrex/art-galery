@@ -47,14 +47,14 @@ public class FileController {
     }
 
     @GetMapping("/arts/{artId}")
-    public ResponseEntity<List<FileInfoDto>> findAllByArtId(@PathVariable UUID  artId) {
+    public ResponseEntity<List<FileInfoDto>> findAllByArtId(@PathVariable UUID artId) {
         return ResponseEntity.ok(fileInfoServiceFacade.findAllByArtId(artId));
     }
 
-    @GetMapping("/arts/first")
-    public ResponseEntity<List<FileInfoDto>> findAllFirstByArtId(@RequestParam List<UUID> artId) {
-        log.info(artId.toString());
-        return ResponseEntity.ok(fileInfoServiceFacade.findAllFirstByArtIds(artId));
+    @DeleteMapping("/arts/{artId}")
+    public ResponseEntity<Void> deleteByArtId(@PathVariable UUID artId) {
+        fileService.deleteByArtId(artId);
+        return ResponseEntity.ok().build();
     }
 
     // @GetMapping("/arts/{artId}")

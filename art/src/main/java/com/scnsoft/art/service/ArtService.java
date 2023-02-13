@@ -16,4 +16,6 @@ public interface ArtService {
     Art save(Art art);
 
     Art findById(UUID id);
+
+    void deleteById(UUID id);
 }
