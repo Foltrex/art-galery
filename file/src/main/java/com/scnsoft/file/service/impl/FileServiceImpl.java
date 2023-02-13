@@ -104,4 +104,14 @@ public class FileServiceImpl implements FileService {
             .map(id -> fileInfoRepository.findFirstByArtId(id).orElseThrow())
             .toList();
     }
+
+    public void deleteByArtId(UUID artId) {
+        fileInfoRepository.findAllByArtId(artId)
+            .stream()
+            .peek(fileInfo -> {
+                String filePath = buildFilePath(fileInfo);
+                fileInfoRepository.delete(fileInfo);
+                documentService.remove(filePath);
+            });
+    }
 }

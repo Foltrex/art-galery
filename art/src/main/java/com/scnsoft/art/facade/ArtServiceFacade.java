@@ -34,4 +34,8 @@ public class ArtServiceFacade {
         Art art = artMapper.mapToEntity(artDto);
         return artMapper.mapToDto(artService.save(art));
     }
+
+    public void deleteById(UUID id) {
+        artService.deleteById(id);
+    }
 }
