@@ -16,7 +16,6 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
@@ -28,20 +27,29 @@ public class EmailSenderService {
     private final Configuration configuration;
 
     @Value("${spring.mail.username}")
-    private String from;
+    private String sender;
 
     public void sendEmailMessage(EmailMessagePayload messagePayload) {
+        MimeMessage message = prepareMessageForSending(messagePayload);
+
+        try {
+            mailSender.send(message);
+            log.info("Send message successfully");
+        } catch (MailException e) {
+            log.error("Error to send mail message: " + e);
+        }
+    }
+
+    private MimeMessage prepareMessageForSending(EmailMessagePayload messagePayload) {
         MimeMessage message = mailSender.createMimeMessage();
 
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(
-                    message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+            MimeMessageHelper helper = new MimeMessageHelper(message);
 
-            Template template =
-                    configuration.getTemplate(messagePayload.getTemplateFile().getName());
+            Template template = configuration.getTemplate(messagePayload.getTemplateFile().getName());
             String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, messagePayload.getProperties());
 
-            helper.setFrom(messagePayload.getSender() != null ? messagePayload.getSender() : from);
+            helper.setFrom(messagePayload.getSender() != null ? messagePayload.getSender() : sender);
             helper.setTo(messagePayload.getReceiver());
             helper.setSubject(messagePayload.getSubject());
             helper.setText(html, true);
@@ -51,12 +59,7 @@ public class EmailSenderService {
             log.error("Error to create mail message: " + e);
         }
 
-        try {
-            mailSender.send(message);
-            log.info("Send message successfully");
-        } catch (MailException e) {
-            log.error("Error to send mail message: " + e);
-        }
+        return message;
     }
 
 }

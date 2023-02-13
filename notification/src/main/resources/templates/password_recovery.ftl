@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Java Techie Mail</title>
 </head>
 <body>
-
+<div style="background: #d2c9c9; text-align: center">
+    <h1>Hello, <b>${email}</b>!</h1>
+    <h1>Your code for password recovery is <b>&laquo;${code}&raquo;</b></h1>
+</div>
 </body>
 </html>
