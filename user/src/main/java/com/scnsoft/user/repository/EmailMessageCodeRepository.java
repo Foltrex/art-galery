@@ -2,9 +2,11 @@ package com.scnsoft.user.repository;
 
 import com.scnsoft.user.entity.EmailMessageCode;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,5 +21,10 @@ public interface EmailMessageCodeRepository extends JpaRepository<EmailMessageCo
                     "desc " +
                     "limit 1")
     Optional<EmailMessageCode> findLastByAccountId(@Param("accountId") UUID accountId);
+
+    @Transactional
+    @Modifying
+    @Query("update EmailMessageCode message set message.isValid = false where message.id=:emailMessageCodeId")
+    void updateSetCodeIsInvalidById(@Param("emailMessageCodeId") UUID emailMessageCodeId);
 
 }

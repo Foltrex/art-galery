@@ -35,6 +35,11 @@ public class EmailMessageServiceImpl implements EmailMessageCodeService {
         return emailMessageCodeRepository.save(emailMessageCode);
     }
 
+    @Override
+    public void updateSetCodeIsInvalidById(UUID id, EmailMessageCode emailMessageCode) {
+        emailMessageCodeRepository.updateSetCodeIsInvalidById(id);
+    }
+
     public Boolean existWithAccountId(UUID accountId) {
         return emailMessageCodeRepository
                 .findLastByAccountId(accountId)

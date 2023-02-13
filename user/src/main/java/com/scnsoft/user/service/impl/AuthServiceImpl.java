@@ -30,11 +30,13 @@ import com.scnsoft.user.util.TimeUtil;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -66,6 +68,7 @@ public class AuthServiceImpl implements AuthService {
                 Account.AccountType.valueOf(registerRequest.getAccountType()));
         account.setIsOneTimePassword(false);
         accountRepository.save(account);
+
         accountAuthenticationUtil.setAccountToAuthentication(registerRequest.getEmail(), registerRequest.getPassword());
 
         try {
@@ -179,9 +182,7 @@ public class AuthServiceImpl implements AuthService {
 
         if (emailMessageService.existWithAccountId(account.getId())) {
             EmailMessageCode lastEmailMessageCode = emailMessageService.findLastByAccountId(account.getId());
-            lastEmailMessageCode.setIsValid(false);
-
-            emailMessageService.save(lastEmailMessageCode);
+            emailMessageService.updateSetCodeIsInvalidById(lastEmailMessageCode.getId(), lastEmailMessageCode);
         }
 
         emailMessageService.save(EmailMessageCode.builder()
@@ -193,7 +194,26 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void passwordRecovery(PasswordRecoveryRequest passwordRecoveryRequest) {
+        Account account = accountService.findByEmail(passwordRecoveryRequest.getEmail());
+        EmailMessageCode emailMessageCode = emailMessageService.findLastByAccountId(account.getId());
 
+        if (!emailMessageCode.getIsValid()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code is invalid, try to send code again!");
+        }
+
+        if (!emailMessageCode.getCode().equals(passwordRecoveryRequest.getCode())) {
+            emailMessageCode.setCountAttempts(emailMessageCode.getCountAttempts() + 1);
+            if (emailMessageCode.getCountAttempts().equals(5)) {
+                emailMessageService.updateSetCodeIsInvalidById(emailMessageCode.getId(), emailMessageCode);
+            }
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code is not correct, try again!");
+        }
+
+        account.setPassword(accountAuthenticationUtil.encodePassword(passwordRecoveryRequest.getPassword()));
+        accountRepository.save(account);
+
+        emailMessageService.updateSetCodeIsInvalidById(emailMessageCode.getId(), emailMessageCode);
     }
 
     @Override

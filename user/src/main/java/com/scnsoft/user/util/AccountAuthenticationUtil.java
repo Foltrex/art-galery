@@ -39,7 +39,7 @@ public class AccountAuthenticationUtil {
     public Account createAccount(String email, String password, Account.AccountType accountType) {
         return Account.builder()
                 .email(email)
-                .password(passwordEncoder.encode(password))
+                .password(encodePassword(password))
                 .accountType(accountType)
                 .roles(getUserRoles())
                 .build();
@@ -50,6 +50,10 @@ public class AccountAuthenticationUtil {
                 .token(createToken(account))
                 .type("Bearer")
                 .build();
+    }
+
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     private Set<Role> getUserRoles() {
