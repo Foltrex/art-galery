@@ -100,13 +100,14 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             accountAuthenticationUtil.setAccountToAuthentication(loginRequest.getEmail(), loginRequest.getPassword());
-            if (account.getIsOneTimePassword()) {
-                account.setPassword(null);
-                accountRepository.save(account);
-            }
         } catch (AuthenticationException e) {
             handleEventOfBadCredentials(account);
             throw new BadCredentialsException("Invalid credentials");
+        }
+
+        if (account.getIsOneTimePassword()) {
+            account.setPassword(null);
+            accountRepository.save(account);
         }
 
         return accountAuthenticationUtil.createAuthTokenResponse(account);
@@ -133,14 +134,14 @@ public class AuthServiceImpl implements AuthService {
                 .facility(FacilityDto.builder().id(registerRepresentativeRequest.getFacilityId()).build())
                 .build();
 
+        Map<String, String> properties = new HashMap<>();
+        properties.put("firstname", registerRepresentativeRequest.getFirstname());
+        properties.put("lastname", registerRepresentativeRequest.getLastname());
+        properties.put("password", password);
+
         try {
             ResponseEntity<RepresentativeDto> response = representativeFeignClient.save(representativeDto);
             representativeDto = response.getBody();
-
-            Map<String, String> properties = new HashMap<>();
-            properties.put("firstname", registerRepresentativeRequest.getFirstname());
-            properties.put("lastname", registerRepresentativeRequest.getLastname());
-            properties.put("password", password);
 
             notificationFeignClient.sendMessage(EmailMessagePayload.builder()
                     .receiver(registerRepresentativeRequest.getEmail())
@@ -172,14 +173,21 @@ public class AuthServiceImpl implements AuthService {
                     .templateFile(TemplateFile.PASSWORD_RECOVERY)
                     .properties(properties)
                     .build());
-
-            emailMessageService.save(EmailMessageCode.builder()
-                    .account(account)
-                    .code(emailCode)
-                    .build());
         } catch (FeignException e) {
             throw new FeignResponseException(e);
         }
+
+        if (emailMessageService.existWithAccountId(account.getId())) {
+            EmailMessageCode lastEmailMessageCode = emailMessageService.findLastByAccountId(account.getId());
+            lastEmailMessageCode.setIsValid(false);
+
+            emailMessageService.save(lastEmailMessageCode);
+        }
+
+        emailMessageService.save(EmailMessageCode.builder()
+                .account(account)
+                .code(emailCode)
+                .build());
 
     }
 

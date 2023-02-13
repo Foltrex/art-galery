@@ -1,6 +1,5 @@
 package com.scnsoft.user.listener;
 
-import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.EmailMessageCode;
 
 import javax.persistence.PrePersist;

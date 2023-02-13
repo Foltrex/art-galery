@@ -48,7 +48,7 @@ public class Account {
     @Size(min = 3)
     private String email;
 
-    @Size(min = 3)
+    @Size(min = 6)
     private String password;
 
     private Date lastFail;
