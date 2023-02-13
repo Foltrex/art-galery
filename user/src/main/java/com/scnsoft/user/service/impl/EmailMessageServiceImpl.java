@@ -30,12 +30,6 @@ public class EmailMessageServiceImpl implements EmailMessageCodeService {
     }
 
     @Override
-    public EmailMessageCode updateById(UUID id, EmailMessageCode emailMessageCode) {
-        emailMessageCode.setId(id);
-        return emailMessageCodeRepository.save(emailMessageCode);
-    }
-
-    @Override
     public void updateSetCodeIsInvalidById(UUID id, EmailMessageCode emailMessageCode) {
         emailMessageCodeRepository.updateSetCodeIsInvalidById(id);
     }

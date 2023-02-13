@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 /**
  * Util number generator class, that has one static method for generating random number.
  *
- * @author Maxim Semenko
+ * @author Maxim Semianko
  * @version 0.0.1
  */
 public class NumberGeneratorUtil {

@@ -23,7 +23,6 @@ import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.service.AccountService;
 import com.scnsoft.user.service.AuthService;
 import com.scnsoft.user.service.EmailMessageCodeService;
-import com.scnsoft.user.util.AccountAuthenticationUtil;
 import com.scnsoft.user.util.NumberGeneratorUtil;
 import com.scnsoft.user.util.PasswordGeneratorUtil;
 import com.scnsoft.user.util.TimeUtil;
@@ -50,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final AccountRepository accountRepository;
     private final AccountService accountService;
-    private final AccountAuthenticationUtil accountAuthenticationUtil;
+    private final AccountAuthenticationHelperServiceImpl accountAuthenticationHelperServiceImpl;
     private final RepresentativeFeignClient representativeFeignClient;
     private final ArtistFeignClient artistFeignClient;
     private final NotificationFeignClient notificationFeignClient;
@@ -62,14 +61,14 @@ public class AuthServiceImpl implements AuthService {
             throw new LoginAlreadyExistsException("Email is already in use!");
         }
 
-        Account account = accountAuthenticationUtil.createAccount(
+        Account account = accountAuthenticationHelperServiceImpl.createAccount(
                 registerRequest.getEmail(),
                 registerRequest.getPassword(),
                 Account.AccountType.valueOf(registerRequest.getAccountType()));
         account.setIsOneTimePassword(false);
         accountRepository.save(account);
 
-        accountAuthenticationUtil.setAccountToAuthentication(registerRequest.getEmail(), registerRequest.getPassword());
+        accountAuthenticationHelperServiceImpl.setAccountToAuthentication(registerRequest.getEmail(), registerRequest.getPassword());
 
         try {
             UUID accountId = account.getId();
@@ -83,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
             throw new FeignResponseException(e);
         }
 
-        return accountAuthenticationUtil.createAuthTokenResponse(account);
+        return accountAuthenticationHelperServiceImpl.createAuthTokenResponse(account);
     }
 
     @Override
@@ -96,13 +95,12 @@ public class AuthServiceImpl implements AuthService {
 
             if (secondsToUnblock > 0) {
                 throw new AccountBlockedException("Account blocked on " + secondsToUnblock + " seconds");
-            } else {
-                account.setFailCount(0);
             }
+            account.setFailCount(0);
         }
 
         try {
-            accountAuthenticationUtil.setAccountToAuthentication(loginRequest.getEmail(), loginRequest.getPassword());
+            accountAuthenticationHelperServiceImpl.setAccountToAuthentication(loginRequest.getEmail(), loginRequest.getPassword());
         } catch (AuthenticationException e) {
             handleEventOfBadCredentials(account);
             throw new BadCredentialsException("Invalid credentials");
@@ -110,10 +108,11 @@ public class AuthServiceImpl implements AuthService {
 
         if (account.getIsOneTimePassword()) {
             account.setPassword(null);
+            account.setIsOneTimePassword(false);
             accountRepository.save(account);
         }
 
-        return accountAuthenticationUtil.createAuthTokenResponse(account);
+        return accountAuthenticationHelperServiceImpl.createAuthTokenResponse(account);
     }
 
     @Override
@@ -124,7 +123,7 @@ public class AuthServiceImpl implements AuthService {
 
         String password = PasswordGeneratorUtil.generate(10);
 
-        Account account = accountAuthenticationUtil.createAccount(
+        Account account = accountAuthenticationHelperServiceImpl.createAccount(
                 registerRepresentativeRequest.getEmail(), password, Account.AccountType.REPRESENTATIVE);
 
         account.setIsOneTimePassword(true);
@@ -189,7 +188,6 @@ public class AuthServiceImpl implements AuthService {
                 .account(account)
                 .code(emailCode)
                 .build());
-
     }
 
     @Override
@@ -210,7 +208,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code is not correct, try again!");
         }
 
-        account.setPassword(accountAuthenticationUtil.encodePassword(passwordRecoveryRequest.getPassword()));
+        account.setPassword(accountAuthenticationHelperServiceImpl.encodePassword(passwordRecoveryRequest.getPassword()));
         accountRepository.save(account);
 
         emailMessageService.updateSetCodeIsInvalidById(emailMessageCode.getId(), emailMessageCode);

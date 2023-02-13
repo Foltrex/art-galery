@@ -1,4 +1,4 @@
-package com.scnsoft.user.util;
+package com.scnsoft.user.service.impl;
 
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Role;
@@ -7,6 +7,7 @@ import com.scnsoft.user.payload.AuthToken;
 import com.scnsoft.user.repository.RoleRepository;
 import com.scnsoft.user.security.JwtUtils;
 import com.scnsoft.user.security.UserDetailsServiceImpl;
+import com.scnsoft.user.service.AccountAuthenticationHelperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +20,7 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class AccountAuthenticationUtil {
+public class AccountAuthenticationHelperServiceImpl implements AccountAuthenticationHelperService {
 
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
@@ -27,6 +28,7 @@ public class AccountAuthenticationUtil {
     private final RoleRepository roleRepository;
     private final JwtUtils jwtUtils;
 
+    @Override
     public void setAccountToAuthentication(String login, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         UserDetails userDetails = userDetailsService.loadUserByUsername(login);
@@ -36,6 +38,7 @@ public class AccountAuthenticationUtil {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
+    @Override
     public Account createAccount(String email, String password, Account.AccountType accountType) {
         return Account.builder()
                 .email(email)
@@ -45,6 +48,7 @@ public class AccountAuthenticationUtil {
                 .build();
     }
 
+    @Override
     public AuthToken createAuthTokenResponse(Account account) {
         return AuthToken.builder()
                 .token(createToken(account))
@@ -52,6 +56,7 @@ public class AccountAuthenticationUtil {
                 .build();
     }
 
+    @Override
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }

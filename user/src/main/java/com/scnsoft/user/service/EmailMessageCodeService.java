@@ -10,8 +10,6 @@ public interface EmailMessageCodeService {
 
     EmailMessageCode save(EmailMessageCode emailMessageCode);
 
-    EmailMessageCode updateById(UUID id, EmailMessageCode emailMessageCode);
-
     void updateSetCodeIsInvalidById(UUID id, EmailMessageCode emailMessageCode);
 
     Boolean existWithAccountId(UUID accountId);

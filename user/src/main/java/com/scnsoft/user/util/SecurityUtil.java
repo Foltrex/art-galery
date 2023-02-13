@@ -10,7 +10,6 @@ public class SecurityUtil {
 
     public static UUID getCurrentAccountId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getPrincipal());
         if (authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
             return userDetails.getId();
         }

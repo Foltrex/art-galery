@@ -11,8 +11,11 @@ import com.scnsoft.user.service.AccountService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -24,6 +27,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final RepresentativeFeignClient representativeFeignClient;
     private final ArtistFeignClient artistFeignClient;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Account findById(UUID id) {
@@ -45,11 +49,11 @@ public class AccountServiceImpl implements AccountService {
         String newPassword = updatePasswordRequest.getNewPassword();
         Account account = findById(id);
 
-//        if (!passwordEncoder.matches(oldPassword, account.getPassword())) {
-//            throw new UserPasswordNotMatchesException("User password not matches!");
-//        }
-//
-//        existUser.setPassword(passwordEncoder.encode(newPassword));
+        if (!passwordEncoder.matches(oldPassword, account.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords not matches!");
+        }
+
+        account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account);
 
     }
