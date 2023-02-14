@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.List;
 
 public interface ArtRepository extends JpaRepository<Art, UUID> {
+    Page<Art> findAllByArtistAndName(Artist artist, Pageable pageable, String name);
 
     Page<Art> findAllByArtist(Artist artist, Pageable pageable);
 

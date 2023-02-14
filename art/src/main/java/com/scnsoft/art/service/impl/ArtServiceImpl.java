@@ -1,5 +1,15 @@
 package com.scnsoft.art.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import com.google.common.base.Strings;
 import com.scnsoft.art.dto.mapper.impl.ArtMapper;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.Artist;
@@ -53,11 +63,13 @@ public record ArtServiceImpl(
     }
 
     @Override
-    public Page<Art> findAllByAccountId(UUID accountId, Pageable pageable) {
+    public Page<Art> findAllByAccountIdAndName(UUID accountId, Pageable pageable, String artName) {
         Artist artist = artistRepository
-                .findByAccountId(accountId)
-                .orElseThrow(ArtResourceNotFoundException::new);
-
-        return artRepository.findAllByArtist(artist, pageable);
+            .findByAccountId(accountId)
+            .orElseThrow(ArtResourceNotFoundException::new);
+        
+        return !Strings.isNullOrEmpty(artName) 
+            ? artRepository.findAllByArtistAndName(artist, pageable, artName)
+            : artRepository.findAllByArtist(artist, pageable);
     }
 }
