@@ -38,16 +38,15 @@ public class AccountController {
         return ResponseEntity.ok(accountMapper.mapToDto(accountService.findByEmail(email)));
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated() and #id == authentication.principal.id")
-    public void deleteById(@PathVariable UUID id) {
-        accountService.deleteById(id);
-    }
-
     @PatchMapping("/{id}/password")
     @PreAuthorize("isAuthenticated() and #id == authentication.principal.id")
     public void updatePassword(@PathVariable UUID id, @Valid @RequestBody UpdatePasswordRequest request) {
         accountService.updatePasswordById(id, request);
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated() and #id == authentication.principal.id")
+    public void deleteById(@PathVariable UUID id) {
+        accountService.deleteById(id);
+    }
 }
