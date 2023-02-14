@@ -4,7 +4,7 @@
     <title>Java Techie Mail</title>
 </head>
 <body>
-<div style="background: #d2c9c9; text-align: center">
+<div style="background: #e3e2e2; text-align: center">
     <h1>Hello, <b>${email}</b>!</h1>
     <h1>Your code for password recovery is <b>&laquo;${code}&raquo;</b></h1>
 </div>
