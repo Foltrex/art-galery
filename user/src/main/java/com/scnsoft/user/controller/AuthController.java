@@ -48,7 +48,6 @@ public class AuthController {
     @PostMapping("/password-recovery-code")
     @PreAuthorize("permitAll()")
     public void sendPasswordRecoveryCode(@Valid @RequestBody SendEmailMessageRequest sendEmailMessageRequest) {
-        System.out.println(sendEmailMessageRequest.getReceiver());
         authService.sendPasswordRecoveryCode(sendEmailMessageRequest.getReceiver());
     }
 

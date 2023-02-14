@@ -3,13 +3,12 @@ package com.scnsoft.art.dto.mapper.impl;
 import com.scnsoft.art.dto.ArtDto;
 import com.scnsoft.art.dto.mapper.Mapper;
 import com.scnsoft.art.entity.Art;
-
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public record ArtMapper(
@@ -42,10 +41,10 @@ public record ArtMapper(
 
     public Page<ArtDto> mapPageToDto(Page<Art> artPage) {
         List<ArtDto> artDtos = artPage
-            .stream() 
-            .map(this::mapToDto)
-            .toList();
-        
+                .stream()
+                .map(this::mapToDto)
+                .toList();
+
         Pageable pageable = artPage.getPageable();
         long totalElements = artPage.getTotalElements();
         return new PageImpl<>(artDtos, pageable, totalElements);

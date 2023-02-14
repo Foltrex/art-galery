@@ -1,14 +1,5 @@
 package com.scnsoft.art.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import com.scnsoft.art.dto.mapper.impl.ArtMapper;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.Artist;
@@ -16,8 +7,13 @@ import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.ArtRepository;
 import com.scnsoft.art.repository.ArtistRepository;
 import com.scnsoft.art.service.ArtService;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -59,9 +55,9 @@ public record ArtServiceImpl(
     @Override
     public Page<Art> findAllByAccountId(UUID accountId, Pageable pageable) {
         Artist artist = artistRepository
-            .findByAccountId(accountId)
-            .orElseThrow(ArtResourceNotFoundException::new);
-        
+                .findByAccountId(accountId)
+                .orElseThrow(ArtResourceNotFoundException::new);
+
         return artRepository.findAllByArtist(artist, pageable);
     }
 }
