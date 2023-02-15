@@ -50,7 +50,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = findById(id);
 
         if (!passwordEncoder.matches(oldPassword, account.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords not matches!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password is not correct!");
         }
 
         account.setPassword(passwordEncoder.encode(newPassword));
