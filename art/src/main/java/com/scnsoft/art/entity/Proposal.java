@@ -48,5 +48,5 @@ public class Proposal {
     private Facility facility;
 
     private Boolean artistConfirmation;
-    private Boolean organisationConfirmation;
+    private Boolean organizationConfirmation;
 }

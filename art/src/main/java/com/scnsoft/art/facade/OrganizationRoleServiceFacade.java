@@ -1,7 +1,7 @@
 package com.scnsoft.art.facade;
 
 import com.scnsoft.art.dto.OrganizationRoleDto;
-import com.scnsoft.art.dto.mapper.impl.OrganizationRoleMapper;
+import com.scnsoft.art.dto.mapper.OrganizationRoleMapper;
 import com.scnsoft.art.service.OrganizationRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

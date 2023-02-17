@@ -2,9 +2,9 @@ package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.ProposalDto;
-import com.scnsoft.art.dto.mapper.impl.ArtistMapper;
-import com.scnsoft.art.dto.mapper.impl.OrganizationMapper;
-import com.scnsoft.art.dto.mapper.impl.ProposalMapper;
+import com.scnsoft.art.dto.mapper.ArtistMapper;
+import com.scnsoft.art.dto.mapper.OrganizationMapper;
+import com.scnsoft.art.dto.mapper.ProposalMapper;
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.entity.Proposal;

@@ -1,7 +1,7 @@
 package com.scnsoft.art.facade;
 
 import com.scnsoft.art.dto.AddressDto;
-import com.scnsoft.art.dto.mapper.impl.AddressMapper;
+import com.scnsoft.art.dto.mapper.AddressMapper;
 import com.scnsoft.art.service.impl.AddressServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

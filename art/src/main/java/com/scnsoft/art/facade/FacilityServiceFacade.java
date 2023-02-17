@@ -1,7 +1,7 @@
 package com.scnsoft.art.facade;
 
 import com.scnsoft.art.dto.FacilityDto;
-import com.scnsoft.art.dto.mapper.impl.FacilityMapper;
+import com.scnsoft.art.dto.mapper.FacilityMapper;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.service.FacilityService;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.scnsoft.art.facade;
 
 import com.scnsoft.art.dto.ArtDto;
-import com.scnsoft.art.dto.mapper.impl.ArtMapper;
+import com.scnsoft.art.dto.mapper.ArtMapper;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.service.ArtService;
 import lombok.RequiredArgsConstructor;

@@ -22,7 +22,7 @@ public class ArtInfoController {
     public ResponseEntity<ArtInfoDto> create(@RequestBody ArtInfoDto artInfoDto) {
         Proposal proposal = proposalService.findById(artInfoDto.getProposalId());
         return Boolean.TRUE.equals(proposal.getArtistConfirmation())
-                && Boolean.TRUE.equals(proposal.getOrganisationConfirmation())
+                && Boolean.TRUE.equals(proposal.getOrganizationConfirmation())
                 ? ResponseEntity.ok(artInfoService.create(artInfoDto))
                 : ResponseEntity.badRequest().build();
     }

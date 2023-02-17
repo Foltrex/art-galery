@@ -1,7 +1,7 @@
 package com.scnsoft.art.facade;
 
 import com.scnsoft.art.dto.CityDto;
-import com.scnsoft.art.dto.mapper.impl.CityMapper;
+import com.scnsoft.art.dto.mapper.CityMapper;
 import com.scnsoft.art.entity.City;
 import com.scnsoft.art.service.impl.CityServiceImpl;
 import lombok.RequiredArgsConstructor;

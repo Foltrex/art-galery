@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
 import com.scnsoft.art.dto.AccountDto;
-import com.scnsoft.art.dto.mapper.impl.ArtMapper;
+import com.scnsoft.art.dto.mapper.ArtMapper;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.ArtInfo;
 import com.scnsoft.art.entity.Artist;

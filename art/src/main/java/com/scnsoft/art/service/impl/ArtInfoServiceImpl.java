@@ -1,7 +1,7 @@
 package com.scnsoft.art.service.impl;
 
 import com.scnsoft.art.dto.ArtInfoDto;
-import com.scnsoft.art.dto.mapper.impl.ArtInfoMapper;
+import com.scnsoft.art.dto.mapper.ArtInfoMapper;
 import com.scnsoft.art.entity.ArtInfo;
 import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
