@@ -32,6 +32,11 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountMapper accountMapper;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<AccountDto> findById(@PathVariable UUID id) {
+        return ResponseEntity.ok(accountMapper.mapToDto(accountService.findById(id)));
+    }
+
     @GetMapping("/byEmail/{email}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<AccountDto> findByEmail(@PathVariable String email) {

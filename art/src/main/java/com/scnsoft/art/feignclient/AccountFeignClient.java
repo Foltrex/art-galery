@@ -1,6 +1,9 @@
 package com.scnsoft.art.feignclient;
 
 import com.scnsoft.art.dto.AccountDto;
+
+import java.util.UUID;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,4 +15,7 @@ public interface AccountFeignClient {
     @GetMapping(path = "/byEmail/{email}")
     ResponseEntity<AccountDto> getAccountByEmail(@PathVariable("email") String email);
 
+
+    @GetMapping("/{id}")
+    ResponseEntity<AccountDto> findById(@PathVariable UUID id);
 }

@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+
 import java.util.UUID;
 
 @Entity
@@ -29,4 +31,7 @@ public class Art {
     @ManyToOne
     @JoinColumn(name = "artist_id")
     private Artist artist;
+
+    @OneToOne(mappedBy = "art")
+    private ArtInfo artInfo;
 }

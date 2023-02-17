@@ -23,7 +23,9 @@ import com.scnsoft.art.facade.ArtServiceFacade;
 import com.scnsoft.art.feignclient.FileFeignClient;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("arts")
 @RequiredArgsConstructor
@@ -49,7 +51,7 @@ public class ArtController {
     }
 
     @GetMapping("/accounts/{accountId}")
-    public ResponseEntity<Page<ArtDto>> findAllByAccountIdAndSearchText(@PathVariable UUID accountId, Pageable pageable, @RequestParam(defaultValue = Strings.EMPTY) String name) {
+    public ResponseEntity<Page<ArtDto>> findAllByAccountIdAndSearchText(@PathVariable UUID accountId,  Pageable pageable, @RequestParam(defaultValue = Strings.EMPTY) String name) {
         return ResponseEntity.ok(artServiceFacade.findAllByAccountIdAndName(accountId, pageable, name));
     }
 }

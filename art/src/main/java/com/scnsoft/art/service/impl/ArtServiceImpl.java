@@ -1,37 +1,45 @@
 package com.scnsoft.art.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
+import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.mapper.impl.ArtMapper;
 import com.scnsoft.art.entity.Art;
+import com.scnsoft.art.entity.ArtInfo;
 import com.scnsoft.art.entity.Artist;
+import com.scnsoft.art.entity.Organization;
+import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
+import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.repository.ArtRepository;
 import com.scnsoft.art.repository.ArtistRepository;
+import com.scnsoft.art.repository.ProposalRepository;
+import com.scnsoft.art.repository.RepresentativeRepository;
+import com.scnsoft.art.repository.ArtInfoRepository;
 import com.scnsoft.art.service.ArtService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public record ArtServiceImpl(
         ArtRepository artRepository,
         ArtistRepository artistRepository,
+        RepresentativeRepository representativeRepository,
+        ArtInfoRepository artInfoRepository,
+        AccountFeignClient accountFeignClient,
         ArtMapper artMapper
 ) implements ArtService {
+    private static final String ARTIST_ACCOUNT_TYPE = "ARTIST";
+    private static final String REPRESENTATIVE_ACCOUNT_TYPE = "REPRESENTATIVE";
+
     public List<Art> findAll() {
         return artRepository.findAll();
     }
@@ -41,13 +49,6 @@ public record ArtServiceImpl(
                 .findById(id)
                 .orElseThrow(ArtResourceNotFoundException::new);
     }
-
-    // public ArtDto save(ArtDto artDto) {
-    //     Art art = artMapper.mapToEntity(artDto);
-    //     Art persistedArt = artRepository.save(art);
-    //     artDto.setId(persistedArt.getId());
-    //     return fileFeignClient.save(artDto);
-    // }
 
     public Art save(Art art) {
         return artRepository.save(art);
@@ -64,12 +65,25 @@ public record ArtServiceImpl(
 
     @Override
     public Page<Art> findAllByAccountIdAndName(UUID accountId, Pageable pageable, String artName) {
-        Artist artist = artistRepository
-            .findByAccountId(accountId)
-            .orElseThrow(ArtResourceNotFoundException::new);
-        
-        return !Strings.isNullOrEmpty(artName) 
-            ? artRepository.findAllByArtistAndName(artist, pageable, artName)
-            : artRepository.findAllByArtist(artist, pageable);
+        AccountDto accountDto = accountFeignClient.findById(accountId).getBody();
+        String accountType = accountDto.getAccountType();
+
+        switch (accountType) {
+            case ARTIST_ACCOUNT_TYPE: {
+                Artist artist = artistRepository
+                    .findByAccountId(accountId)
+                    .orElseThrow(ArtResourceNotFoundException::new);
+                
+                return !Strings.isNullOrEmpty(artName) 
+                    ? artRepository.findAllByArtistAndName(artist, pageable, artName)
+                    : artRepository.findAllByArtist(artist, pageable);
+            }
+            case REPRESENTATIVE_ACCOUNT_TYPE: {
+                return artRepository.findAll(pageable);
+            }
+            default: {
+                throw new IllegalArgumentException("Unknown account");
+            }
+        }
     }
 }
