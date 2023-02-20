@@ -1,7 +1,6 @@
 package com.scnsoft.art.contoller;
 
 import java.util.UUID;
-import java.util.List;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Page;
@@ -17,15 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scnsoft.art.dto.ArtDto;
-import com.scnsoft.art.service.impl.ArtServiceImpl;
-
 import com.scnsoft.art.facade.ArtServiceFacade;
 import com.scnsoft.art.feignclient.FileFeignClient;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("arts")
 @RequiredArgsConstructor

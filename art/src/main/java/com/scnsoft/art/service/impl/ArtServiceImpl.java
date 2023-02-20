@@ -66,24 +66,31 @@ public record ArtServiceImpl(
     @Override
     public Page<Art> findAllByAccountIdAndName(UUID accountId, Pageable pageable, String artName) {
         AccountDto accountDto = accountFeignClient.findById(accountId).getBody();
-        String accountType = accountDto.getAccountType();
 
-        switch (accountType) {
-            case ARTIST_ACCOUNT_TYPE: {
-                Artist artist = artistRepository
-                    .findByAccountId(accountId)
-                    .orElseThrow(ArtResourceNotFoundException::new);
-                
-                return !Strings.isNullOrEmpty(artName) 
-                    ? artRepository.findAllByArtistAndName(artist, pageable, artName)
-                    : artRepository.findAllByArtist(artist, pageable);
+        if (accountDto != null) {
+            String accountType = accountDto.getAccountType();
+            switch (accountType) {
+                case ARTIST_ACCOUNT_TYPE: {
+                    Artist artist = artistRepository
+                        .findByAccountId(accountId)
+                        .orElseThrow(ArtResourceNotFoundException::new);
+                    
+                    return !Strings.isNullOrEmpty(artName) 
+                        ? artRepository.findAllByArtistAndName(artist, pageable, artName)
+                        : artRepository.findAllByArtist(artist, pageable);
+                }
+                case REPRESENTATIVE_ACCOUNT_TYPE: {
+    
+                    return !Strings.isNullOrEmpty(artName)
+                        ? artRepository.findAllByArtInfoIsNull(pageable, artName)
+                        : artRepository.findAllByArtInfoIsNull(pageable);
+                }
+                default: {
+                    throw new IllegalArgumentException("Unknown account");
+                }
             }
-            case REPRESENTATIVE_ACCOUNT_TYPE: {
-                return artRepository.findAll(pageable);
-            }
-            default: {
-                throw new IllegalArgumentException("Unknown account");
-            }
+        } else {
+            return Page.empty();
         }
     }
 }

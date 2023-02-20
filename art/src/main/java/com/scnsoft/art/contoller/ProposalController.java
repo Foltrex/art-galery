@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/proposal")
+@RequestMapping("/proposals")
 public class ProposalController {
 
     private final ProposalServiceImpl proposalService;
