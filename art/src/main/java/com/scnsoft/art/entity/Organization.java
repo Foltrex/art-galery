@@ -51,6 +51,7 @@ public class Organization {
     @Enumerated(value = EnumType.ORDINAL)
     private Status status;
 
+    @Builder.Default
     @OneToMany(mappedBy = "organization", cascade = CascadeType.REMOVE)
     private List<Facility> facilities = new ArrayList<>();
 

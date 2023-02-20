@@ -32,6 +32,10 @@ public class ArtistServiceFacade {
         return artistMapper.mapToDto(artistService.findByAccountId(accountId));
     }
 
+    public ArtistDto findByArtId(@PathVariable UUID artId) {
+        return artistMapper.mapToDto(artistService.findByArtId(artId));
+    }
+
     public ArtistDto save(@RequestBody ArtistDto artistDto) {
         Artist artist = artistMapper.mapToEntity(artistDto);
         return artistMapper.mapToDto(artistService.save(artist));

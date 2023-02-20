@@ -36,6 +36,11 @@ public class ArtistController {
         return ResponseEntity.ok(artistServiceFacade.findById(id));
     }
 
+    @GetMapping("/arts/{artId}")
+    public ResponseEntity<ArtistDto> findByArtId(@PathVariable UUID artId) {
+        return ResponseEntity.ok(artistServiceFacade.findByArtId(artId));
+    }
+
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<ArtistDto> findByAccountId(@PathVariable UUID accountId) {
         return ResponseEntity.ok(artistServiceFacade.findByAccountId(accountId));

@@ -40,6 +40,10 @@ public class FacilityServiceFacade {
         return facilityMapper.mapToDto(facilityService.findById(id));
     }
 
+    public FacilityDto findByAccountId(UUID accountId) {
+        return facilityMapper.mapToDto(facilityService.findByAccountId(accountId));
+    }
+
     public FacilityDto save(FacilityDto facilityDto) {
         Facility facility = facilityMapper.mapToEntity(facilityDto);
         return facilityMapper.mapToDto(facilityService.save(facility));

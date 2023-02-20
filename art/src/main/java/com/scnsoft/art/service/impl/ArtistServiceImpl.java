@@ -1,7 +1,9 @@
 package com.scnsoft.art.service.impl;
 
+import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
+import com.scnsoft.art.repository.ArtRepository;
 import com.scnsoft.art.repository.ArtistRepository;
 import com.scnsoft.art.service.ArtistService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class ArtistServiceImpl implements ArtistService {
 
     private final ArtistRepository artistRepository;
+    private final ArtRepository artRepository;
 
     @Override
     public Page<Artist> findAll(Pageable pageable) {
@@ -68,5 +71,13 @@ public class ArtistServiceImpl implements ArtistService {
     @Transactional
     public void deleteByAccountId(UUID accountId) {
         artistRepository.deleteArtistByAccountId(accountId);
+    }
+
+    @Override
+    public Artist findByArtId(UUID artId) {
+        Art art = artRepository.findById(artId)
+            .orElseThrow();
+
+        return art.getArtist();
     }
 }

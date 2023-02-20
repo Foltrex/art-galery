@@ -12,6 +12,8 @@ public interface ArtistService {
 
     Artist findById(UUID id);
 
+    Artist findByArtId(UUID artId);
+
     boolean existWithAccountId(UUID accountId);
 
     Artist findByAccountId(UUID accountId);

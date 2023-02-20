@@ -47,7 +47,13 @@ public class FacilityController {
         return ResponseEntity.ok(facilityServiceFacade.findAllByOrganizationId(organizationId, pageable));
     }
 
-    @GetMapping("/accounts/{accountId}")
+
+    @GetMapping("accounts/{accountId}")
+    public ResponseEntity<FacilityDto> findByAccountId(@PathVariable UUID accountId) {
+        return ResponseEntity.ok(facilityServiceFacade.findByAccountId(accountId));
+    }
+
+    @GetMapping("page/accounts/{accountId}")
     public ResponseEntity<Page<FacilityDto>> findAllByAccountId(@PathVariable UUID accountId, Pageable pageable) {
         return ResponseEntity.ok(facilityServiceFacade.findAllByAccountId(accountId, pageable));
     }

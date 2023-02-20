@@ -15,13 +15,11 @@ public class ProposalDto {
     // TODO: price for one?
     private BigDecimal price;
     private double commission;
+    private ArtDto artDto;
     private long currency;
     private ArtistDto artist;
     private OrganizationDto organization;
     private FacilityDto facility;
-    private UpdateSide updateSide;
-
-    public enum UpdateSide {
-        ARTIST, ORGANIZATION
-    }
+    private Boolean artistConfirmation;
+    private Boolean organizationConfirmation;
 }

@@ -13,18 +13,4 @@ public interface ProposalMapper {
     ProposalDto mapToDto(Proposal proposal);
 
     Proposal mapToEntity(ProposalDto proposalDto);
-
-    @AfterMapping
-    default void updateEntity(ProposalDto proposalDto, @MappingTarget Proposal proposal) {
-        switch (proposalDto.getUpdateSide()) {
-            case ARTIST: {
-                proposal.setArtistConfirmation(true);
-                proposal.setOrganizationConfirmation(null);
-            }
-            case ORGANIZATION: {
-                proposal.setOrganizationConfirmation(true);
-                proposal.setArtistConfirmation(null);
-            }
-        }
-    }
 }

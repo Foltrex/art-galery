@@ -11,6 +11,8 @@ public interface FacilityService {
 
     Facility findById(UUID id);
 
+    Facility findByAccountId(UUID accountId);
+
     Page<Facility> findAll(Pageable pageable);
 
     Page<Facility> findAllByOrganizationId(UUID organizationId, Pageable pageable);

@@ -13,8 +13,6 @@ import com.scnsoft.art.entity.Organization;
 @Mapper(componentModel = "spring", uses = { AddressMapper.class })
 public abstract class OrganizationMapper {
 
-    // TODO: mapper for status enum
-
     public abstract OrganizationDto mapToDto(Organization organization);
 
     public abstract Organization mapToEntity(OrganizationDto organizationDto);

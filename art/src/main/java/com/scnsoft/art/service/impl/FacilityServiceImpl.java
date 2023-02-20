@@ -25,6 +25,14 @@ public class FacilityServiceImpl implements FacilityService {
     private final OrganizationServiceImpl organizationService;
 
     @Override
+    public Facility findByAccountId(UUID accountId) {
+        Representative representative = representativeRepository.findByAccountId(accountId)
+            .orElseThrow(ArtResourceNotFoundException::new);
+        
+        return representative.getFacility();
+    }
+
+    @Override
     public Page<Facility> findAll(Pageable pageable) {
         return facilityRepository.findAll(pageable);
     }
