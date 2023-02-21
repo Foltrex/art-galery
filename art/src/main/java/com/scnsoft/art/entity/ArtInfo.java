@@ -32,8 +32,8 @@ public class ArtInfo {
     @GeneratedValue
     private UUID id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "art_id")
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "art_id", referencedColumnName = "id")
     private Art art;
 
     @NotNull

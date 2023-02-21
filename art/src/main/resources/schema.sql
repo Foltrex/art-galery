@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS art_info (
     exposition_date_start TIMESTAMP WITHOUT TIME ZONE,
     price NUMERIC (19, 2),
     status INTEGER,
-    art_id UUID REFERENCES art (id),
+    art_id UUID NOT NULL REFERENCES art (id),
     facility_id UUID REFERENCES facility (id),
     organization_id UUID NOT NULL REFERENCES organization (id)
 );
@@ -76,13 +76,20 @@ CREATE TABLE IF NOT EXISTS organization_role (
     name INTEGER UNIQUE NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS currency (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    value VARCHAR (15),
+    label VARCHAR (5)
+);
+
 CREATE TABLE IF NOT EXISTS proposal (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     artist_confirmation BOOLEAN,
     commission DOUBLE PRECISION NOT NULL,
-    currency BIGINT NOT NULL,
-    organisation_confirmation BOOLEAN,
+    currency_id UUID NOT NULL REFERENCES currency (id),
+    organization_confirmation BOOLEAN,
     price NUMERIC (19, 2),
+    art_id UUID NOT NULL REFERENCES art (id),
     artist_id UUID NOT NULL REFERENCES artist (id),
     facility_id UUID REFERENCES facility (id),
     organization_id UUID NOT NULL REFERENCES organization (id)

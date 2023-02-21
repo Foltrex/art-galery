@@ -12,9 +12,11 @@ import com.scnsoft.art.dto.CurrencyDto;
 import com.scnsoft.art.facade.CurrencyServiceFacade;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("currencies")
 public class CurrencyController {
     private final CurrencyServiceFacade currencyServiceFacade;
@@ -26,6 +28,7 @@ public class CurrencyController {
 
     @PostMapping
     public ResponseEntity<CurrencyDto> save(CurrencyDto currencyDto) {
+        log.info(currencyDto.toString());
         return ResponseEntity.ok(currencyServiceFacade.save(currencyDto));
     }
 }

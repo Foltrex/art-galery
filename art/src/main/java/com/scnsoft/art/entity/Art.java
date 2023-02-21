@@ -34,4 +34,7 @@ public class Art {
 
     @OneToOne(mappedBy = "art")
     private ArtInfo artInfo;
+
+    @OneToOne(mappedBy = "art")
+    private Proposal proposal;
 }

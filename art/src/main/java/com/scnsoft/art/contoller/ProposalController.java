@@ -1,64 +1,25 @@
 package com.scnsoft.art.contoller;
 
-import com.scnsoft.art.dto.AccountDto;
-import com.scnsoft.art.dto.ProposalDto;
-import com.scnsoft.art.dto.mapper.ArtistMapper;
-import com.scnsoft.art.dto.mapper.OrganizationMapper;
-import com.scnsoft.art.dto.mapper.ProposalMapper;
-import com.scnsoft.art.entity.Artist;
-import com.scnsoft.art.entity.Organization;
-import com.scnsoft.art.entity.Proposal;
-import com.scnsoft.art.entity.Representative;
-import com.scnsoft.art.feignclient.AccountFeignClient;
-import com.scnsoft.art.service.impl.ArtistServiceImpl;
-import com.scnsoft.art.service.impl.ProposalServiceImpl;
-import com.scnsoft.art.service.impl.RepresentativeServiceImpl;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
+import com.scnsoft.art.dto.ProposalDto;
+import com.scnsoft.art.facade.ProposalServiceFacade;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/proposals")
 public class ProposalController {
 
-    private final ProposalServiceImpl proposalService;
-    private final ArtistServiceImpl artistService;
-    private final RepresentativeServiceImpl representativeService;
-    private final AccountFeignClient accountFeignClient;
-    private final OrganizationMapper organizationMapper;
-    private final ArtistMapper artistMapper;
-    private final ProposalMapper proposalMapper;
+    private final ProposalServiceFacade proposalServiceFacade;
 
     @PostMapping
-    public ResponseEntity<ProposalDto> create(@RequestBody ProposalDto proposalDto,
-                                              Authentication authentication) {
-        ResponseEntity<AccountDto> accountResponseEntity = accountFeignClient.getAccountByEmail(authentication.getName());
-        AccountDto accountDto = accountResponseEntity.getBody();
-        UUID accountId = accountDto.getId();
-
-        Proposal proposal = proposalMapper.mapToEntity(proposalDto);
-        Artist artist = null;
-        Organization organization = null;
-        if (artistService.existWithAccountId(accountId)) {
-            artist = artistService.findByAccountId(accountId);
-            organization = organizationMapper.mapToEntity(proposalDto.getOrganization());
-        } else {
-            Representative representative = representativeService.findByAccountId(accountId);
-            organization = representative.getOrganization();
-            artist = artistMapper.mapToEntity(proposalDto.getArtist());
-        }
-
-        proposal.setArtist(artist);
-        proposal.setOrganization(organization);
-
-        ProposalDto responseDto = proposalMapper.mapToDto(proposalService.save(proposal));
-        return ResponseEntity.ok(responseDto);
+    public ResponseEntity<ProposalDto> save(@RequestBody ProposalDto proposalDto) {
+        return ResponseEntity.ok(proposalServiceFacade.save(proposalDto));
     }
 }

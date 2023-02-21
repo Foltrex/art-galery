@@ -27,7 +27,6 @@ import com.scnsoft.art.service.ArtService;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 public record ArtServiceImpl(
         ArtRepository artRepository,
@@ -80,10 +79,9 @@ public record ArtServiceImpl(
                         : artRepository.findAllByArtist(artist, pageable);
                 }
                 case REPRESENTATIVE_ACCOUNT_TYPE: {
-    
                     return !Strings.isNullOrEmpty(artName)
-                        ? artRepository.findAllByArtInfoIsNull(pageable, artName)
-                        : artRepository.findAllByArtInfoIsNull(pageable);
+                        ? artRepository.findAllByProposalIsNullAndArtInfoIsNull(pageable, artName)
+                        : artRepository.findAllByProposalIsNullAndArtInfoIsNull(pageable);
                 }
                 default: {
                     throw new IllegalArgumentException("Unknown account");

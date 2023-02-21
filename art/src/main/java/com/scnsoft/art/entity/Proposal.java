@@ -1,20 +1,24 @@
 package com.scnsoft.art.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
+import java.math.BigDecimal;
+import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.util.UUID;
+
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Audited
@@ -28,7 +32,12 @@ public class Proposal {
     private UUID id;
     private BigDecimal price;
     private double commission;
-    private long currency;
+    
+    @NotAudited
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
 
     @NotAudited
     @NotNull
@@ -39,13 +48,18 @@ public class Proposal {
     @NotAudited
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "organisation_id", updatable = false, nullable = false)
+    @JoinColumn(name = "organization_id", updatable = false, nullable = false)
     private Organization organization;
 
     @NotAudited
     @ManyToOne
     @JoinColumn(name = "facility_id")
     private Facility facility;
+
+    @NotAudited
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "art_id")
+    private Art art;
 
     private Boolean artistConfirmation;
     private Boolean organizationConfirmation;
