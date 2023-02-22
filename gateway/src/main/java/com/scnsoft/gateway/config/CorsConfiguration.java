@@ -19,8 +19,8 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class CorsConfiguration {
 
-    private static final String ALLOWED_HEADERS = "x-requested-with, authorization, Content-Type, Content-Length, Authorization, credential, X-XSRF-TOKEN";
-    private static final String ALLOWED_METHODS = "GET, PUT, POST, DELETE, OPTIONS, PATCH";
+    private static final String ALLOWED_HEADERS = "x-requested-with, authorization, Content-Type, Content-Length, Authorization, credential, X-XSRF-TOKEN, access-control-expose-headers, X-Total-Count";
+    private static final String ALLOWED_METHODS = "GET, PUT, POST, DELETE, OPTIONS, PATCH, HEAD";
     private static final String ALLOWED_ORIGIN = "*";
     private static final String MAX_AGE = "7200";
 
@@ -35,6 +35,7 @@ public class CorsConfiguration {
                 headers.add("Access-Control-Allow-Methods", ALLOWED_METHODS);
                 headers.add("Access-Control-Max-Age", MAX_AGE); //OPTION how long the results of a preflight request (that is the information contained in the Access-Control-Allow-Methods and Access-Control-Allow-Headers headers) can be cached.
                 headers.add("Access-Control-Allow-Headers", ALLOWED_HEADERS);
+                headers.add("Access-Control-Expose-Headers", "X-Total-Count");
                 if (request.getMethod() == HttpMethod.OPTIONS) {
                     response.setStatusCode(HttpStatus.OK);
                     return Mono.empty();
