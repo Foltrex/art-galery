@@ -32,13 +32,13 @@ public class ArtInfo {
     @GeneratedValue
     private UUID id;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "art_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "art_id")
     private Art art;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "organisation_id")
+    @JoinColumn(name = "organization_id")
     private Organization organization;
 
     @ManyToOne
@@ -50,9 +50,6 @@ public class ArtInfo {
 
     @Column(updatable = false)
     private double commission;
-
-    @Column(updatable = false)
-    private Date creationDate;
 
     private Date expositionDateStart;
     private Date expositionDateEnd;

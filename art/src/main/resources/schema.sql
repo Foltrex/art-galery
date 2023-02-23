@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS art (
 CREATE TABLE IF NOT EXISTS art_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
     commission DOUBLE PRECISION,
-    creation_date TIMESTAMP WITHOUT TIME ZONE,
     exposition_date_end TIMESTAMP WITHOUT TIME ZONE,
     exposition_date_start TIMESTAMP WITHOUT TIME ZONE,
     price NUMERIC (19, 2),

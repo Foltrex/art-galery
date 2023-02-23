@@ -18,12 +18,12 @@ public class ArtInfoController {
     private final ArtInfoServiceImpl artInfoService;
     private final ProposalServiceImpl proposalService;
 
-    @PostMapping
-    public ResponseEntity<ArtInfoDto> create(@RequestBody ArtInfoDto artInfoDto) {
-        Proposal proposal = proposalService.findById(artInfoDto.getProposalId());
-        return Boolean.TRUE.equals(proposal.getArtistConfirmation())
-                && Boolean.TRUE.equals(proposal.getOrganizationConfirmation())
-                ? ResponseEntity.ok(artInfoService.create(artInfoDto))
-                : ResponseEntity.badRequest().build();
-    }
+    // @PostMapping
+    // public ResponseEntity<ArtInfoDto> create(@RequestBody ArtInfoDto artInfoDto) {
+    //     Proposal proposal = proposalService.findById(artInfoDto.getProposalId());
+    //     return Boolean.TRUE.equals(proposal.getArtistConfirmation())
+    //             && Boolean.TRUE.equals(proposal.getOrganizationConfirmation())
+    //             ? ResponseEntity.ok(artInfoService.create(artInfoDto))
+    //             : ResponseEntity.badRequest().build();
+    // }
 }

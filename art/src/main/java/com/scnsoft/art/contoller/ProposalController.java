@@ -5,10 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scnsoft.art.dto.ProposalDto;
+import com.scnsoft.art.facade.ArtInfoServiceFacade;
 import com.scnsoft.art.facade.ProposalServiceFacade;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/proposals")
@@ -32,6 +29,7 @@ public class ProposalController {
     private static final String X_TOTAL_COUNT_HEADER = "X-Total-Count";
 
     private final ProposalServiceFacade proposalServiceFacade;
+    private final ArtInfoServiceFacade artInfoServiceFacade;
 
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<Page<ProposalDto>> findAllByAccountId(@PathVariable UUID accountId,  Pageable pageable) {
@@ -53,6 +51,13 @@ public class ProposalController {
 
     @PostMapping
     public ResponseEntity<ProposalDto> save(@RequestBody ProposalDto proposalDto) {
+        if (
+            proposalDto.getArtistConfirmation() != null && proposalDto.getArtistConfirmation() && 
+            proposalDto.getOrganizationConfirmation() != null && proposalDto.getOrganizationConfirmation()
+        ) {
+            artInfoServiceFacade.createFromProposal(proposalDto);
+        }
+        
         return ResponseEntity.ok(proposalServiceFacade.save(proposalDto));
     }
 }

@@ -16,7 +16,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProposalDto {
     private UUID id;
-    // TODO: price for one?
     private BigDecimal price;
     private double commission;
     private ArtDto art;

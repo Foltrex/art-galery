@@ -57,7 +57,7 @@ public class Proposal {
     private Facility facility;
 
     @NotAudited
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "art_id")
     private Art art;
 

@@ -4,13 +4,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.scnsoft.art.dto.ArtInfoDto;
+import com.scnsoft.art.dto.ProposalDto;
 import com.scnsoft.art.entity.ArtInfo;
 
 @Mapper(componentModel = "spring", uses = {ArtMapper.class})
-public abstract class ArtInfoMapper {
+public interface ArtInfoMapper {
 
-    public abstract ArtInfoDto mapToDto(ArtInfo artInfo);
+    ArtInfoDto mapToDto(ArtInfo artInfo);
 
-    public abstract ArtInfo mapToEntity(ArtInfoDto artInfoDto);
+    ArtInfo mapToEntity(ArtInfoDto artInfoDto);
 
+    @Mapping(target = "id", ignore = true)
+    ArtInfo mapProposalDtoToEntity(ProposalDto proposal);
 }

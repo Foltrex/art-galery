@@ -1,19 +1,23 @@
 package com.scnsoft.art.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
-import java.util.UUID;
+import org.hibernate.annotations.GenericGenerator;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -32,9 +36,11 @@ public class Art {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
-    @OneToOne(mappedBy = "art")
-    private ArtInfo artInfo;
+    @Builder.Default
+    @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)
+    private List<ArtInfo> artInfos = new ArrayList<>();
 
-    @OneToOne(mappedBy = "art")
-    private Proposal proposal;
+    @Builder.Default
+    @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)
+    private List<Proposal> proposals = new ArrayList<>();
 }

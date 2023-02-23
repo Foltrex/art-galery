@@ -14,15 +14,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArtInfoDto {
-    public enum Status {
-        INACTIVE, ACTIVE, SOLD, RETURN
-    }
-
     private UUID id;
-    private UUID proposalId;
     private ArtDto art;
     private BigDecimal price;
+    private FacilityDto faciltiy;
+    private OrganizationDto organization;
+    private Double commission;
     private Date expositionDateStart;
     private Date expositionDateEnd;
-    private Status status;
+    private String status;
 }
