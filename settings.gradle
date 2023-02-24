@@ -1,4 +1,6 @@
 rootProject.name = 'art-gallery'
 include 'user'
 include 'art'
-
+include 'file'
+include 'gateway'
+include 'eureka'
