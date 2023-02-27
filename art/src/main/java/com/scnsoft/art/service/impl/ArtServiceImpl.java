@@ -82,6 +82,7 @@ public record ArtServiceImpl(
                         .findByAccountId(accountId)
                         .orElseThrow(ArtResourceNotFoundException::new);
 
+                    // Add specification for art info is not null
                     Specification<Art> specification = (proposalsWithRepresentativeIsNull(representative));
                     return !Strings.isNullOrEmpty(artName)
                         ? artRepository.findAll(specification.and(nameIsEqualTo(artName)), pageable)

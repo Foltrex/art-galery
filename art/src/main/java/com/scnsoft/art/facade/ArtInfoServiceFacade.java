@@ -1,5 +1,7 @@
 package com.scnsoft.art.facade;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
 import com.scnsoft.art.dto.ArtInfoDto;
@@ -18,6 +20,10 @@ public record ArtInfoServiceFacade(
     ProposalServiceImpl proposalServiceImpl,
     ProposalMapper proposalMapper
 ) {
+    public ArtInfoDto findByArtId(UUID artId) {
+        return artInfoMapper.mapToDto(artInfoServiceImpl.findByArtId(artId));
+    }
+
     public ArtInfoDto save(ArtInfoDto artInfoDto) {
         ArtInfo artInfo = artInfoMapper.mapToEntity(artInfoDto);
         return artInfoMapper.mapToDto(artInfoServiceImpl.save(artInfo));

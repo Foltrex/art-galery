@@ -10,6 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.UUID;
 
 public interface AddressRepository extends JpaRepository<Address, UUID> {
-    @Query("SELECT a FROM Address a WHERE a.city.id = :cityId")
+    @Query("SELECT a FROM Address a JOIN a.city c WHERE c.id = :cityId")
     Page<Address> findAllByCityId(@Param("cityId") UUID cityId, Pageable pageable);
 }
