@@ -1,31 +1,30 @@
 package com.scnsoft.art.service.impl;
 
+import static com.scnsoft.art.repository.specification.ArtSpecification.artInfoIsNull;
+import static com.scnsoft.art.repository.specification.ArtSpecification.nameIsEqualTo;
+import static com.scnsoft.art.repository.specification.ArtSpecification.proposalsWithRepresentativeIsNull;
+
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
 import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.mapper.ArtMapper;
 import com.scnsoft.art.entity.Art;
-import com.scnsoft.art.entity.ArtInfo;
 import com.scnsoft.art.entity.Artist;
-import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.AccountFeignClient;
+import com.scnsoft.art.repository.ArtInfoRepository;
 import com.scnsoft.art.repository.ArtRepository;
 import com.scnsoft.art.repository.ArtistRepository;
-import com.scnsoft.art.repository.ProposalRepository;
 import com.scnsoft.art.repository.RepresentativeRepository;
-import com.scnsoft.art.repository.ArtInfoRepository;
 import com.scnsoft.art.service.ArtService;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 public record ArtServiceImpl(
@@ -79,9 +78,16 @@ public record ArtServiceImpl(
                         : artRepository.findAllByArtist(artist, pageable);
                 }
                 case REPRESENTATIVE_ACCOUNT_TYPE: {
+                    Representative representative = representativeRepository
+                        .findByAccountId(accountId)
+                        .orElseThrow(ArtResourceNotFoundException::new);
+
+                    Specification<Art> specification = (proposalsWithRepresentativeIsNull(representative));
                     return !Strings.isNullOrEmpty(artName)
-                        ? artRepository.findAllByProposalIsNullAndArtInfoIsNull(pageable, artName)
-                        : artRepository.findAllByProposalIsNullAndArtInfoIsNull(pageable);
+                        ? artRepository.findAll(specification.and(nameIsEqualTo(artName)), pageable)
+                        : artRepository.findAll(specification, pageable);
+                        // ? artRepository.findAllByArtInfoIsNull(pageable, artName)
+                        // : artRepository.findAllByArtInfoIsNull(pageable);
                 }
                 default: {
                     throw new IllegalArgumentException("Unknown account");

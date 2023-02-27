@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -18,12 +19,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldNameConstants
 public class Art {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -36,9 +39,8 @@ public class Art {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)
-    private List<ArtInfo> artInfos = new ArrayList<>();
+    @OneToOne(mappedBy = "art")
+    private ArtInfo artInfo;
 
     @Builder.Default
     @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)

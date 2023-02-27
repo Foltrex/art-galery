@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldNameConstants
 public class ArtInfo {
     public enum Status {
         INACTIVE, ACTIVE, SOLD, RETURN
@@ -32,7 +34,7 @@ public class ArtInfo {
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "art_id")
     private Art art;
 

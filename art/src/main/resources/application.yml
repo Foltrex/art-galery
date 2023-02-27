@@ -25,7 +25,7 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: none
-    # show-sql: true
+    show-sql: true
     properties:
       org:
         hibernate:
@@ -33,9 +33,6 @@ spring:
             audit_table_suffix: _AUDIT
             revision_field_name: REVISION_ID
             revision_type_field_name: REVISION_TYPE
-  sql:
-    init:
-      mode: always
 eureka:
   client:
     service-url:

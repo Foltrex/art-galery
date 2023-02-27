@@ -1,5 +1,6 @@
 package com.scnsoft.art.service.impl;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.scnsoft.art.dto.AccountDto;
+import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.entity.Representative;
@@ -87,6 +89,16 @@ public class ProposalServiceImpl {
         } else {
             return 0;
         }
+    }
+
+    public void discardAllProposalsForArtExceptPassed(Art art, Proposal proposal) {
+        proposalRepository.findByArt(art)
+            .stream()
+            .filter(p -> !Objects.equals(proposal.getId(), p.getId()))
+            .peek(p -> {
+                p.setArtistConfirmation(false);
+                proposalRepository.save(p);
+            });
     }
 
     public void deleteById(UUID id) {
