@@ -17,11 +17,6 @@ public record ArtInfoServiceImpl(
 ) implements ArtInfoService {
 
     public ArtInfo save(ArtInfo artInfo) {
-        Optional<ArtInfo> artInfoWithCurrentArt = artInfoRepository.findByArt(artInfo.getArt());
-        if (artInfoWithCurrentArt.isPresent()) {
-            return artInfoWithCurrentArt.get();
-        }
-
         if (artInfo.getExpositionDateStart() == null) {
             Date now = new Date();
             artInfo.setExpositionDateStart(now);
