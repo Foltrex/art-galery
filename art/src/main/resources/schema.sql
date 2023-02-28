@@ -15,20 +15,20 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -------------------Tables ddl------------------------
 CREATE TABLE IF NOT EXISTS city (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     name VARCHAR NOT NULL,
     latitude DOUBLE PRECISION NOT NULL,
     longitude DOUBLE PRECISION NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS address (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     city_id UUID REFERENCES city (id),
     full_name VARCHAR NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS artist (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     firstname VARCHAR (255),
     lastname VARCHAR (255),
     account_id UUID,
@@ -37,14 +37,14 @@ CREATE TABLE IF NOT EXISTS artist (
 );
 
 CREATE TABLE IF NOT EXISTS organization (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     name VARCHAR (255),
     status INTEGER,
     address_id UUID REFERENCES address (id)
 );
 
 CREATE TABLE IF NOT EXISTS facility (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     is_active BOOLEAN DEFAULT true,
     name VARCHAR (255),
     address_id UUID REFERENCES address (id) ON DELETE SET NULL,
@@ -52,14 +52,14 @@ CREATE TABLE IF NOT EXISTS facility (
 );
 
 CREATE TABLE IF NOT EXISTS art (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     description VARCHAR (255),
     name VARCHAR (255),
     artist_id UUID REFERENCES artist (id)
 );
 
 CREATE TABLE IF NOT EXISTS art_info (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     commission DOUBLE PRECISION,
     exposition_date_end TIMESTAMP WITHOUT TIME ZONE,
     exposition_date_start TIMESTAMP WITHOUT TIME ZONE,
@@ -76,13 +76,13 @@ CREATE TABLE IF NOT EXISTS organization_role (
 );
 
 CREATE TABLE IF NOT EXISTS currency (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1(),
     value VARCHAR (15),
     label VARCHAR (5)
 );
 
 CREATE TABLE IF NOT EXISTS proposal (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     artist_confirmation BOOLEAN,
     commission DOUBLE PRECISION NOT NULL,
     currency_id UUID NOT NULL REFERENCES currency (id),
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS proposal (
 );
 
 CREATE TABLE IF NOT EXISTS representative (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     account_id UUID NOT NULL,
     firstname VARCHAR (255),
     lastname VARCHAR (255),
