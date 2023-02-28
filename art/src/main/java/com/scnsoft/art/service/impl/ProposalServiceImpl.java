@@ -1,5 +1,6 @@
 package com.scnsoft.art.service.impl;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -20,8 +21,10 @@ import com.scnsoft.art.repository.ProposalRepository;
 import com.scnsoft.art.repository.RepresentativeRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ProposalServiceImpl {
     private static final String REPRESENTATIVE_ACCOUNT_TYPE = "REPRESENTATIVE";
@@ -92,13 +95,13 @@ public class ProposalServiceImpl {
     }
 
     public void discardAllProposalsForArtExceptPassed(Art art, Proposal proposal) {
-        proposalRepository.findByArt(art)
-            .stream()
-            .filter(p -> !Objects.equals(proposal.getId(), p.getId()))
-            .peek(p -> {
+        List<Proposal> proposals = proposalRepository.findByArt(art);
+        for (Proposal p : proposals) {
+            if (!Objects.equals(proposal.getId(), p.getId())) {
                 p.setArtistConfirmation(false);
                 proposalRepository.save(p);
-            });
+            }
+        }
     }
 
     public void deleteById(UUID id) {

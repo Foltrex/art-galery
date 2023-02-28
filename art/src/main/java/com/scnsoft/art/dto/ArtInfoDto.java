@@ -17,7 +17,7 @@ public class ArtInfoDto {
     private UUID id;
     private ArtDto art;
     private BigDecimal price;
-    private FacilityDto faciltiy;
+    private FacilityDto facility;
     private OrganizationDto organization;
     private Double commission;
     private Date expositionDateStart;

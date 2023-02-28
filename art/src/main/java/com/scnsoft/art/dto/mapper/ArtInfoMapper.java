@@ -7,7 +7,7 @@ import com.scnsoft.art.dto.ArtInfoDto;
 import com.scnsoft.art.dto.ProposalDto;
 import com.scnsoft.art.entity.ArtInfo;
 
-@Mapper(componentModel = "spring", uses = {ArtMapper.class})
+@Mapper(componentModel = "spring", uses = {ArtMapper.class, FacilityMapper.class})
 public interface ArtInfoMapper {
 
     ArtInfoDto mapToDto(ArtInfo artInfo);

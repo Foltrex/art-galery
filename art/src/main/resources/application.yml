@@ -25,7 +25,6 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: none
-    show-sql: true
     properties:
       org:
         hibernate:
