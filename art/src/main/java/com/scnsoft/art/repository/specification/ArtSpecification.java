@@ -10,7 +10,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.scnsoft.art.entity.Art;
-import com.scnsoft.art.entity.Facility;
+import com.scnsoft.art.entity.ArtInfo;
 import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.entity.Representative;
 
@@ -19,11 +19,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ArtSpecification {
 
-    public static Specification<Art> artInfoIsNull() {
+    public static Specification<Art> artInfosIsEmpty() {
         return new Specification<Art>() {
             @Override
-            public Predicate toPredicate(Root<Art> r, CriteriaQuery<?> q, CriteriaBuilder cb) {
-                return cb.isNull(r.get("artInfo"));
+            public Predicate toPredicate(Root<Art> art, CriteriaQuery<?> q, CriteriaBuilder cb) {
+                return cb.isEmpty(art.get("artInfos"));
             }
         };
     }

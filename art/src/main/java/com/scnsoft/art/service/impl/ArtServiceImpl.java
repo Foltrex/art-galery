@@ -1,6 +1,6 @@
 package com.scnsoft.art.service.impl;
 
-import static com.scnsoft.art.repository.specification.ArtSpecification.artInfoIsNull;
+import static com.scnsoft.art.repository.specification.ArtSpecification.artInfosIsEmpty;
 import static com.scnsoft.art.repository.specification.ArtSpecification.nameIsEqualTo;
 import static com.scnsoft.art.repository.specification.ArtSpecification.proposalsWithRepresentativeIsNull;
 
@@ -62,7 +62,7 @@ public record ArtServiceImpl(
     }
 
     @Override
-    public Page<Art> findAllByAccountIdAndName(UUID accountId, Pageable pageable, String artName) {
+    public Page<Art> findAllByAccountIdAndName(UUID accountId, Pageable pageable, String artName, boolean isExhibited) {
         AccountDto accountDto = accountFeignClient.findById(accountId).getBody();
 
         if (accountDto != null) {
@@ -82,13 +82,14 @@ public record ArtServiceImpl(
                         .findByAccountId(accountId)
                         .orElseThrow(ArtResourceNotFoundException::new);
 
-                    // Add specification for art info is not null
                     Specification<Art> specification = (proposalsWithRepresentativeIsNull(representative));
+                    if (!isExhibited) {
+                        specification = specification.and(artInfosIsEmpty()); 
+                    }
+
                     return !Strings.isNullOrEmpty(artName)
                         ? artRepository.findAll(specification.and(nameIsEqualTo(artName)), pageable)
                         : artRepository.findAll(specification, pageable);
-                        // ? artRepository.findAllByArtInfoIsNull(pageable, artName)
-                        // : artRepository.findAllByArtInfoIsNull(pageable);
                 }
                 default: {
                     throw new IllegalArgumentException("Unknown account");
