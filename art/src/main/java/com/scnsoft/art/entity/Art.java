@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -39,8 +38,9 @@ public class Art {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
-    @OneToOne(mappedBy = "art")
-    private ArtInfo artInfo;
+    @Builder.Default
+    @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)
+    private List<ArtInfo> artInfos = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)

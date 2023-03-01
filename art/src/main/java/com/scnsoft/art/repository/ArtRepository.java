@@ -14,23 +14,10 @@ import com.scnsoft.art.entity.Artist;
 
 public interface ArtRepository extends JpaRepository<Art, UUID>, JpaSpecificationExecutor<Art> {
 
-    
-    // @Query("""
-    //     SELECT a
-    //     FROM Art a
-    //     JOIN a.proposals p
-    //     WHERE p.facility <> r.facility
-    // """)
-    // Page<Art> findAllByArtInfoIsNull(Pageable pageable);
-
     Page<Art> findAllByArtistAndName(Artist artist, Pageable pageable, String name);
 
-
-    // Page<Art> findAllByArtInfoIsNull(Pageable pageable);
-
-
-    Page<Art> findAllByArtInfoIsNull(Pageable pageable, String name);
-    // Page<Art> findAllByArtInfoIsNull(Pageable pageable, String name);
+    @Query("SELECT a FROM Art a WHERE a.artInfos IS EMPTY")
+    Page<Art> findAllByArtInfoIsEmpty(Pageable pageable, String name);
 
     Page<Art> findAllByArtist(Artist artist, Pageable pageable);
 

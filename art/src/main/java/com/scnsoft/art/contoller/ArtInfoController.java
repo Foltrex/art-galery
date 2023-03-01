@@ -17,7 +17,7 @@ public record ArtInfoController(
     ArtInfoServiceFacade artInfoServiceFacade
 ) {
 
-    @GetMapping("/arts/{artId}")
+    @GetMapping("/last/arts/{artId}")
     public ResponseEntity<ArtInfoDto> findByAccountId(@PathVariable UUID artId) {
         return ResponseEntity.ok(artInfoServiceFacade.findByArtId(artId));
     }
