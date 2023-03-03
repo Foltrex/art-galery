@@ -21,5 +21,13 @@ public interface ArtInfoRepository extends JpaRepository<ArtInfo, UUID> {
         WHERE a.id = :artId 
         AND ai.expositionDateEnd IS NULL        
     """)
-    Optional<ArtInfo> findByArtId(@Param("artId") UUID artId);
+    Optional<ArtInfo> findLastByArtId(@Param("artId") UUID artId);
+
+    @Query("""
+        SELECT ai 
+        FROM ArtInfo ai 
+        JOIN ai.art a 
+        WHERE a.id = :artId
+    """)
+    List<ArtInfo> findByArtId(@Param("artId") UUID artId);
 }
