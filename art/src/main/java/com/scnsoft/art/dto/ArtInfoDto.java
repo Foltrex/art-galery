@@ -17,6 +17,7 @@ public class ArtInfoDto {
     private UUID id;
     private ArtDto art;
     private BigDecimal price;
+    private CurrencyDto currency;
     private FacilityDto facility;
     private OrganizationDto organization;
     private Double commission;

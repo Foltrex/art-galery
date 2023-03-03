@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS art_info (
     exposition_date_end TIMESTAMP WITHOUT TIME ZONE,
     exposition_date_start TIMESTAMP WITHOUT TIME ZONE,
     price NUMERIC (19, 2),
+    currency_id UUID NOT NULL REFERENCES currency (id),
     status INTEGER,
     art_id UUID NOT NULL REFERENCES art (id),
     facility_id UUID REFERENCES facility (id),

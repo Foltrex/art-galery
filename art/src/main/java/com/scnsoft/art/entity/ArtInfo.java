@@ -54,6 +54,11 @@ public class ArtInfo {
     @Column(updatable = false)
     private double commission;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
+
     private Date expositionDateStart;
     private Date expositionDateEnd;
     private Status status;
