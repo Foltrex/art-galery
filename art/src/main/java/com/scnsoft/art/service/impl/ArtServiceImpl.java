@@ -2,14 +2,12 @@ package com.scnsoft.art.service.impl;
 
 import static com.scnsoft.art.repository.specification.ArtSpecification.artInfosIsEmpty;
 import static com.scnsoft.art.repository.specification.ArtSpecification.nameIsEqualTo;
-import static com.scnsoft.art.repository.specification.ArtSpecification.proposalsWithRepresentativeIsNull;
 
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
@@ -82,14 +80,18 @@ public record ArtServiceImpl(
                         .findByAccountId(accountId)
                         .orElseThrow(ArtResourceNotFoundException::new);
 
-                    Specification<Art> specification = (proposalsWithRepresentativeIsNull(representative));
+
                     if (!isExhibited) {
-                        specification = specification.and(artInfosIsEmpty()); 
+                        return !Strings.isNullOrEmpty(artName)
+                            ? artRepository.findAll(artInfosIsEmpty().and(nameIsEqualTo(artName)), pageable)
+                            : artRepository.findAll(artInfosIsEmpty(), pageable);
+                            
+                    } else {
+                        return !Strings.isNullOrEmpty(artName)
+                            ? artRepository.findAll(nameIsEqualTo(artName), pageable)
+                            : artRepository.findAll(pageable);
                     }
 
-                    return !Strings.isNullOrEmpty(artName)
-                        ? artRepository.findAll(specification.and(nameIsEqualTo(artName)), pageable)
-                        : artRepository.findAll(specification, pageable);
                 }
                 default: {
                     throw new IllegalArgumentException("Unknown account");
