@@ -19,8 +19,11 @@ public class ArtServiceFacade {
     private final ArtMapper artMapper;
 
 
-    public Page<ArtDto> findAllByAccountIdAndName(UUID accountId, Pageable pageable, String name, boolean isExhibited) {
-        return artMapper.mapPageToDto(artService.findAllByAccountIdAndName(accountId, pageable, name, isExhibited));
+    public Page<ArtDto> findAllByAccountIdAndName(UUID accountId, Pageable pageable, String searchText, String searchFilter, String searchOption) {
+        Page<Art> artPage = artService.findAllByAccountIdAndName(
+            accountId, pageable, searchText, searchFilter, searchOption
+        );
+        return artMapper.mapPageToDto(artPage);
     }
 
     public ArtDto findById(UUID id) {

@@ -49,9 +49,13 @@ public class ArtController {
     public ResponseEntity<Page<ArtDto>> findAllByAccountIdAndSearchText(
         @PathVariable UUID accountId,  
         Pageable pageable, 
-        @RequestParam(defaultValue = Strings.EMPTY) String name,
-        @RequestParam(defaultValue = "false") boolean isExhibited
+        @RequestParam(defaultValue = "") String searchText,
+        @RequestParam(defaultValue = "exhibited") String searchFilter,
+        @RequestParam(defaultValue = "art name") String searchOption
     ) {
-        return ResponseEntity.ok(artServiceFacade.findAllByAccountIdAndName(accountId, pageable, name, isExhibited));
+        Page<ArtDto> artDtoPage = artServiceFacade.findAllByAccountIdAndName(
+            accountId, pageable, searchText, searchFilter, searchOption
+        );
+        return ResponseEntity.ok(artDtoPage);
     }
 }
