@@ -2,7 +2,6 @@ package com.scnsoft.art.contoller;
 
 import java.util.UUID;
 
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +42,11 @@ public class ArtController {
         fileFeignClient.deleteByArtId(id);
         artServiceFacade.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/artists/{artistId}")
+    public Page<ArtDto> findAllByArtistId(@PathVariable UUID artistId, Pageable pageable) {
+        return artServiceFacade.findAllByArtistId(artistId, pageable);
     }
 
     @GetMapping("/accounts/{accountId}")

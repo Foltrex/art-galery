@@ -26,6 +26,10 @@ public class ArtServiceFacade {
         return artMapper.mapPageToDto(artPage);
     }
 
+    public Page<ArtDto> findAllByArtistId(UUID artistId, Pageable pageable) {
+        return artMapper.mapPageToDto(artService.findAllByArtistId(artistId, pageable));
+    }
+
     public ArtDto findById(UUID id) {
         return artMapper.mapToDto(artService.findById(id));
     }

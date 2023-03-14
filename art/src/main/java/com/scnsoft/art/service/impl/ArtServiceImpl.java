@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.base.Strings;
 import com.scnsoft.art.dto.mapper.ArtMapper;
 import com.scnsoft.art.entity.Art;
+import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.repository.ArtInfoRepository;
@@ -103,5 +104,13 @@ public record ArtServiceImpl(
                     yield artRepository.findAll(pageable);
                 }
             };
+    }
+
+    @Override
+    public Page<Art> findAllByArtistId(UUID artistId, Pageable pageable) {
+        Artist artist = artistRepository.findById(artistId)
+            .orElseThrow();
+
+        return artRepository.findAllByArtist(artist, pageable);
     }
 }

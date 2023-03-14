@@ -10,6 +10,8 @@ import java.util.UUID;
 public interface ArtService {
     Page<Art> findAllByAccountIdAndName(UUID accountId, Pageable pageable, String searchText, String searchFilter, String searchOption);
 
+    Page<Art> findAllByArtistId(UUID artistId, Pageable pageable);
+
     List<Art> findAll();
 
     Art save(Art art);
