@@ -1,8 +1,7 @@
 package com.scnsoft.art.contoller;
 
-import com.scnsoft.art.dto.RepresentativeDto;
-import com.scnsoft.art.facade.RepresentativeServiceFacade;
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
+import com.scnsoft.art.dto.RepresentativeDto;
+import com.scnsoft.art.facade.RepresentativeServiceFacade;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("representatives")
@@ -39,6 +41,11 @@ public class RepresentativeController {
     @GetMapping("/account/{accountId}")
     public ResponseEntity<Page<RepresentativeDto>> findAllByAccountId(@PathVariable UUID accountId, Pageable pageable) {
         return ResponseEntity.ok(representativeServiceFacade.findAllByAccountId(accountId, pageable));
+    }
+
+    @GetMapping("/accounts/{accountId}")
+    public RepresentativeDto findByAccountId(@PathVariable UUID accountId) {
+        return representativeServiceFacade.findByAccountId(accountId);
     }
 
     @PostMapping
