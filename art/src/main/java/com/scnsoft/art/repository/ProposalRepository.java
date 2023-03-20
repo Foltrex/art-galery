@@ -22,7 +22,7 @@ public interface ProposalRepository extends JpaRepository<Proposal, UUID> {
 
     Page<Proposal> findByFacility(Facility facility, Pageable pageable);
 
-    long countByArtist(Artist artist);
+    long countByArtistAndArtistConfirmationIsNull(Artist artist);
 
-    long countByFacility(Facility facility);
+    long countByFacilityAndArtistConfirmationIsNull(Facility facility);
 }
