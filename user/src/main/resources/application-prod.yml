@@ -17,23 +17,20 @@ server:
 spring:
   application:
     name: user-service
-  zipkin:
-    enabled: true
-    service.name: user-service
-    sender.type: web
-    base-url: http://localhost:9411
+  #  zipkin:
+  #    enabled: true
+  #    service.name: user-service
+  #    sender.type: web
+  #    base-url: http://localhost:9411
   datasource:
     url: jdbc:postgresql://localhost:5432/user
-    username: root
-    password:
+    username: postgres
+    password: postgres
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: none
-  sql:
-    init:
-      mode: always
+      ddl-auto: update
 # ------------> Eureka Client <---------------
 eureka:
   client:

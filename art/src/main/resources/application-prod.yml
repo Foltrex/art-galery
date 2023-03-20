@@ -11,20 +11,20 @@ server:
 spring:
   application:
     name: art-service
-  zipkin:
-    enabled: true
-    service.name: art-service
-    sender.type: web
-    base-url: http://localhost:9411
+#  zipkin:
+#    enabled: true
+#    service.name: art-service
+#    sender.type: web
+#    base-url: http://localhost:9411
   datasource:
     url: jdbc:postgresql://localhost:5432/art
-    username: root
-    password:
+    username: postgres
+    password: postgres
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       org:
         hibernate:
