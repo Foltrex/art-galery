@@ -1,0 +1,44 @@
+#------------> Spring app <---------------
+app:
+  props:
+    admin:
+      email: admin@gmail.com
+      password: admin123
+    token:
+      secret: my_secret_key
+      expired: 86400000
+#------------> Spring server <---------------
+server:
+  port: 8083
+  error:
+    include-stacktrace: never
+    include-message: always
+#------------> Spring database <---------------
+spring:
+  application:
+    name: user-service
+  zipkin:
+    enabled: true
+    service.name: user-service
+    sender.type: web
+    base-url: http://localhost:9411
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user
+    username: root
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: always
+# ------------> Eureka Client <---------------
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+
