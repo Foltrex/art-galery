@@ -48,8 +48,9 @@ public class RepresentativeController {
         return representativeServiceFacade.findByAccountId(accountId);
     }
 
+    // TODO: uncomment
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
+    // @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RepresentativeDto> save(@RequestBody RepresentativeDto representativeDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(representativeServiceFacade.save(representativeDto));
     }
