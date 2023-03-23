@@ -1,6 +1,7 @@
 package com.scnsoft.art.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +34,9 @@ public class Art {
     private UUID id;
     private String name;
     private String description;
+
+    @Builder.Default
+    private Date dateCreation = new Date();
 
     @ManyToOne
     @JoinColumn(name = "artist_id")

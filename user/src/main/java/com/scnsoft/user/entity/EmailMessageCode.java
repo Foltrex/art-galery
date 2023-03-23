@@ -39,6 +39,7 @@ public class EmailMessageCode {
 
     private Integer code;
 
+    @Builder.Default
     private Boolean isValid = true;
 
     private Integer countAttempts;
