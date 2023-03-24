@@ -55,7 +55,15 @@ CREATE TABLE IF NOT EXISTS art (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     description VARCHAR (255),
     name VARCHAR (255),
+    date_creation TIMESTAMP WITHOUT TIME ZONE DEFAULT now(),
     artist_id UUID REFERENCES artist (id)
+);
+
+
+CREATE TABLE IF NOT EXISTS currency (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v1(),
+    value VARCHAR (15),
+    label VARCHAR (5)
 );
 
 CREATE TABLE IF NOT EXISTS art_info (
@@ -76,11 +84,6 @@ CREATE TABLE IF NOT EXISTS organization_role (
     name INTEGER UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS currency (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v1(),
-    value VARCHAR (15),
-    label VARCHAR (5)
-);
 
 CREATE TABLE IF NOT EXISTS proposal (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),

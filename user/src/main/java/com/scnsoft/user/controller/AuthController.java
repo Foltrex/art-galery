@@ -39,7 +39,7 @@ public class AuthController {
     }
 
     @PostMapping("/register-representative")
-    @PreAuthorize("isAuthenticated()")
+    // @PreAuthorize("isAuthenticated()")
     public ResponseEntity<RepresentativeDto> registerRepresentative(
             @Valid @RequestBody RegisterRepresentativeRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerRepresentative(request));

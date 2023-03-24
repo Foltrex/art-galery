@@ -60,6 +60,7 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
+    @Builder.Default
     private Boolean isOneTimePassword = false;
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -1,5 +1,6 @@
 package com.scnsoft.art.contoller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -26,6 +27,21 @@ import lombok.RequiredArgsConstructor;
 public class ArtController {
     private final ArtServiceFacade artServiceFacade;
     private final FileFeignClient fileFeignClient;
+
+    @GetMapping
+    public Page<ArtDto> findAll(
+        Pageable pageable,
+        @RequestParam(defaultValue = "") String artistName,
+        @RequestParam(defaultValue = "") String cityName,
+        @RequestParam(defaultValue = "") String artNameAndDescription
+    ) {
+        return artServiceFacade.findAll(
+            pageable,
+            artistName, 
+            cityName, 
+            artNameAndDescription
+        );
+    }
 
     @PostMapping
     public ResponseEntity<ArtDto> save(@RequestBody ArtDto artDto) {

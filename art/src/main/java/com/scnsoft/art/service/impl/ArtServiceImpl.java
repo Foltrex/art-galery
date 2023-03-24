@@ -113,4 +113,31 @@ public record ArtServiceImpl(
 
         return artRepository.findAllByArtist(artist, pageable);
     }
+
+    @Override
+    public Page<Art> findAll(
+        Pageable pageable, 
+        String artistName, 
+        String cityName, 
+        String artNameAndDescription
+    ) {
+        Specification<Art> specification = Specification.where(null);
+
+        if (!Strings.isNullOrEmpty(artistName)) {
+            specification = specification.and(artistNameContain(artistName));
+        }
+
+        if (!Strings.isNullOrEmpty(cityName)) {
+            specification = specification.and(cityNameContain(cityName));
+        }
+
+        if (!Strings.isNullOrEmpty(artNameAndDescription)) {
+            Specification<Art> artNameOrDescription = artNameContain(artNameAndDescription)
+                .or(decriptionContain(artNameAndDescription));
+
+            specification = specification.and(artNameOrDescription);
+        }
+
+        return artRepository.findAll(specification, pageable);
+    }
 }

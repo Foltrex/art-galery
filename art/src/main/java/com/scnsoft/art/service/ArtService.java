@@ -19,4 +19,6 @@ public interface ArtService {
     Art findById(UUID id);
 
     void deleteById(UUID id);
+
+    Page<Art> findAll(Pageable pageable, String artistName, String cityName, String artNameAndDescription);
 }

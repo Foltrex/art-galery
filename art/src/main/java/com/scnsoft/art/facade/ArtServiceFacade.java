@@ -42,4 +42,14 @@ public class ArtServiceFacade {
     public void deleteById(UUID id) {
         artService.deleteById(id);
     }
+
+    public Page<ArtDto> findAll(Pageable pageable, String artistName, String cityName, String artNameAndDescription) {
+        Page<Art> artPage = artService.findAll(
+            pageable,
+            artistName, 
+            cityName, 
+            artNameAndDescription
+        );
+        return artMapper.mapPageToDto(artPage);
+    }
 }

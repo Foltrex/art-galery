@@ -79,13 +79,13 @@ public class ProposalServiceImpl {
                     Artist artist = artistRepository.findByAccountId(accountId)
                         .orElseThrow(ArtResourceNotFoundException::new);
 
-                    yield proposalRepository.countByArtist(artist);
+                    yield proposalRepository.countByArtistAndArtistConfirmationIsNull(artist);
                 }
                 case REPRESENTATIVE_ACCOUNT_TYPE -> {
                     Representative representative = representativeRepository.findByAccountId(accountId)
                         .orElseThrow(ArtResourceNotFoundException::new);   
 
-                    yield proposalRepository.countByFacility(representative.getFacility());
+                    yield proposalRepository.countByFacilityAndArtistConfirmationIsNull(representative.getFacility());
                 }
                 default -> throw new IllegalArgumentException("Unknown account type");
             };

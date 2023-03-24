@@ -66,6 +66,7 @@ public class AppInitialization {
                     .failCount(0)
                     .roles(getAdminRoles())
                     .accountType(Account.AccountType.SYSTEM)
+                    .isOneTimePassword(false)
                     .build();
 
             accountRepository.save(account);

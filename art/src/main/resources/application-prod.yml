@@ -1,0 +1,42 @@
+app:
+  props:
+    token:
+      secret: my_secret_key
+      expired: 86400000
+server:
+  port: 8081
+  error:
+    include-stacktrace: never
+    include-message: always
+spring:
+  application:
+    name: art-service
+#  zipkin:
+#    enabled: true
+#    service.name: art-service
+#    sender.type: web
+#    base-url: http://localhost:9411
+  datasource:
+    url: jdbc:postgresql://localhost:5432/art
+    username: postgres
+    password: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      org:
+        hibernate:
+          envers:
+            audit_table_suffix: _AUDIT
+            revision_field_name: REVISION_ID
+            revision_type_field_name: REVISION_TYPE
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+
+
