@@ -11,6 +11,9 @@ server:
 spring:
   application:
     name: file-service
+  sql:
+    init:
+      mode: never
   datasource:
     url: jdbc:postgresql://localhost:5432/file
     username: postgres

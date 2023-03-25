@@ -11,6 +11,9 @@ server:
 spring:
   application:
     name: art-service
+  sql:
+    init:
+      mode: never
 #  zipkin:
 #    enabled: true
 #    service.name: art-service
