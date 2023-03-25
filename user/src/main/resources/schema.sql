@@ -41,6 +41,6 @@ CREATE TABLE IF NOT EXISTS email_message_code (
     account_id UUID NOT NULL REFERENCES account (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
     code INTEGER,
     is_valid boolean,
-    countAttempts INTEGER,
-    created_at DATE
+    count_attempts INTEGER,
+    created_at TIMESTAMP
 );
