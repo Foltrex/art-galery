@@ -36,14 +36,8 @@ CREATE TABLE IF NOT EXISTS accounts_m2m_roles (
     PRIMARY KEY (account_id, role_id)
 );
 
-CREATE SEQUENCE IF NOT EXISTS email_message_code_seq
-    INCREMENT 1
-    START 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
 CREATE TABLE IF NOT EXISTS email_message_code (
-    id BIGINT NOT NULL PRIMARY KEY DEFAULT nextval('email_message_code_seq'),
+    id UUID PRIMARY KEY  DEFAULT uuid_generate_v4 (),
     account_id UUID NOT NULL REFERENCES account (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
     code INTEGER,
     is_valid boolean,
