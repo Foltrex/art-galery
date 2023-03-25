@@ -28,9 +28,9 @@ spring:
     password: postgres
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: true
+    generate-ddl: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
 # ------------> Eureka Client <---------------
 eureka:
   client:
