@@ -25,7 +25,7 @@ spring:
       ddl-auto: validate
     # show-sql: true
   liquibase:
-    changeLog: classpath:db/changelog/db.changelog-master.sql
+    changeLog: classpath:db/changelog/db.changelog-master.xml
 
 eureka:
   client:

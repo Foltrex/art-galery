@@ -31,7 +31,7 @@ spring:
     hibernate:
       ddl-auto: none
   liquibase:
-    changeLog: classpath:db/changelog/db.changelog-master.sql
+    changeLog: classpath:db/changelog/db.changelog-master.xml
 # ------------> Eureka Client <---------------
 eureka:
   client:

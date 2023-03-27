@@ -20,7 +20,7 @@ spring:
     hibernate: 
       ddl-auto: none
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.sql
+    change-log: classpath:db/changelog/db.changelog-master.xml
 
 eureka:
   client:
