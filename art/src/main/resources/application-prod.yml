@@ -36,7 +36,7 @@ spring:
             revision_field_name: REVISION_ID
             revision_type_field_name: REVISION_TYPE
   liquibase:
-    changeLog: classpath:db/changelog/db.changelog-master.xml
+    changeLog: classpath:db/changelog/db.changelog-master.sql
 eureka:
   client:
     service-url:

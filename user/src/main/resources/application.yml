@@ -28,12 +28,10 @@ spring:
     password: root
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: true
     hibernate:
       ddl-auto: none
-  sql:
-    init:
-     mode: always
+  liquibase:
+    changeLog: classpath:db/changelog/db.changelog-master.sql
 # ------------> Eureka Client <---------------
 eureka:
   client:
