@@ -1,6 +1,6 @@
 --liquibase formatted sql
---changeset Foltrex:1
 
+--changeset Foltrex:1
 -------------------Sequence ddl----------------------
 CREATE SEQUENCE IF NOT EXISTS role_id_seq 
     INCREMENT 1 

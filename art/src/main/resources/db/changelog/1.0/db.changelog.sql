@@ -1,10 +1,6 @@
 --liquibase formatted sql
+
 --changeset Foltrex:1
-
-
--- CREATE SCHEMA IF NOT EXISTS public;
--- SET search_path TO public;
-
 -------------------Sequence ddl----------------------
 CREATE SEQUENCE IF NOT EXISTS organization_role_id_seq 
     INCREMENT 1 
