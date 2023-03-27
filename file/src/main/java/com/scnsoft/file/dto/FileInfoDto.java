@@ -11,5 +11,5 @@ public class FileInfoDto {
     private UUID id;
     private UUID artId;
     private String mimeType;
-    private String filename;
+    private Integer contentLength;
 }

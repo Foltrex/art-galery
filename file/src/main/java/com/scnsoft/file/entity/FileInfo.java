@@ -27,8 +27,6 @@ public class FileInfo {
 
     private String mimeType;
 
-    private String filename;
-
-    private String systemFileName;
+    private Integer contentLength;
 
 }

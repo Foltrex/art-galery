@@ -3,6 +3,7 @@ package com.scnsoft.file.controller;
 import java.util.List;
 import java.util.UUID;
 
+import com.scnsoft.file.exception.ResourseNotFoundException;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,11 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scnsoft.file.dto.FileInfoDto;
-import com.scnsoft.file.dto.FileStreamDto;
 import com.scnsoft.file.dto.UploadFileDto;
 import com.scnsoft.file.dto.mapper.impl.FileInfoMapper;
 import com.scnsoft.file.facade.FileInfoServiceFacade;
@@ -38,12 +37,19 @@ public class FileController {
 
     @GetMapping(value = "/{id}/data", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<InputStreamResource> getFileStreamById(@PathVariable UUID id) {
-        return ResponseEntity.ok(new InputStreamResource(fileService.getFileStream(id).getInputStream()));
+        FileInfoDto info = fileInfoServiceFacade.findById(id);
+        return ResponseEntity
+                .ok()
+                .contentLength(info.getContentLength())
+                .contentType(MediaType.parseMediaType(info.getMimeType()))
+                .body(new InputStreamResource(fileService.getFileStream(id)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FileInfoDto> findFileInfoById(@PathVariable UUID id) {
-        return new ResponseEntity<>(fileInfoMapper.mapToDto(fileService.findFileInfoById(id)), HttpStatus.OK);
+        return fileService.findFileInfoById(id)
+                .map(f -> new ResponseEntity<>(fileInfoMapper.mapToDto(f), HttpStatus.OK))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/arts/{artId}")
@@ -57,11 +63,6 @@ public class FileController {
         return ResponseEntity.ok().build();
     }
 
-    // @GetMapping("/arts/{artId}")
-    // public ResponseEntity<Page<FileInfoDto>> findAllFileInfoByArtId(@PathVariable UUID artId, Pageable pageable) {
-    //     return ResponseEntity.ok().body(fileInfoMapper.mapPageToDto(fileService.findAllFileInfoByArtId(artId, pageable)));
-    // }
-
     @PostMapping
     public ResponseEntity<FileInfoDto> uploadFile(@RequestBody UploadFileDto uploadFileDto) {
         return ResponseEntity.ok().body(fileInfoMapper.mapToDto(fileService.uploadFile(uploadFileDto)));
@@ -69,7 +70,11 @@ public class FileController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeFileById(@PathVariable UUID id) {
-        fileService.removeFileById(id);
+        try {
+            fileService.removeFileById(id);
+        } catch (ResourseNotFoundException e) {
+            log.info("Attempt to delete file which does not exists: " + id);
+        }
         return ResponseEntity.ok().build();
     }
 }
