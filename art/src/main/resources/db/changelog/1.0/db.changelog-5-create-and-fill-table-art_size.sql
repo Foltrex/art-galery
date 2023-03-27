@@ -19,15 +19,3 @@ VALUES (3, 'Big(less then 150x150)', true);
 
 INSERT INTO art_size (id, label, verified)
 VALUES (4, 'Huge (bigger then 150x150)', true);
-
-INSERT INTO art_format (id, label, verified)
-VALUES (5, 'Ellipsis', true);
-
-INSERT INTO art_format (id, label, verified)
-VALUES (6, 'Diptych', true);
-
-INSERT INTO art_format (id, label, verified)
-VALUES (7, 'Triptych', true);
-
-INSERT INTO art_format (id, label, verified)
-VALUES (8, 'Polyptych', true);
