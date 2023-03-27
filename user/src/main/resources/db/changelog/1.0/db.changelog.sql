@@ -1,8 +1,6 @@
--- !! For development !! Delete later
-DROP SCHEMA public CASCADE;
+--liquibase formatted sql
 
-CREATE SCHEMA public;
-
+--changeset Foltrex:1
 -------------------Sequence ddl----------------------
 CREATE SEQUENCE IF NOT EXISTS role_id_seq 
     INCREMENT 1 
@@ -22,7 +20,8 @@ CREATE TABLE IF NOT EXISTS account (
     email VARCHAR(255) UNIQUE,
     fail_count INTEGER,
     last_fail TIMESTAMP WITHOUT TIME ZONE,
-    password VARCHAR(255)
+    password VARCHAR(255),
+    is_one_time_password BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS role (

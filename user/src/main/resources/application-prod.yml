@@ -31,9 +31,11 @@ spring:
     password: postgres
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: off
+    generate-ddl: false
     hibernate:
       ddl-auto: validate
+  liquibase:
+    changeLog: classpath:db/changelog/db.changelog-master.xml
 # ------------> Eureka Client <---------------
 eureka:
   client:
