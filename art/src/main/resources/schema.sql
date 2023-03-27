@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS art (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),
     description VARCHAR (255),
     name VARCHAR (255),
-    date_creation TIMESTAMP WITHOUT TIME ZONE DEFAULT now(),
+    date_creation TIMESTAMP WITHOUT TIME ZONE DEFAULT current_timestamp,
     artist_id UUID REFERENCES artist (id)
 );
 
