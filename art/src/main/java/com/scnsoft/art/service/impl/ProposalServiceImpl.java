@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.scnsoft.art.dto.AccountType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class ProposalServiceImpl {
-    private static final String REPRESENTATIVE_ACCOUNT_TYPE = "REPRESENTATIVE";
-    private static final String ARTIST_ACCOUNT_TYPE = "ARTIST";
 
     private final ProposalRepository proposalRepository;
     private final ArtistRepository artistRepository;
@@ -49,21 +48,23 @@ public class ProposalServiceImpl {
         if (accountResponse.getBody() != null) {
             AccountDto accountDto = accountResponse.getBody();
 
-            return switch (accountDto.getAccountType()) {
-                case ARTIST_ACCOUNT_TYPE -> { 
+            switch (AccountType.fromString(accountDto.getAccountType())) {
+                case ARTIST -> {
                     Artist artist = artistRepository.findByAccountId(accountId)
                         .orElseThrow(ArtResourceNotFoundException::new);
-
-                    yield proposalRepository.findByArtist(artist, pageable);
+                    return proposalRepository.findByArtist(artist, pageable);
                 }
-                case REPRESENTATIVE_ACCOUNT_TYPE -> {
+                case REPRESENTATIVE -> {
                     Representative representative = representativeRepository.findByAccountId(accountId)
-                        .orElseThrow(ArtResourceNotFoundException::new);   
+                        .orElseThrow(ArtResourceNotFoundException::new);
 
-                    yield proposalRepository.findByFacility(representative.getFacility(), pageable);
+                    return proposalRepository.findByFacility(representative.getFacility(), pageable);
+                }
+                case SYSTEM -> {
+                    return Page.empty(pageable);
                 }
                 default -> throw new IllegalArgumentException("Unknown account type");
-            };
+            }
         } else {
             return Page.empty(pageable);
         }
@@ -74,21 +75,24 @@ public class ProposalServiceImpl {
         if (accountResponse.getBody() != null) {
             AccountDto accountDto = accountResponse.getBody();
 
-            return switch (accountDto.getAccountType()) {
-                case ARTIST_ACCOUNT_TYPE -> { 
+            switch (AccountType.fromString(accountDto.getAccountType())) {
+                case ARTIST -> {
                     Artist artist = artistRepository.findByAccountId(accountId)
                         .orElseThrow(ArtResourceNotFoundException::new);
 
-                    yield proposalRepository.countByArtistAndArtistConfirmationIsNull(artist);
+                    return proposalRepository.countByArtistAndArtistConfirmationIsNull(artist);
                 }
-                case REPRESENTATIVE_ACCOUNT_TYPE -> {
+                case REPRESENTATIVE -> {
                     Representative representative = representativeRepository.findByAccountId(accountId)
                         .orElseThrow(ArtResourceNotFoundException::new);   
 
-                    yield proposalRepository.countByFacilityAndArtistConfirmationIsNull(representative.getFacility());
+                    return proposalRepository.countByFacilityAndArtistConfirmationIsNull(representative.getFacility());
+                }
+                case SYSTEM -> {
+                    return 0;
                 }
                 default -> throw new IllegalArgumentException("Unknown account type");
-            };
+            }
         } else {
             return 0;
         }
