@@ -70,8 +70,8 @@ public class ArtController {
             @RequestParam(defaultValue = "") String searchFilter,
             @RequestParam(defaultValue = "art name") String searchOption
     ) {
-        Page<ArtDto> artDtoPage = artServiceFacade.findAllByParameters(
-                pageable, searchText, searchFilter, searchOption
+        Page<ArtDto> artDtoPage = artServiceFacade.findAllByAccountId(
+            accountId, pageable, searchText, searchFilter, searchOption
         );
         return ResponseEntity.ok(artDtoPage);
     }

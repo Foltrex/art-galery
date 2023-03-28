@@ -1,5 +1,21 @@
 package com.scnsoft.art.service.impl;
 
+import static com.scnsoft.art.repository.specification.ArtSpecification.artInfosIsEmpty;
+import static com.scnsoft.art.repository.specification.ArtSpecification.artNameContain;
+import static com.scnsoft.art.repository.specification.ArtSpecification.artistNameContain;
+import static com.scnsoft.art.repository.specification.ArtSpecification.cityNameContain;
+import static com.scnsoft.art.repository.specification.ArtSpecification.decriptionContain;
+
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.criteria.Join;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
 import com.google.common.base.Strings;
 import com.scnsoft.art.dto.mapper.ArtMapper;
 import com.scnsoft.art.entity.Art;
@@ -66,17 +82,26 @@ public record ArtServiceImpl(
     }
 
     @Override
-    public Page<Art> findAllByParameters(
-            Pageable pageable,
-            String searchText,
-            String searchFilter,
-            String searchOption
+    public Page<Art> findAllByAccountId(
+        UUID accountId,
+        Pageable pageable, 
+        String searchText, 
+        String searchFilter, 
+        String searchOption
     ) {
-        Specification<Art> searchFilterSpecification = switch (searchFilter) {
+        Specification<Art> accountSpecification = (art, cq, cb) -> {
+            Join<Art, Artist> artist = art.join("artist");
+            return cb.equal(artist.get("accountId"), accountId);
+        };
+
+        Specification<Art> searchFilterSpecification 
+        = switch (searchFilter) {
             case EXHIBITED_ARTS -> Specification.not(artInfosIsEmpty());
             case FREE_ARTS -> artInfosIsEmpty();
             default -> Specification.where(null);
         };
+
+        searchFilterSpecification = searchFilterSpecification.and(accountSpecification);
 
 
         return Strings.isNullOrEmpty(searchText)

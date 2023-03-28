@@ -1,15 +1,17 @@
 package com.scnsoft.art.facade;
 
-import com.scnsoft.art.dto.ArtDto;
-import com.scnsoft.art.dto.mapper.ArtMapper;
-import com.scnsoft.art.entity.Art;
-import com.scnsoft.art.service.ArtService;
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
+import com.scnsoft.art.dto.ArtDto;
+import com.scnsoft.art.dto.mapper.ArtMapper;
+import com.scnsoft.art.entity.Art;
+import com.scnsoft.art.service.ArtService;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -19,9 +21,9 @@ public class ArtServiceFacade {
     private final ArtMapper artMapper;
 
 
-    public Page<ArtDto> findAllByParameters(Pageable pageable, String searchText, String searchFilter, String searchOption) {
-        Page<Art> artPage = artService.findAllByParameters(
-                pageable, searchText, searchFilter, searchOption
+    public Page<ArtDto> findAllByAccountId(UUID accountId, Pageable pageable, String searchText, String searchFilter, String searchOption) {
+        Page<Art> artPage = artService.findAllByAccountId(
+            accountId, pageable, searchText, searchFilter, searchOption
         );
         return artMapper.mapPageToDto(artPage);
     }

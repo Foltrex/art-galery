@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ArtService {
-    Page<Art> findAllByParameters(Pageable pageable, String searchText, String searchFilter, String searchOption);
+    Page<Art> findAllByAccountId(UUID accountId, Pageable pageable, String searchText, String searchFilter, String searchOption);
 
     Page<Art> findAllByArtistId(UUID artistId, Pageable pageable);
 
