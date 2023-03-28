@@ -1,6 +1,7 @@
 package com.scnsoft.file.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -10,10 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DocumentService {
@@ -22,7 +23,7 @@ public class DocumentService {
         try {
             return Files.newInputStream(Paths.get(filePath));
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Troubles with file reading", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File not found", e);
         }
     }
 
@@ -32,7 +33,7 @@ public class DocumentService {
             Files.createDirectories(file.getParentFile().toPath());
             Files.write(file.toPath(), fileData, StandardOpenOption.CREATE_NEW);
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot save file to path: " + filePath);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot save file: " + filePath);
         }
     }
 
@@ -41,11 +42,10 @@ public class DocumentService {
         try {
             Files.delete(file.toPath());
         } catch (NoSuchFileException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    (String.format("Cannot found file with path : %s", file)));
+            log.info("attempt to delete file which does not exists " + filePath);
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    (String.format("Troubles with deleting file with path = %s", filePath)));
+                    (String.format("Cannot delete file by path = %s", filePath)));
         }
     }
 

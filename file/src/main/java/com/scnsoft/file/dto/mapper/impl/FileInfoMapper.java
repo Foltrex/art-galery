@@ -3,11 +3,7 @@ package com.scnsoft.file.dto.mapper.impl;
 import com.scnsoft.file.dto.FileInfoDto;
 import com.scnsoft.file.dto.mapper.Mapper;
 import com.scnsoft.file.entity.FileInfo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @Component
 public class FileInfoMapper implements Mapper<FileInfo, FileInfoDto> {
@@ -18,7 +14,7 @@ public class FileInfoMapper implements Mapper<FileInfo, FileInfoDto> {
                 .id(fileInfo.getId())
                 .artId(fileInfo.getArtId())
                 .mimeType(fileInfo.getMimeType())
-                .filename(fileInfo.getFilename())
+                .contentLength(fileInfo.getContentLength())
                 .build();
     }
 
@@ -28,14 +24,7 @@ public class FileInfoMapper implements Mapper<FileInfo, FileInfoDto> {
                 .id(fileInfoDto.getId())
                 .artId(fileInfoDto.getArtId())
                 .mimeType(fileInfoDto.getMimeType())
-                .filename(fileInfoDto.getFilename())
+                .contentLength(fileInfoDto.getContentLength())
                 .build();
-    }
-
-    public Page<FileInfoDto> mapPageToDto(final Page<FileInfo> fileInfoPage) {
-        return new PageImpl<>(fileInfoPage.stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList()), fileInfoPage.getPageable(), fileInfoPage.getTotalElements());
-
     }
 }

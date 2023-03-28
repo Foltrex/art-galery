@@ -67,8 +67,7 @@ public record ArtServiceImpl(
     }
 
     @Override
-    public Page<Art> findAllByAccountIdAndName(
-        UUID accountId, 
+    public Page<Art> findAllByParameters(
         Pageable pageable, 
         String searchText, 
         String searchFilter, 

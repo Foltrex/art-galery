@@ -70,11 +70,11 @@ public class ArtController {
         @PathVariable UUID accountId,  
         Pageable pageable, 
         @RequestParam(defaultValue = "") String searchText,
-        @RequestParam(defaultValue = "exhibited") String searchFilter,
+        @RequestParam(defaultValue = "") String searchFilter,
         @RequestParam(defaultValue = "art name") String searchOption
     ) {
-        Page<ArtDto> artDtoPage = artServiceFacade.findAllByAccountIdAndName(
-            accountId, pageable, searchText, searchFilter, searchOption
+        Page<ArtDto> artDtoPage = artServiceFacade.findAllByParameters(
+            pageable, searchText, searchFilter, searchOption
         );
         return ResponseEntity.ok(artDtoPage);
     }
