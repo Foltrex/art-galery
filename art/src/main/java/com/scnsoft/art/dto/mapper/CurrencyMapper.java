@@ -1,9 +1,8 @@
 package com.scnsoft.art.dto.mapper;
 
-import org.mapstruct.Mapper;
-
 import com.scnsoft.art.dto.CurrencyDto;
 import com.scnsoft.art.entity.Currency;
+import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface CurrencyMapper {

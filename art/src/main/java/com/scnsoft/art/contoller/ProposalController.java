@@ -1,8 +1,9 @@
 package com.scnsoft.art.contoller;
 
-import java.util.Objects;
-import java.util.UUID;
-
+import com.scnsoft.art.dto.ProposalDto;
+import com.scnsoft.art.facade.ArtInfoServiceFacade;
+import com.scnsoft.art.facade.ProposalServiceFacade;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scnsoft.art.dto.ProposalDto;
-import com.scnsoft.art.facade.ArtInfoServiceFacade;
-import com.scnsoft.art.facade.ProposalServiceFacade;
-
-import lombok.RequiredArgsConstructor;
+import java.util.Objects;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,16 +29,16 @@ public class ProposalController {
     private final ArtInfoServiceFacade artInfoServiceFacade;
 
     @GetMapping("/accounts/{accountId}")
-    public ResponseEntity<Page<ProposalDto>> findAllByAccountId(@PathVariable UUID accountId,  Pageable pageable) {
-        return ResponseEntity.ok(proposalServiceFacade.findAllByAccountId(accountId, pageable));   
+    public ResponseEntity<Page<ProposalDto>> findAllByAccountId(@PathVariable UUID accountId, Pageable pageable) {
+        return ResponseEntity.ok(proposalServiceFacade.findAllByAccountId(accountId, pageable));
     }
 
-    @RequestMapping(value="/accounts/{accountId}", method = RequestMethod.HEAD)
+    @RequestMapping(value = "/accounts/{accountId}", method = RequestMethod.HEAD)
     public ResponseEntity<Void> countByAccountId(@PathVariable UUID accountId) {
         long proposalsAmount = proposalServiceFacade.countByAccountId(accountId);
         return ResponseEntity.ok()
-            .header(X_TOTAL_COUNT_HEADER, Objects.toString(proposalsAmount))
-            .build();
+                .header(X_TOTAL_COUNT_HEADER, Objects.toString(proposalsAmount))
+                .build();
     }
 
     @DeleteMapping("/{id}")
@@ -51,12 +49,12 @@ public class ProposalController {
     @PostMapping
     public ResponseEntity<ProposalDto> save(@RequestBody ProposalDto proposalDto) {
         if (
-            proposalDto.getArtistConfirmation() != null && proposalDto.getArtistConfirmation() && 
-            proposalDto.getOrganizationConfirmation() != null && proposalDto.getOrganizationConfirmation()
+                proposalDto.getArtistConfirmation() != null && proposalDto.getArtistConfirmation() &&
+                        proposalDto.getOrganizationConfirmation() != null && proposalDto.getOrganizationConfirmation()
         ) {
             artInfoServiceFacade.createFromProposal(proposalDto);
         }
-        
+
         return ResponseEntity.ok(proposalServiceFacade.save(proposalDto));
     }
 }

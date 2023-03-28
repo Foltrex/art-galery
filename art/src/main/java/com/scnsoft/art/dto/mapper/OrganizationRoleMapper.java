@@ -1,9 +1,8 @@
 package com.scnsoft.art.dto.mapper;
 
-import org.mapstruct.Mapper;
-
 import com.scnsoft.art.dto.OrganizationRoleDto;
 import com.scnsoft.art.entity.OrganizationRole;
+import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface OrganizationRoleMapper {

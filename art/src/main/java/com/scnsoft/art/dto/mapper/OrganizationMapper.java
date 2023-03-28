@@ -1,16 +1,15 @@
 package com.scnsoft.art.dto.mapper;
 
-import java.util.List;
-
+import com.scnsoft.art.dto.OrganizationDto;
+import com.scnsoft.art.entity.Organization;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import com.scnsoft.art.dto.OrganizationDto;
-import com.scnsoft.art.entity.Organization;
+import java.util.List;
 
-@Mapper(componentModel = "spring", uses = { AddressMapper.class })
+@Mapper(componentModel = "spring", uses = {AddressMapper.class})
 public abstract class OrganizationMapper {
 
     public abstract OrganizationDto mapToDto(Organization organization);

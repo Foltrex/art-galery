@@ -1,14 +1,13 @@
 package com.scnsoft.art.dto.mapper;
 
-import java.util.List;
-
+import com.scnsoft.art.dto.ArtDto;
+import com.scnsoft.art.entity.Art;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import com.scnsoft.art.dto.ArtDto;
-import com.scnsoft.art.entity.Art;
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {ArtistMapper.class})
 public abstract class ArtMapper {

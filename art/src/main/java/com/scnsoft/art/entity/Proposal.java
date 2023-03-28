@@ -1,7 +1,12 @@
 package com.scnsoft.art.entity;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,15 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldNameConstants;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Audited
@@ -32,7 +30,7 @@ public class Proposal {
     private UUID id;
     private BigDecimal price;
     private double commission;
-    
+
     @NotAudited
     @NotNull
     @ManyToOne

@@ -1,11 +1,10 @@
 package com.scnsoft.art.dto.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import com.scnsoft.art.dto.ArtInfoDto;
 import com.scnsoft.art.dto.ProposalDto;
 import com.scnsoft.art.entity.ArtInfo;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {ArtMapper.class, FacilityMapper.class})
 public interface ArtInfoMapper {
