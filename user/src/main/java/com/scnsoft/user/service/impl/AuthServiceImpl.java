@@ -2,10 +2,13 @@ package com.scnsoft.user.service.impl;
 
 import com.scnsoft.user.dto.ArtistDto;
 import com.scnsoft.user.dto.FacilityDto;
+import com.scnsoft.user.dto.MetadataDto;
 import com.scnsoft.user.dto.OrganizationDto;
 import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.EmailMessageCode;
+import com.scnsoft.user.entity.Metadata;
+import com.scnsoft.user.entity.MetadataId;
 import com.scnsoft.user.entity.constant.TemplateFile;
 import com.scnsoft.user.exception.AccountBlockedException;
 import com.scnsoft.user.exception.FeignResponseException;
@@ -37,8 +40,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -61,12 +66,36 @@ public class AuthServiceImpl implements AuthService {
             throw new LoginAlreadyExistsException("Email is already in use!");
         }
 
+        UUID uuid = UUID.randomUUID();
+
         Account account = accountAuthenticationHelperServiceImpl.createAccount(
                 registerRequest.getEmail(),
                 registerRequest.getPassword(),
                 Account.AccountType.valueOf(registerRequest.getAccountType()));
         account.setIsOneTimePassword(false);
+        account.setId(uuid);
+//        account = accountRepository.save(account);
+
+        List<MetadataDto> metadataDtosList = registerRequest.getMetadata();
+        List<Metadata> metadataList = new ArrayList<>();
+        for (MetadataDto metadataDto : metadataDtosList) {
+            MetadataId metadataId = new MetadataId();
+            metadataId.setAccountId(uuid);
+            metadataId.setKey(metadataDto.getKey());
+            Metadata metadata = Metadata.builder()
+                    .metadataId(metadataId)
+                    .value(metadataDto.getValue())
+                    .build();
+            metadataList.add(metadata);
+        }
+//        metadataDtosList.forEach(metadataDto -> {
+//
+//
+//        });
+        account.setMetadata(metadataList);
+        log.info(String.valueOf(account));
         accountRepository.save(account);
+
 
         accountAuthenticationHelperServiceImpl.setAccountToAuthentication(registerRequest.getEmail(), registerRequest.getPassword());
 

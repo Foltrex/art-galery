@@ -5,15 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-import java.util.UUID;
 
 @Entity
 @Table(name = "account_metadata")
@@ -23,17 +18,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Metadata {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
-
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
-
-    @NotEmpty
-    private String key;
+    @EmbeddedId
+    private MetadataId metadataId;
 
     @NotEmpty
     private String value;
+
 }

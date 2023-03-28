@@ -1,9 +1,11 @@
 package com.scnsoft.user.dto;
 
+import com.scnsoft.user.entity.Metadata;
 import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,4 +18,5 @@ public class AccountDto {
     private Date blockedSince;
     private Boolean isApproved;
     private String accountType;
+    private List<Metadata> metadata;
 }

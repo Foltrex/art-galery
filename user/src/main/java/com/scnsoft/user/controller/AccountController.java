@@ -34,6 +34,7 @@ public class AccountController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AccountDto> findById(@PathVariable UUID id) {
+        log.info(accountService.findById(id).toString());
         return ResponseEntity.ok(accountMapper.mapToDto(accountService.findById(id)));
     }
 

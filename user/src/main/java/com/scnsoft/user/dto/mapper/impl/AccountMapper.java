@@ -17,6 +17,7 @@ public class AccountMapper implements Mapper<Account, AccountDto> {
                 .failCount(account.getFailCount())
                 .lastFail(account.getLastFail())
                 .accountType(account.getAccountType().toString())
+                .metadata(account.getMetadata())
                 .build();
     }
 
@@ -31,4 +32,5 @@ public class AccountMapper implements Mapper<Account, AccountDto> {
                 .accountType(Account.AccountType.valueOf(accountDto.getAccountType()))
                 .build();
     }
+
 }
