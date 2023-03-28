@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface ArtFormatRepository extends JpaRepository<ArtFormat, Integer> {
 
-    @Query("select artFormat.id, artFormat.label from ArtFormat artFormat")
+    @Query(value = "select art_format.id, art_format.label from art_format", nativeQuery = true)
     List<Option> findAllInOptionModel();
 }
