@@ -1,11 +1,5 @@
 package com.scnsoft.art.repository.specification;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-
-import org.springframework.data.jpa.domain.Specification;
-
 import com.scnsoft.art.entity.Address;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.ArtInfo;
@@ -14,8 +8,12 @@ import com.scnsoft.art.entity.City;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.entity.Representative;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 
 @RequiredArgsConstructor
 public class ArtSpecification {
@@ -37,13 +35,13 @@ public class ArtSpecification {
             Join<Art, Artist> artist = art.join("artist");
             String nameRegex = "%" + name + "%";
             Predicate artistFirstnameEqualName = cb.like(
-                artist.get("firstname"), 
-                nameRegex
+                    artist.get("firstname"),
+                    nameRegex
             );
 
             Predicate artistLastnameEqualName = cb.like(
-                artist.get("lastname"), 
-                nameRegex
+                    artist.get("lastname"),
+                    nameRegex
             );
             return cb.or(artistFirstnameEqualName, artistLastnameEqualName);
         };

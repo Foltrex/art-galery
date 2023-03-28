@@ -1,6 +1,5 @@
 package com.scnsoft.art.repository;
 
-import com.scnsoft.art.entity.ArtFormat;
 import com.scnsoft.art.entity.ArtStyle;
 import com.scnsoft.art.entity.model.Option;
 import org.springframework.data.jpa.repository.JpaRepository;

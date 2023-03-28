@@ -75,7 +75,7 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public Artist findByArtId(UUID artId) {
         Art art = artRepository.findById(artId)
-            .orElseThrow();
+                .orElseThrow();
 
         return art.getArtist();
     }

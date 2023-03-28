@@ -1,22 +1,21 @@
 package com.scnsoft.art.contoller;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import com.scnsoft.art.dto.ArtInfoDto;
+import com.scnsoft.art.facade.ArtInfoServiceFacade;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scnsoft.art.dto.ArtInfoDto;
-import com.scnsoft.art.facade.ArtInfoServiceFacade;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/art-infos")
 public record ArtInfoController(
-    ArtInfoServiceFacade artInfoServiceFacade
+        ArtInfoServiceFacade artInfoServiceFacade
 ) {
     @GetMapping("/arts/{artId}")
     public List<ArtInfoDto> findAllByArtId(@PathVariable UUID artId) {
@@ -27,7 +26,7 @@ public record ArtInfoController(
     public ResponseEntity<ArtInfoDto> findLastByArtId(@PathVariable UUID artId) {
         Optional<ArtInfoDto> optionalArtInfo = artInfoServiceFacade.findLastByArtId(artId);
         return optionalArtInfo.isPresent()
-            ? ResponseEntity.ok(optionalArtInfo.get())
-            : ResponseEntity.ok().build();
+                ? ResponseEntity.ok(optionalArtInfo.get())
+                : ResponseEntity.ok().build();
     }
 }

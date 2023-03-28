@@ -21,7 +21,7 @@ public class ArtServiceFacade {
 
     public Page<ArtDto> findAllByParameters(Pageable pageable, String searchText, String searchFilter, String searchOption) {
         Page<Art> artPage = artService.findAllByParameters(
-            pageable, searchText, searchFilter, searchOption
+                pageable, searchText, searchFilter, searchOption
         );
         return artMapper.mapPageToDto(artPage);
     }
@@ -45,10 +45,10 @@ public class ArtServiceFacade {
 
     public Page<ArtDto> findAll(Pageable pageable, String artistName, String cityName, String artNameAndDescription) {
         Page<Art> artPage = artService.findAll(
-            pageable,
-            artistName, 
-            cityName, 
-            artNameAndDescription
+                pageable,
+                artistName,
+                cityName,
+                artNameAndDescription
         );
         return artMapper.mapPageToDto(artPage);
     }

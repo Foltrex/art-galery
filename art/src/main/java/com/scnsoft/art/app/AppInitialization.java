@@ -1,17 +1,15 @@
 package com.scnsoft.art.app;
 
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.scnsoft.art.entity.Currency;
 import com.scnsoft.art.entity.OrganizationRole;
 import com.scnsoft.art.repository.CurrencyRepository;
 import com.scnsoft.art.repository.OrganizationRoleRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -59,11 +57,11 @@ public class AppInitialization {
     public void initCurrencies() {
         if (currencyRepository.findByValue(DOLLAR_CURRENCY_VALUE).isEmpty()) {
             Currency currency = Currency.builder()
-                .value(DOLLAR_CURRENCY_VALUE)
-                .label(DOLLAR_CURRENCY_LABEL)
-                .build();
+                    .value(DOLLAR_CURRENCY_VALUE)
+                    .label(DOLLAR_CURRENCY_LABEL)
+                    .build();
 
-                currencyRepository.save(currency);
+            currencyRepository.save(currency);
         }
     }
 

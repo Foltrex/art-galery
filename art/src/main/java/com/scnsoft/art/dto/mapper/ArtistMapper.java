@@ -1,13 +1,12 @@
 package com.scnsoft.art.dto.mapper;
 
-import java.util.stream.Collectors;
-
+import com.scnsoft.art.dto.ArtistDto;
+import com.scnsoft.art.entity.Artist;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-import com.scnsoft.art.dto.ArtistDto;
-import com.scnsoft.art.entity.Artist;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {AddressMapper.class})
 public abstract class ArtistMapper {

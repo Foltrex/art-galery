@@ -1,7 +1,6 @@
 package com.scnsoft.art.service.impl;
 
 import com.scnsoft.art.entity.model.Option;
-import com.scnsoft.art.repository.ArtFormatRepository;
 import com.scnsoft.art.repository.ArtTopicRepository;
 import com.scnsoft.art.service.OptionService;
 import lombok.RequiredArgsConstructor;

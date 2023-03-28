@@ -27,8 +27,8 @@ public class FacilityServiceImpl implements FacilityService {
     @Override
     public Facility findByAccountId(UUID accountId) {
         Representative representative = representativeRepository.findByAccountId(accountId)
-            .orElseThrow(ArtResourceNotFoundException::new);
-        
+                .orElseThrow(ArtResourceNotFoundException::new);
+
         return representative.getFacility();
     }
 

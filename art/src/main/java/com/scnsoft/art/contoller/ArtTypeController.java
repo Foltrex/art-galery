@@ -15,6 +15,7 @@ import java.util.List;
 public class ArtTypeController {
 
     private final ArtTypeServiceImpl artTypeService;
+
     @GetMapping
     public List<Option> findAll() {
         return artTypeService.findAll();

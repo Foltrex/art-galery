@@ -1,17 +1,15 @@
 package com.scnsoft.art.facade;
 
-import java.util.UUID;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
-
 import com.scnsoft.art.dto.ProposalDto;
 import com.scnsoft.art.dto.mapper.ProposalMapper;
 import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.service.impl.ProposalServiceImpl;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor

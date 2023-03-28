@@ -1,8 +1,9 @@
 package com.scnsoft.art.contoller;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.scnsoft.art.dto.ArtDto;
+import com.scnsoft.art.facade.ArtServiceFacade;
+import com.scnsoft.art.feignclient.FileFeignClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.scnsoft.art.dto.ArtDto;
-import com.scnsoft.art.facade.ArtServiceFacade;
-import com.scnsoft.art.feignclient.FileFeignClient;
-
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("arts")
@@ -30,16 +27,16 @@ public class ArtController {
 
     @GetMapping
     public Page<ArtDto> findAll(
-        Pageable pageable,
-        @RequestParam(defaultValue = "") String artistName,
-        @RequestParam(defaultValue = "") String cityName,
-        @RequestParam(defaultValue = "") String artNameAndDescription
+            Pageable pageable,
+            @RequestParam(defaultValue = "") String artistName,
+            @RequestParam(defaultValue = "") String cityName,
+            @RequestParam(defaultValue = "") String artNameAndDescription
     ) {
         return artServiceFacade.findAll(
-            pageable,
-            artistName, 
-            cityName, 
-            artNameAndDescription
+                pageable,
+                artistName,
+                cityName,
+                artNameAndDescription
         );
     }
 
@@ -67,14 +64,14 @@ public class ArtController {
 
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<Page<ArtDto>> findAllByAccountIdAndSearchText(
-        @PathVariable UUID accountId,  
-        Pageable pageable, 
-        @RequestParam(defaultValue = "") String searchText,
-        @RequestParam(defaultValue = "") String searchFilter,
-        @RequestParam(defaultValue = "art name") String searchOption
+            @PathVariable UUID accountId,
+            Pageable pageable,
+            @RequestParam(defaultValue = "") String searchText,
+            @RequestParam(defaultValue = "") String searchFilter,
+            @RequestParam(defaultValue = "art name") String searchOption
     ) {
         Page<ArtDto> artDtoPage = artServiceFacade.findAllByParameters(
-            pageable, searchText, searchFilter, searchOption
+                pageable, searchText, searchFilter, searchOption
         );
         return ResponseEntity.ok(artDtoPage);
     }
