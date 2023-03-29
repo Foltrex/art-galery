@@ -17,9 +17,9 @@ spring:
     sender.type: web
     base-url: http://localhost:9411
   datasource:
-    url: jdbc:postgresql://localhost:5432/art
-    username: root
-    password: root
+    url: jdbc:postgresql://localhost:5432/arts
+    username: postgres
+    password: 27072001
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:

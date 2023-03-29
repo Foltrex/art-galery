@@ -18,8 +18,6 @@ public class AccountMapper implements Mapper<Account, AccountDto> {
                 .id(account.getId())
                 .email(account.getEmail())
                 .blockedSince(account.getBlockedSince())
-                .failCount(account.getFailCount())
-                .lastFail(account.getLastFail())
                 .accountType(account.getAccountType().toString())
                 .metadata(metadataMapper.mapToDtoList(account.getMetadata()))
                 .build();
@@ -31,8 +29,6 @@ public class AccountMapper implements Mapper<Account, AccountDto> {
                 .id(accountDto.getId())
                 .email(accountDto.getEmail())
                 .blockedSince(accountDto.getBlockedSince())
-                .failCount(accountDto.getFailCount())
-                .lastFail(accountDto.getLastFail())
                 .accountType(Account.AccountType.valueOf(accountDto.getAccountType()))
                 .metadata(metadataMapper.mapToList(accountDto.getMetadata(), accountDto.getId()))
                 .build();

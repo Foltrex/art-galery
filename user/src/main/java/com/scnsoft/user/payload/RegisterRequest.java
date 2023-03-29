@@ -34,6 +34,6 @@ public class RegisterRequest {
 
 //    private String lastname;
 
-    @NotEmpty
+//    @NotEmpty
     private List<MetadataDto> metadata;
 }

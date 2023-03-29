@@ -12,8 +12,6 @@ import java.util.UUID;
 public class AccountDto {
     private UUID id;
     private String email;
-    private Date lastFail;
-    private Integer failCount;
     private Date blockedSince;
     private Boolean isApproved;
     private String accountType;

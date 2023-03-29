@@ -45,8 +45,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account updateById(UUID id, Account account) {
-        account.setId(id);
-        return accountRepository.save(account);
+        Account existedAccount = findById(id);
+        existedAccount.setMetadata(account.getMetadata());
+
+        return accountRepository.save(existedAccount);
     }
 
     @Override
@@ -61,7 +63,6 @@ public class AccountServiceImpl implements AccountService {
 
         account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account);
-
     }
 
     @Override
