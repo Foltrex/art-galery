@@ -1,6 +1,6 @@
-package com.scnsoft.art.dto.mapper;
+package com.scnsoft.user.dto.mapper;
 
-import com.scnsoft.art.dto.CityDto;
+import com.scnsoft.user.dto.CityDto;
 import com.scnsoft.user.entity.City;
 
 import org.mapstruct.Mapper;

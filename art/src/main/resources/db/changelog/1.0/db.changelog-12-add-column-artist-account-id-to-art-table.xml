@@ -1,0 +1,19 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="2023-03-29-" author="author">
+        <dropColumn catalogName="art"
+            columnName="artist_id"
+            schemaName="public"
+            tableName="art"/>
+        <addColumn catalogName="art"
+            schemaName="public"
+            tableName="art"
+        >
+            <column name="account_id" type="uuid"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

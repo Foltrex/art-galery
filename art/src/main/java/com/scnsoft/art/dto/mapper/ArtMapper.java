@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {ArtistMapper.class})
+@Mapper(componentModel = "spring")
 public abstract class ArtMapper {
 
     public abstract ArtDto mapToDto(Art art);

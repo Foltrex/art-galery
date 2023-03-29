@@ -1,9 +1,10 @@
 package com.scnsoft.art.facade;
 
 import com.scnsoft.art.dto.CityDto;
-import com.scnsoft.art.dto.mapper.CityMapper;
-import com.scnsoft.art.entity.City;
 import com.scnsoft.art.service.impl.CityServiceImpl;
+import com.scnsoft.user.entity.City;
+import com.scnsoft.art.dto.mapper.CityMapper;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

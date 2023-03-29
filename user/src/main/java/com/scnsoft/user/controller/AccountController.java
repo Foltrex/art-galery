@@ -1,7 +1,7 @@
 package com.scnsoft.user.controller;
 
 import com.scnsoft.user.dto.AccountDto;
-import com.scnsoft.user.dto.mapper.impl.AccountMapper;
+import com.scnsoft.user.dto.mapper.AccountMapper;
 import com.scnsoft.user.payload.UpdatePasswordRequest;
 import com.scnsoft.user.service.AccountService;
 import lombok.RequiredArgsConstructor;

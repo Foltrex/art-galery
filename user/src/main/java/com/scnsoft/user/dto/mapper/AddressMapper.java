@@ -1,4 +1,4 @@
-package com.scnsoft.art.dto.mapper;
+package com.scnsoft.user.dto.mapper;
 
 import java.util.List;
 
@@ -7,9 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import com.scnsoft.art.dto.AddressDto;
+import com.scnsoft.user.dto.AddressDto;
 import com.scnsoft.user.entity.Address;
-
 
 @Mapper(componentModel = "spring", uses = {CityMapper.class})
 public abstract class AddressMapper {

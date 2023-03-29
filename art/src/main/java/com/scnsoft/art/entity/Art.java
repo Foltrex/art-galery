@@ -1,23 +1,23 @@
 package com.scnsoft.art.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldNameConstants;
-import org.hibernate.annotations.GenericGenerator;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 
 @Entity
 @Data
@@ -36,9 +36,7 @@ public class Art {
     @Builder.Default
     private Date dateCreation = new Date();
 
-    @ManyToOne
-    @JoinColumn(name = "artist_id")
-    private Artist artist;
+    private UUID artistAccountId;
 
     @Builder.Default
     @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)

@@ -37,11 +37,7 @@ public class Proposal {
     @JoinColumn(name = "currency_id")
     private Currency currency;
 
-    @NotAudited
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "artist_id", updatable = false, nullable = false)
-    private Artist artist;
+    private UUID artistAccountId;
 
     @NotAudited
     @NotNull

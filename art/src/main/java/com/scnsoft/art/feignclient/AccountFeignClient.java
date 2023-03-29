@@ -16,5 +16,5 @@ public interface AccountFeignClient {
 
 
     @GetMapping("/{id}")
-    ResponseEntity<AccountDto> findById(@PathVariable("id") UUID id);
+    AccountDto findById(@PathVariable("id") UUID id);
 }

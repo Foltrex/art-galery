@@ -2,9 +2,8 @@ package com.scnsoft.art.service.impl;
 
 import static com.scnsoft.art.repository.specification.ArtSpecification.artInfosIsEmpty;
 import static com.scnsoft.art.repository.specification.ArtSpecification.artNameContain;
-import static com.scnsoft.art.repository.specification.ArtSpecification.artistNameContain;
 import static com.scnsoft.art.repository.specification.ArtSpecification.cityNameContain;
-import static com.scnsoft.art.repository.specification.ArtSpecification.decriptionContain;
+import static com.scnsoft.art.repository.specification.ArtSpecification.descriptionContain;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,33 +18,15 @@ import org.springframework.stereotype.Service;
 import com.google.common.base.Strings;
 import com.scnsoft.art.dto.mapper.ArtMapper;
 import com.scnsoft.art.entity.Art;
-import com.scnsoft.art.entity.Artist;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.repository.ArtInfoRepository;
 import com.scnsoft.art.repository.ArtRepository;
-import com.scnsoft.art.repository.ArtistRepository;
-import com.scnsoft.art.repository.RepresentativeRepository;
 import com.scnsoft.art.service.ArtService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
-
-import static com.scnsoft.art.repository.specification.ArtSpecification.artInfosIsEmpty;
-import static com.scnsoft.art.repository.specification.ArtSpecification.artNameContain;
-import static com.scnsoft.art.repository.specification.ArtSpecification.artistNameContain;
-import static com.scnsoft.art.repository.specification.ArtSpecification.cityNameContain;
-import static com.scnsoft.art.repository.specification.ArtSpecification.decriptionContain;
 
 @Service
 public record ArtServiceImpl(
         ArtRepository artRepository,
-        ArtistRepository artistRepository,
-        RepresentativeRepository representativeRepository,
         ArtInfoRepository artInfoRepository,
         AccountFeignClient accountFeignClient,
         ArtMapper artMapper
@@ -90,8 +71,7 @@ public record ArtServiceImpl(
         String searchOption
     ) {
         Specification<Art> accountSpecification = (art, cq, cb) -> {
-            Join<Art, Artist> artist = art.join("artist");
-            return cb.equal(artist.get("accountId"), accountId);
+            return cb.equal(art.get("accountId"), accountId);
         };
 
         Specification<Art> searchFilterSpecification 
@@ -111,16 +91,17 @@ public record ArtServiceImpl(
                 Specification<Art> artNameSpecification = searchFilterSpecification.and(artNameContain(searchText));
                 yield artRepository.findAll(artNameSpecification, pageable);
             }
-            case SEARCH_BY_ARTIST_NAME: {
-                Specification<Art> artistNameSpecification = searchFilterSpecification.and(artistNameContain(searchText));
-                yield artRepository.findAll(artistNameSpecification, pageable);
-            }
+            // TODO: fix latter
+            // case SEARCH_BY_ARTIST_NAME: {
+            //     Specification<Art> artistNameSpecification = searchFilterSpecification.and(artistNameContain(searchText));
+            //     yield artRepository.findAll(artistNameSpecification, pageable);
+            // }
             case SEARCH_BY_CITY: {
                 Specification<Art> citySpecification = searchFilterSpecification.and(cityNameContain(searchText));
                 yield artRepository.findAll(citySpecification, pageable);
             }
             case SEARCH_BY_DESCRIPTION: {
-                Specification<Art> descriptionSpecification = searchFilterSpecification.and(decriptionContain(searchText));
+                Specification<Art> descriptionSpecification = searchFilterSpecification.and(descriptionContain(searchText));
                 yield artRepository.findAll(descriptionSpecification, pageable);
             }
             default: {
@@ -131,10 +112,7 @@ public record ArtServiceImpl(
 
     @Override
     public Page<Art> findAllByArtistId(UUID artistId, Pageable pageable) {
-        Artist artist = artistRepository.findById(artistId)
-                .orElseThrow();
-
-        return artRepository.findAllByArtist(artist, pageable);
+        return artRepository.findAllByArtistAccountId(artistId, pageable);
     }
 
     @Override
@@ -146,9 +124,10 @@ public record ArtServiceImpl(
     ) {
         Specification<Art> specification = Specification.where(null);
 
-        if (!Strings.isNullOrEmpty(artistName)) {
-            specification = specification.and(artistNameContain(artistName));
-        }
+        // TODO: change latter
+        // if (!Strings.isNullOrEmpty(artistName)) {
+        //     specification = specification.and(artistNameContain(artistName));
+        // }
 
         if (!Strings.isNullOrEmpty(cityName)) {
             specification = specification.and(cityNameContain(cityName));
@@ -156,7 +135,7 @@ public record ArtServiceImpl(
 
         if (!Strings.isNullOrEmpty(artNameAndDescription)) {
             Specification<Art> artNameOrDescription = artNameContain(artNameAndDescription)
-                    .or(decriptionContain(artNameAndDescription));
+                    .or(descriptionContain(artNameAndDescription));
 
             specification = specification.and(artNameOrDescription);
         }

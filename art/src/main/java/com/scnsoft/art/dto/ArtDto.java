@@ -18,6 +18,6 @@ public class ArtDto {
     private UUID id;
     private String name;
     private String description;
-    private ArtistDto artist;
+    private UUID artistAccountId;
     private Date dateCreation;
 }

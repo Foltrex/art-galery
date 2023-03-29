@@ -20,7 +20,7 @@ public class ProposalDto {
     private double commission;
     private ArtDto art;
     private CurrencyDto currency;
-    private ArtistDto artist;
+    private UUID artistAccountId;
     private OrganizationDto organization;
     private FacilityDto facility;
     private Boolean artistConfirmation;

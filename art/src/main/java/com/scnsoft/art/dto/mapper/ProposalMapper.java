@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {
-        ArtistMapper.class,
         OrganizationMapper.class,
         FacilityMapper.class,
         CurrencyMapper.class

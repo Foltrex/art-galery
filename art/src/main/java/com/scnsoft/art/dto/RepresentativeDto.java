@@ -17,6 +17,6 @@ public class RepresentativeDto {
     private String lastname;
     private OrganizationDto organization;
     private FacilityDto facility;
-    private OrganizationRoleDto organizationRole;
+    private String organizationRole;
     private UUID accountId;
 }

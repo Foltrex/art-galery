@@ -1,14 +1,16 @@
 package com.scnsoft.art.service.impl;
 
-import com.scnsoft.art.entity.Address;
-import com.scnsoft.art.repository.AddressRepository;
-import com.scnsoft.art.service.AddressService;
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import com.scnsoft.art.repository.AddressRepository;
+import com.scnsoft.art.service.AddressService;
+import com.scnsoft.user.entity.Address;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

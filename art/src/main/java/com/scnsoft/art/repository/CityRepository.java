@@ -1,7 +1,8 @@
 package com.scnsoft.art.repository;
 
-import com.scnsoft.art.entity.City;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.scnsoft.user.entity.City;
 
 import java.util.UUID;
 
