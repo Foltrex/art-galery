@@ -5,6 +5,7 @@ import com.scnsoft.user.dto.FacilityDto;
 import com.scnsoft.user.dto.MetadataDto;
 import com.scnsoft.user.dto.OrganizationDto;
 import com.scnsoft.user.dto.RepresentativeDto;
+import com.scnsoft.user.dto.mapper.impl.MetadataMapper;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.EmailMessageCode;
 import com.scnsoft.user.entity.Metadata;
@@ -23,12 +24,13 @@ import com.scnsoft.user.payload.PasswordRecoveryRequest;
 import com.scnsoft.user.payload.RegisterRepresentativeRequest;
 import com.scnsoft.user.payload.RegisterRequest;
 import com.scnsoft.user.repository.AccountRepository;
+import com.scnsoft.user.repository.MetadataRepository;
 import com.scnsoft.user.service.AccountService;
 import com.scnsoft.user.service.AuthService;
 import com.scnsoft.user.service.EmailMessageCodeService;
 import com.scnsoft.user.util.NumberGeneratorUtil;
 import com.scnsoft.user.util.PasswordGeneratorUtil;
-import com.scnsoft.user.util.TimeUtil;
+import com.scnsoft.user.util.AuthHelperUtil;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +61,8 @@ public class AuthServiceImpl implements AuthService {
     private final ArtistFeignClient artistFeignClient;
     private final NotificationFeignClient notificationFeignClient;
     private final EmailMessageCodeService emailMessageService;
+    private final MetadataRepository metadataRepository;
+    private final MetadataMapper metadataMapper;
 
     @Override
     public AuthToken register(RegisterRequest registerRequest) {
@@ -66,36 +70,15 @@ public class AuthServiceImpl implements AuthService {
             throw new LoginAlreadyExistsException("Email is already in use!");
         }
 
-        UUID uuid = UUID.randomUUID();
-
         Account account = accountAuthenticationHelperServiceImpl.createAccount(
                 registerRequest.getEmail(),
                 registerRequest.getPassword(),
                 Account.AccountType.valueOf(registerRequest.getAccountType()));
         account.setIsOneTimePassword(false);
-        account.setId(uuid);
-//        account = accountRepository.save(account);
+        account = accountRepository.save(account);
 
-        List<MetadataDto> metadataDtosList = registerRequest.getMetadata();
-        List<Metadata> metadataList = new ArrayList<>();
-        for (MetadataDto metadataDto : metadataDtosList) {
-            MetadataId metadataId = new MetadataId();
-            metadataId.setAccountId(uuid);
-            metadataId.setKey(metadataDto.getKey());
-            Metadata metadata = Metadata.builder()
-                    .metadataId(metadataId)
-                    .value(metadataDto.getValue())
-                    .build();
-            metadataList.add(metadata);
-        }
-//        metadataDtosList.forEach(metadataDto -> {
-//
-//
-//        });
-        account.setMetadata(metadataList);
-        log.info(String.valueOf(account));
-        accountRepository.save(account);
-
+        List<Metadata> metadata = metadataMapper.mapToList(registerRequest.getMetadata(), account.getId());
+        metadataRepository.saveAll(metadata);
 
         accountAuthenticationHelperServiceImpl.setAccountToAuthentication(registerRequest.getEmail(), registerRequest.getPassword());
 
@@ -120,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
 
         Integer failCount = account.getFailCount();
         if (failCount != 0 && failCount % 5 == 0) {
-            long secondsToUnblock = TimeUtil.calculateSecondsToUnblock(account.getBlockedSince());
+            long secondsToUnblock = AuthHelperUtil.calculateSecondsToUnblock(account.getBlockedSince());
 
             if (secondsToUnblock > 0) {
                 throw new AccountBlockedException("Account blocked on " + secondsToUnblock + " seconds");
@@ -251,7 +234,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void handleEventOfBadCredentials(Account account) {
         account.setLastFail(new Date());
-        if (TimeUtil.isBruteForce(account.getLastFail())) {
+        if (AuthHelperUtil.isBruteForce(account.getLastFail())) {
             Integer failCount = account.getFailCount();
             account.setFailCount(++failCount);
 

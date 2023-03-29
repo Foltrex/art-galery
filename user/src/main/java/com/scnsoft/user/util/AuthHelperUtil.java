@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-public class TimeUtil {
+public class AuthHelperUtil {
 
     public static long calculateSecondsToUnblock(Date blockedSince) {
         long different = new Date().getTime() - blockedSince.getTime();

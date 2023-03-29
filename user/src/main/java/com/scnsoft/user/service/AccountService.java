@@ -11,6 +11,8 @@ public interface AccountService {
 
     Account findByEmail(String email);
 
+    Account updateById(UUID id, Account account);
+
     void updatePasswordById(UUID id, UpdatePasswordRequest updatePasswordRequest);
 
     void deleteById(UUID id);

@@ -3,10 +3,14 @@ package com.scnsoft.user.dto.mapper.impl;
 import com.scnsoft.user.dto.AccountDto;
 import com.scnsoft.user.dto.mapper.Mapper;
 import com.scnsoft.user.entity.Account;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class AccountMapper implements Mapper<Account, AccountDto> {
+
+    private final MetadataMapper metadataMapper;
 
     @Override
     public AccountDto mapToDto(Account account) {
@@ -17,7 +21,7 @@ public class AccountMapper implements Mapper<Account, AccountDto> {
                 .failCount(account.getFailCount())
                 .lastFail(account.getLastFail())
                 .accountType(account.getAccountType().toString())
-                .metadata(account.getMetadata())
+                .metadata(metadataMapper.mapToDtoList(account.getMetadata()))
                 .build();
     }
 
@@ -30,6 +34,7 @@ public class AccountMapper implements Mapper<Account, AccountDto> {
                 .failCount(accountDto.getFailCount())
                 .lastFail(accountDto.getLastFail())
                 .accountType(Account.AccountType.valueOf(accountDto.getAccountType()))
+                .metadata(metadataMapper.mapToList(accountDto.getMetadata(), accountDto.getId()))
                 .build();
     }
 

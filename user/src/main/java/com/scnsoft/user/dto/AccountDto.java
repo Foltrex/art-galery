@@ -1,6 +1,5 @@
 package com.scnsoft.user.dto;
 
-import com.scnsoft.user.entity.Metadata;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,5 +17,5 @@ public class AccountDto {
     private Date blockedSince;
     private Boolean isApproved;
     private String accountType;
-    private List<Metadata> metadata;
+    private List<MetadataDto> metadata;
 }
