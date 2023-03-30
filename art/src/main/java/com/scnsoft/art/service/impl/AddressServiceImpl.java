@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.scnsoft.art.repository.AddressRepository;
 import com.scnsoft.art.service.AddressService;
-import com.scnsoft.user.entity.Address;
+import com.scnsoft.art.entity.Address;
 
 import lombok.RequiredArgsConstructor;
 

@@ -7,15 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.scnsoft.art.dto.AccountDto;
-import com.scnsoft.art.dto.RepresentativeDto;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.repository.FacilityRepository;
 import com.scnsoft.art.repository.OrganizationRepository;
-import com.scnsoft.art.repository.RepresentativeRepository;
 import com.scnsoft.art.service.FacilityService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,9 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class FacilityServiceImpl implements FacilityService {
 
     private final FacilityRepository facilityRepository;
-    private final OrganizationRepository organizationRepository;
     private final OrganizationServiceImpl organizationService;
-    private final AccountFeignClient accountFeignClient;
 
     @Override
     public Facility findByAccountId(UUID accountId) {
@@ -38,7 +33,7 @@ public class FacilityServiceImpl implements FacilityService {
 
         // return representative.getFacility();
         // TODO: fix latter
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -82,11 +77,11 @@ public class FacilityServiceImpl implements FacilityService {
 
     @Override
     public Page<Facility> findAllByAccountId(UUID accountId, Pageable pageable) {
-        AccountDto accountDto = accountFeignClient.findById(accountId);
+        throw new UnsupportedOperationException();
+        // AccountDto accountDto = accountFeignClient.findById(accountId);
 
-        Organization organization = organizationRepository.findBy;
-        return facilityRepository.findAllByOrganization(organization, pageable);
-        return null;
+        // // Organization organization = organizationRepository.findBy;
+        // return facilityRepository.findAllByOrganization(organization, pageable);
     }
 
     @Override
@@ -96,7 +91,7 @@ public class FacilityServiceImpl implements FacilityService {
 
         // Organization organization = representative.getOrganization();
         // return facilityRepository.findAllByOrganization(organization);
-        return null;
+        throw new UnsupportedOperationException();
     }
 
 }

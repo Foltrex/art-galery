@@ -1,15 +1,27 @@
 package com.scnsoft.user.service.impl;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.scnsoft.user.dto.ArtistDto;
 import com.scnsoft.user.dto.FacilityDto;
-import com.scnsoft.user.dto.MetadataDto;
 import com.scnsoft.user.dto.OrganizationDto;
 import com.scnsoft.user.dto.RepresentativeDto;
-import com.scnsoft.user.dto.mapper.impl.MetadataMapper;
+import com.scnsoft.user.dto.mapper.MetadataMapper;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.EmailMessageCode;
 import com.scnsoft.user.entity.Metadata;
-import com.scnsoft.user.entity.MetadataId;
 import com.scnsoft.user.entity.constant.TemplateFile;
 import com.scnsoft.user.exception.AccountBlockedException;
 import com.scnsoft.user.exception.FeignResponseException;
@@ -28,26 +40,13 @@ import com.scnsoft.user.repository.MetadataRepository;
 import com.scnsoft.user.service.AccountService;
 import com.scnsoft.user.service.AuthService;
 import com.scnsoft.user.service.EmailMessageCodeService;
+import com.scnsoft.user.util.AuthHelperUtil;
 import com.scnsoft.user.util.NumberGeneratorUtil;
 import com.scnsoft.user.util.PasswordGeneratorUtil;
-import com.scnsoft.user.util.AuthHelperUtil;
+
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

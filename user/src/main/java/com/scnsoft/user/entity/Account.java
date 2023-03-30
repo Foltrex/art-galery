@@ -48,6 +48,10 @@ public class Account {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private UUID id;
 
+    private String firstName;
+
+    private String lastName;
+
     @Column(unique = true)
     @Size(min = 3)
     private String email;

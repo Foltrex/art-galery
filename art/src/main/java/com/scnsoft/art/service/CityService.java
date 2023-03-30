@@ -3,7 +3,7 @@ package com.scnsoft.art.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.scnsoft.user.entity.City;
+import com.scnsoft.art.entity.City;
 
 import java.util.UUID;
 

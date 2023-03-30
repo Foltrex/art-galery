@@ -3,7 +3,7 @@ package com.scnsoft.art.service.impl;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.CityRepository;
 import com.scnsoft.art.service.CityService;
-import com.scnsoft.user.entity.City;
+import com.scnsoft.art.entity.City;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

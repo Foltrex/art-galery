@@ -1,7 +1,7 @@
 package com.scnsoft.art.dto.mapper;
 
 import com.scnsoft.art.dto.CityDto;
-import com.scnsoft.user.entity.City;
+import com.scnsoft.art.entity.City;
 
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;

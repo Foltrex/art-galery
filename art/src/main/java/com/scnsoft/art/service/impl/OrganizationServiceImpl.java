@@ -1,7 +1,6 @@
 package com.scnsoft.art.service.impl;
 
 import com.scnsoft.art.entity.Organization;
-import com.scnsoft.art.entity.Representative;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.OrganizationRepository;
 import com.scnsoft.art.service.OrganizationService;
@@ -22,8 +21,6 @@ import java.util.UUID;
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
-    @Lazy
-    private final RepresentativeServiceImpl representativeService;
 
     @Override
     public Page<Organization> findAll(Pageable pageable) {
@@ -39,8 +36,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Organization findByAccountId(UUID accountId) {
-        Representative representative = representativeService.findByAccountId(accountId);
-        return representative.getOrganization();
+        throw new UnsupportedOperationException();
     }
 
     @Override

@@ -1,14 +1,23 @@
 package com.scnsoft.user.dto.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import com.scnsoft.user.dto.AccountDto;
 import com.scnsoft.user.entity.Account;
+import com.scnsoft.user.entity.Account.AccountType;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {MetadataMapper.class})
 public interface AccountMapper {
 
-    public AccountDto mapToDto(Account account);
+    AccountDto mapToDto(Account account);
 
-    public Account mapToEntity(AccountDto accountDto);
+    @Mapping(target = "accountType", source = "accountDto.accountType", qualifiedByName = "accountTypeMapper")
+    Account mapToEntity(AccountDto accountDto);
+
+    @Named("accountTypeMapper")
+    default AccountType mapToAccountType(String accountTypeString) {
+        return AccountType.valueOf(accountTypeString);
+    }
 }

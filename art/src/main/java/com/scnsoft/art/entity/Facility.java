@@ -11,8 +11,6 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.scnsoft.user.entity.Address;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

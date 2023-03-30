@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import com.scnsoft.art.dto.AddressDto;
-import com.scnsoft.user.entity.Address;
+import com.scnsoft.art.entity.Address;
 
 
 @Mapper(componentModel = "spring", uses = {CityMapper.class})

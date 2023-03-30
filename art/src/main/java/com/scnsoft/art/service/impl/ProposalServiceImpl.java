@@ -1,13 +1,14 @@
 package com.scnsoft.art.service.impl;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.scnsoft.art.dto.AccountDto;
-import com.scnsoft.art.dto.AccountType;
+import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.Proposal;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.AccountFeignClient;
@@ -36,47 +37,49 @@ public class ProposalServiceImpl {
     }
 
     public Page<Proposal> findAllByAccountId(UUID accountId, Pageable pageable) {
-        AccountDto accountDto = accountFeignClient.findById(accountId);
-        switch (AccountType.fromString(accountDto.getAccountType())) {
-            case ARTIST -> {
-                Artist artist = artistRepository.findByAccountId(accountId)
-                        .orElseThrow(ArtResourceNotFoundException::new);
-                return proposalRepository.findByArtist(artist, pageable);
-            }
-            case REPRESENTATIVE -> {
-                Representative representative = representativeRepository.findByAccountId(accountId)
-                        .orElseThrow(ArtResourceNotFoundException::new);
+        // AccountDto accountDto = accountFeignClient.findById(accountId);
+        // switch (AccountType.fromString(accountDto.getAccountType())) {
+        //     case ARTIST -> {
+        //         Artist artist = artistRepository.findByAccountId(accountId)
+        //                 .orElseThrow(ArtResourceNotFoundException::new);
+        //         return proposalRepository.findByArtist(artist, pageable);
+        //     }
+        //     case REPRESENTATIVE -> {
+        //         Representative representative = representativeRepository.findByAccountId(accountId)
+        //                 .orElseThrow(ArtResourceNotFoundException::new);
 
-                Facility faclity = facilityRepository.findByAccount
-                return proposalRepository.findByFacility(representative.getFacility(), pageable);
-            }
-            case SYSTEM -> {
-                return Page.empty(pageable);
-            }
-            default -> throw new IllegalArgumentException("Unknown account type");
-        }
+        //         Facility faclity = facilityRepository.findByAccount
+        //         return proposalRepository.findByFacility(representative.getFacility(), pageable);
+        //     }
+        //     case SYSTEM -> {
+        //         return Page.empty(pageable);
+        //     }
+        //     default -> throw new IllegalArgumentException("Unknown account type");
+        // }
+        throw new UnsupportedOperationException();
     }
 
     public long countByAccountId(UUID accountId) {
-        AccountDto accountDto = accountFeignClient.findById(accountId);
-        switch (AccountType.fromString(accountDto.getAccountType())) {
-            case ARTIST -> {
-                Artist artist = artistRepository.findByAccountId(accountId)
-                        .orElseThrow(ArtResourceNotFoundException::new);
+        // AccountDto accountDto = accountFeignClient.findById(accountId);
+        // switch (AccountType.fromString(accountDto.getAccountType())) {
+        //     case ARTIST -> {
+        //         Artist artist = artistRepository.findByAccountId(accountId)
+        //                 .orElseThrow(ArtResourceNotFoundException::new);
 
-                return proposalRepository.countByArtistAccountIdAndArtistConfirmationIsNull(artist);
-            }
-            case REPRESENTATIVE -> {
-                Representative representative = representativeRepository.findByAccountId(accountId)
-                        .orElseThrow(ArtResourceNotFoundException::new);
+        //         return proposalRepository.countByArtistAccountIdAndArtistConfirmationIsNull(artist);
+        //     }
+        //     case REPRESENTATIVE -> {
+        //         Representative representative = representativeRepository.findByAccountId(accountId)
+        //                 .orElseThrow(ArtResourceNotFoundException::new);
 
-                return proposalRepository.countByFacilityAndArtistConfirmationIsNull(representative.getFacility());
-            }
-            case SYSTEM -> {
-                return 0;
-            }
-            default -> throw new IllegalArgumentException("Unknown account type");
-        }
+        //         return proposalRepository.countByFacilityAndArtistConfirmationIsNull(representative.getFacility());
+        //     }
+        //     case SYSTEM -> {
+        //         return 0;
+        //     }
+        //     default -> throw new IllegalArgumentException("Unknown account type");
+        // }
+            throw new UnsupportedOperationException();
     }
 
     public void discardAllProposalsForArtExceptPassed(Art art, Proposal proposal) {

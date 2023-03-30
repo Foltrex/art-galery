@@ -8,8 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.ArtInfo;
 import com.scnsoft.art.entity.Facility;
-import com.scnsoft.user.entity.Address;
-import com.scnsoft.user.entity.City;
+import com.scnsoft.art.entity.Address;
+import com.scnsoft.art.entity.City;
 
 import lombok.RequiredArgsConstructor;
 

@@ -19,7 +19,6 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.scnsoft.art.listener.OrganizationListener;
-import com.scnsoft.user.entity.Address;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
