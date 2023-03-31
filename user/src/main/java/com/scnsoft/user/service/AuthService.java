@@ -13,7 +13,7 @@ public interface AuthService {
 
     AuthToken login(LoginRequest loginRequest);
 
-    RepresentativeDto registerRepresentative(RegisterRepresentativeRequest registerRepresentativeRequest);
+    // RepresentativeDto registerRepresentative(RegisterRepresentativeRequest registerRepresentativeRequest);
 
     void sendPasswordRecoveryCode(String receiver);
 

@@ -39,9 +39,17 @@ public class AccountAuthenticationHelperServiceImpl implements AccountAuthentica
     }
 
     @Override
-    public Account createAccount(String email, String password, Account.AccountType accountType) {
+    public Account createAccount(
+        String email, 
+        String firstName,
+        String lastName,
+        String password, 
+        Account.AccountType accountType
+    ) {
         return Account.builder()
                 .email(email)
+                .firstName(firstName)
+                .lastName(lastName)
                 .password(encodePassword(password))
                 .accountType(accountType)
                 .roles(getUserRoles())

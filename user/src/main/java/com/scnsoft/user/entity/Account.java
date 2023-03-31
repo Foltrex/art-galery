@@ -81,6 +81,7 @@ public class Account {
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "metadataId.accountId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Metadata> metadata = new ArrayList<>();
 

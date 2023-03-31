@@ -21,8 +21,8 @@ public abstract class MetadataMapper {
 
     public abstract List<MetadataDto> mapToDtoList(List<Metadata> metadatas);
  
-    public List<Metadata> mapToList(List<MetadataDto> metadataDtos, UUID accountId) {
-        return metadataDtos
+    public List<Metadata> mapToList(List<MetadataDto> metadata, UUID accountId) {
+        return metadata
             .stream()
             .map(metadataDto -> {
                 return Metadata.builder()

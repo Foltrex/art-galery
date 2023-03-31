@@ -7,7 +7,7 @@ public interface AccountAuthenticationHelperService {
 
     void setAccountToAuthentication(String login, String password);
 
-    Account createAccount(String email, String password, Account.AccountType accountType);
+    Account createAccount(String email, String firstName, String lastName, String password, Account.AccountType accountType);
 
     AuthToken createAuthTokenResponse(Account account);
 

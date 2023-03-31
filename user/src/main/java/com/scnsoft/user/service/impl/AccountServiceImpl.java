@@ -3,8 +3,6 @@ package com.scnsoft.user.service.impl;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.exception.FeignResponseException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
-import com.scnsoft.user.feignclient.ArtistFeignClient;
-import com.scnsoft.user.feignclient.RepresentativeFeignClient;
 import com.scnsoft.user.payload.UpdatePasswordRequest;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.service.AccountService;
@@ -25,8 +23,6 @@ import java.util.UUID;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
-    private final RepresentativeFeignClient representativeFeignClient;
-    private final ArtistFeignClient artistFeignClient;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -70,14 +66,5 @@ public class AccountServiceImpl implements AccountService {
     public void deleteById(UUID id) {
         Account account = findById(id);
         accountRepository.delete(account);
-        try {
-            switch (account.getAccountType()) {
-                case REPRESENTATIVE -> representativeFeignClient.deleteByAccountId(account.getId());
-                case ARTIST -> artistFeignClient.deleteByAccountId(account.getId());
-            }
-        } catch (FeignException e) {
-            throw new FeignResponseException(e);
-        }
     }
-
 }
