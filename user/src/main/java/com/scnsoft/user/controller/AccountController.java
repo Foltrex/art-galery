@@ -1,6 +1,7 @@
 package com.scnsoft.user.controller;
 
 import com.scnsoft.user.dto.AccountDto;
+import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.dto.mapper.AccountMapper;
 import com.scnsoft.user.payload.UpdatePasswordRequest;
 import com.scnsoft.user.service.AccountService;
@@ -56,6 +57,12 @@ public class AccountController {
     @PreAuthorize("isAuthenticated() and #id == authentication.principal.id")
     public void updatePassword(@PathVariable UUID id, @Valid @RequestBody UpdatePasswordRequest request) {
         accountService.updatePasswordById(id, request);
+    }
+
+    @PatchMapping("/{id}/account-image")
+    @PreAuthorize("isAuthenticated() and #id == authentication.principal.id")
+    public void updateAccountImage(@PathVariable UUID id, @Valid @RequestBody UploadFileDto request) {
+        accountService.updateImageById(id, request);
     }
 
     @DeleteMapping("/{id}")

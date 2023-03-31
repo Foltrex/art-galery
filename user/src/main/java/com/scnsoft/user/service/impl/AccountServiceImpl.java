@@ -1,10 +1,16 @@
 package com.scnsoft.user.service.impl;
 
+import com.scnsoft.user.dto.FileInfoDto;
+import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.entity.Account;
+import com.scnsoft.user.entity.Metadata;
+import com.scnsoft.user.entity.MetadataId;
 import com.scnsoft.user.exception.FeignResponseException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
+import com.scnsoft.user.feignclient.FileFeignClient;
 import com.scnsoft.user.payload.UpdatePasswordRequest;
 import com.scnsoft.user.repository.AccountRepository;
+import com.scnsoft.user.repository.MetadataRepository;
 import com.scnsoft.user.service.AccountService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,6 +32,8 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FileFeignClient fileFeignClient;
+    private final MetadataRepository metadataRepository;
 
     @Override
     public Account findById(UUID id) {
@@ -43,6 +53,8 @@ public class AccountServiceImpl implements AccountService {
     public Account updateById(UUID id, Account account) {
         Account existedAccount = findById(id);
         existedAccount.setMetadata(account.getMetadata());
+        existedAccount.setFirstName(account.getFirstName());
+        existedAccount.setLastName(account.getLastName());
 
         return accountRepository.save(existedAccount);
     }
@@ -59,6 +71,35 @@ public class AccountServiceImpl implements AccountService {
 
         account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account);
+    }
+
+    @Override
+    public void updateImageById(UUID id, UploadFileDto uploadFileDto) {
+        Account account = findById(id);
+        try {
+            FileInfoDto fileInfoDto = fileFeignClient.uploadFile(uploadFileDto);
+            List<Metadata> metadataList = account.getMetadata();
+            Optional<Metadata> metadataAccountImageOptional = metadataList
+                    .stream()
+                    .filter(metadata -> metadata.getMetadataId().getKey().equals("account_image"))
+                    .findFirst();
+            metadataAccountImageOptional.ifPresent(metadataRepository::delete);
+
+            Metadata metadata = Metadata.builder()
+                    .metadataId(MetadataId.builder()
+                            .accountId(id)
+                            .key("account_image")
+                            .build())
+                    .value(fileInfoDto.getId().toString())
+                    .build();
+
+            metadataRepository.save(metadata);
+
+
+        } catch (FeignException e) {
+            throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.getMessage());
+        }
+
     }
 
     @Override
