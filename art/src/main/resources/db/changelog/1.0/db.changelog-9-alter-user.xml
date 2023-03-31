@@ -5,6 +5,11 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
    <changeSet id="2023-03-28-alter-user" author="Foltrex">
+      <preConditions onFail="MARK_RAN">
+         <tableExists tableName="representative" />
+         <tableExists tableName="artist" />
+      </preConditions>
+
      <dropColumn tableName="representative">
         <column name="firstname" />
         <column name="lastname" />
