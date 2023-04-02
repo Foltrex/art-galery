@@ -5,6 +5,7 @@ import com.scnsoft.art.feignclient.AccountFeignClient;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,8 +45,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 List<String> roles = jwtUtils.getRolesFromJwtToken(token);
 
                 try {
-                    ResponseEntity<AccountDto> accountDtoResponse = accountFeignClient.getAccountByEmail(email);
-                    if (accountDtoResponse.getBody() == null) {
+                    Page<AccountDto> accountDtoResponse = accountFeignClient.getAccountByEmail(email);
+                    if (accountDtoResponse.getContent().size() != 0) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+                    } else if(accountDtoResponse.getContent().size() != 1) {
+                        log.error("two or more accounts found with same email: {}", email);
                         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
                     }
                 } catch (FeignException e) {

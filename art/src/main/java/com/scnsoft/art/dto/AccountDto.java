@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -15,9 +16,13 @@ import java.util.UUID;
 public class AccountDto {
     private UUID id;
     private String email;
+    private String firstName;
+    private String lastName;
     private Date lastFail;
     private Integer failCount;
+    private String password;
     private Date blockedSince;
     private Boolean isApproved;
-    private String accountType;
+    private AccountType accountType;
+    private List<MetaData> metadata;
 }

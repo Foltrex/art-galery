@@ -39,24 +39,6 @@ public class AccountAuthenticationHelperServiceImpl implements AccountAuthentica
     }
 
     @Override
-    public Account createAccount(
-        String email, 
-        String firstName,
-        String lastName,
-        String password, 
-        Account.AccountType accountType
-    ) {
-        return Account.builder()
-                .email(email)
-                .firstName(firstName)
-                .lastName(lastName)
-                .password(encodePassword(password))
-                .accountType(accountType)
-                .roles(getUserRoles())
-                .build();
-    }
-
-    @Override
     public AuthToken createAuthTokenResponse(Account account) {
         return AuthToken.builder()
                 .token(createToken(account))
@@ -69,7 +51,8 @@ public class AccountAuthenticationHelperServiceImpl implements AccountAuthentica
         return passwordEncoder.encode(password);
     }
 
-    private Set<Role> getUserRoles() {
+    @Override
+    public Set<Role> getUserRoles() {
         return Set.of(roleRepository
                 .findByName(Role.RoleType.ROLE_USER)
                 .orElseThrow(() -> new ResourseNotFoundException("Role not found!")));

@@ -1,11 +1,9 @@
 package com.scnsoft.user.controller;
 
-import com.scnsoft.user.dto.RepresentativeDto;
+import com.scnsoft.user.dto.AccountDto;
 import com.scnsoft.user.payload.AuthToken;
 import com.scnsoft.user.payload.LoginRequest;
 import com.scnsoft.user.payload.PasswordRecoveryRequest;
-import com.scnsoft.user.payload.RegisterRepresentativeRequest;
-import com.scnsoft.user.payload.RegisterRequest;
 import com.scnsoft.user.payload.SendEmailMessageRequest;
 import com.scnsoft.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +26,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<AuthToken> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthToken> register(@Valid @RequestBody AccountDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
     }
 

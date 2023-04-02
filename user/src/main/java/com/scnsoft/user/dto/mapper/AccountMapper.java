@@ -13,11 +13,6 @@ public interface AccountMapper {
 
     AccountDto mapToDto(Account account);
 
-    @Mapping(target = "accountType", source = "accountDto.accountType", qualifiedByName = "accountTypeMapper")
+    @Mapping(target = "password", ignore = true)
     Account mapToEntity(AccountDto accountDto);
-
-    @Named("accountTypeMapper")
-    default AccountType mapToAccountType(String accountTypeString) {
-        return AccountType.valueOf(accountTypeString);
-    }
 }

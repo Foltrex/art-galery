@@ -15,6 +15,8 @@ import com.scnsoft.user.service.AccountService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -107,5 +109,10 @@ public class AccountServiceImpl implements AccountService {
     public void deleteById(UUID id) {
         Account account = findById(id);
         accountRepository.delete(account);
+    }
+
+    @Override
+    public Page<Account> findAll(Pageable pageable) {
+        return accountRepository.findAll(pageable);
     }
 }

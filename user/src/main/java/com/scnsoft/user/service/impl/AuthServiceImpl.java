@@ -6,18 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.scnsoft.user.dto.AccountDto;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.scnsoft.user.dto.ArtistDto;
-import com.scnsoft.user.dto.FacilityDto;
-import com.scnsoft.user.dto.OrganizationDto;
-import com.scnsoft.user.dto.RepresentativeDto;
 import com.scnsoft.user.dto.mapper.MetadataMapper;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.EmailMessageCode;
@@ -31,8 +27,6 @@ import com.scnsoft.user.payload.AuthToken;
 import com.scnsoft.user.payload.EmailMessagePayload;
 import com.scnsoft.user.payload.LoginRequest;
 import com.scnsoft.user.payload.PasswordRecoveryRequest;
-import com.scnsoft.user.payload.RegisterRepresentativeRequest;
-import com.scnsoft.user.payload.RegisterRequest;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.repository.MetadataRepository;
 import com.scnsoft.user.service.AccountService;
@@ -40,7 +34,6 @@ import com.scnsoft.user.service.AuthService;
 import com.scnsoft.user.service.EmailMessageCodeService;
 import com.scnsoft.user.util.AuthHelperUtil;
 import com.scnsoft.user.util.NumberGeneratorUtil;
-import com.scnsoft.user.util.PasswordGeneratorUtil;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -60,25 +53,29 @@ public class AuthServiceImpl implements AuthService {
     private final MetadataMapper metadataMapper;
 
     @Override
-    public AuthToken register(RegisterRequest registerRequest) {
-        if (accountRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+    public AuthToken register(AccountDto registrationRequest) {
+        if (accountRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
             throw new LoginAlreadyExistsException("Email is already in use!");
         }
+        if (registrationRequest.getPassword() == null || registrationRequest.getPassword().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is required field");
+        }
 
-        Account account = accountAuthenticationHelperServiceImpl.createAccount(
-                registerRequest.getEmail(),
-                registerRequest.getFirstname(),
-                registerRequest.getLastname(),
-                registerRequest.getPassword(),
-                Account.AccountType.valueOf(registerRequest.getAccountType())
-        );
-        account.setIsOneTimePassword(false);
-        account = accountRepository.save(account);
+        Account account = accountRepository.save(Account.builder()
+                .id(registrationRequest.getId() == null ? UUID.randomUUID() : registrationRequest.getId())
+                .email(registrationRequest.getEmail())
+                .firstName(registrationRequest.getFirstName())
+                .lastName(registrationRequest.getLastName())
+                .password(accountAuthenticationHelperServiceImpl.encodePassword(registrationRequest.getPassword()))
+                .accountType(registrationRequest.getAccountType())
+                .roles(accountAuthenticationHelperServiceImpl.getUserRoles())
+                .isOneTimePassword(false)
+                .build());
 
-        List<Metadata> metadata = metadataMapper.mapToList(registerRequest.getMetadata(), account.getId());
+        List<Metadata> metadata = metadataMapper.mapToList(registrationRequest.getMetadata(), account.getId());
         metadataRepository.saveAll(metadata);
 
-        accountAuthenticationHelperServiceImpl.setAccountToAuthentication(registerRequest.getEmail(), registerRequest.getPassword());
+        accountAuthenticationHelperServiceImpl.setAccountToAuthentication(registrationRequest.getEmail(), registrationRequest.getPassword());
 
         return accountAuthenticationHelperServiceImpl.createAuthTokenResponse(account);
     }

@@ -7,6 +7,8 @@ import com.scnsoft.user.payload.UpdatePasswordRequest;
 import com.scnsoft.user.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.UUID;
 
+import static java.util.stream.Collectors.toList;
+
 @RestController
 @RequestMapping("accounts")
 @RequiredArgsConstructor
@@ -34,15 +38,13 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountMapper accountMapper;
 
+    @GetMapping()
+    public Page<AccountDto> findAll( Pageable pageable) {
+        return accountService.findAll(pageable).map(accountMapper::mapToDto);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<AccountDto> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(accountMapper.mapToDto(accountService.findById(id)));
-    }
-
-    @GetMapping("/byEmail/{email}")
-    @PreAuthorize("permitAll()")
-    public ResponseEntity<AccountDto> findByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(accountMapper.mapToDto(accountService.findByEmail(email)));
     }
 
     //@Todo make facade later

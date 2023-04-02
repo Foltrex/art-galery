@@ -26,5 +26,5 @@ public class Address {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "city_id")
     private City city;
-    private String fullName;
+    private String name;
 }

@@ -1,5 +1,6 @@
 package com.scnsoft.art.dto;
 
+import com.scnsoft.art.entity.Organization;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrganizationDto {
+
     private UUID id;
     private String name;
     private AddressDto address;
-    private String status;
+    private Organization.Status status;
 }

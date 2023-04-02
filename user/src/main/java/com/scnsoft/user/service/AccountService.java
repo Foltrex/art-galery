@@ -3,7 +3,10 @@ package com.scnsoft.user.service;
 import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.payload.UpdatePasswordRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public interface AccountService {
@@ -20,4 +23,5 @@ public interface AccountService {
 
     void deleteById(UUID id);
 
+    Page<Account> findAll(Pageable pageable);
 }
