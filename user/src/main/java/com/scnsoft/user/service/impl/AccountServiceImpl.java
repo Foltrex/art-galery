@@ -5,6 +5,7 @@ import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Metadata;
 import com.scnsoft.user.entity.MetadataId;
+import com.scnsoft.user.entity.Account.AccountType;
 import com.scnsoft.user.entity.constant.MetadataEnum;
 import com.scnsoft.user.exception.FeignResponseException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
@@ -32,6 +33,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class AccountServiceImpl implements AccountService {
+    private static final String ORGANIZATION_ROLE_KEY = "organization_role";
+    private static final String OWNER_ORGANIZATION_ROLE = "CREATOR";
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
@@ -91,7 +94,8 @@ public class AccountServiceImpl implements AccountService {
 
             if (metadataAccountOldImageOptional.isPresent()) {
                 Metadata metadataAccountOldImage = metadataAccountOldImageOptional.get();
-                fileFeignClient.removeFile(metadataAccountOldImage.getValue());
+                // TODO: uncomment latter
+                // fileFeignClient.removeFile(metadataAccountOldImage.getValue());
                 metadataRepository.delete(metadataAccountOldImage);
             }
 
@@ -121,4 +125,24 @@ public class AccountServiceImpl implements AccountService {
     public Page<Account> findAll(Pageable pageable) {
         return accountRepository.findAll(pageable);
     }
+
+
+    @Override
+    public boolean isEditingUser(UUID id) {
+        Account account = accountRepository.findById(id)
+            .orElseThrow();
+        
+        return switch (account.getAccountType()) {
+            case REPRESENTATIVE -> {
+                Metadata metadata = metadataRepository
+                    .findByMetadataIdAccountIdAndMetadataIdKey(id, ORGANIZATION_ROLE_KEY)
+                    .orElseThrow();
+                yield OWNER_ORGANIZATION_ROLE.equals(metadata.getValue());
+            }
+            case SYSTEM -> true;
+            case ARTIST -> false;
+            default -> false;
+        };
+    }
+    
 }

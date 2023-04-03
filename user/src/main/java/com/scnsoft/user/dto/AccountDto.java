@@ -1,8 +1,11 @@
 package com.scnsoft.user.dto;
 
 import com.scnsoft.user.entity.Account;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -14,6 +17,8 @@ import java.util.UUID;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountDto {
 
     private UUID id;
