@@ -5,6 +5,7 @@ import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.payload.EmailMessagePayload;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -13,5 +14,8 @@ public interface FileFeignClient {
 
     @PostMapping("")
     FileInfoDto uploadFile(@RequestBody UploadFileDto uploadFileDto);
+
+    @PostMapping("/{id}")
+    void removeFile(@PathVariable String id);
 
 }

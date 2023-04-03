@@ -5,6 +5,7 @@ import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Metadata;
 import com.scnsoft.user.entity.MetadataId;
+import com.scnsoft.user.entity.constant.MetadataEnum;
 import com.scnsoft.user.exception.FeignResponseException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.feignclient.FileFeignClient;
@@ -76,32 +77,37 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public void updateImageById(UUID id, UploadFileDto uploadFileDto) {
         Account account = findById(id);
         try {
             FileInfoDto fileInfoDto = fileFeignClient.uploadFile(uploadFileDto);
             List<Metadata> metadataList = account.getMetadata();
-            Optional<Metadata> metadataAccountImageOptional = metadataList
+            Optional<Metadata> metadataAccountOldImageOptional = metadataList
                     .stream()
-                    .filter(metadata -> metadata.getMetadataId().getKey().equals("account_image"))
+                    .filter(metadata -> metadata.getMetadataId()
+                            .getKey().equals(MetadataEnum.ACCOUNT_IMAGE.getValue()))
                     .findFirst();
-            metadataAccountImageOptional.ifPresent(metadataRepository::delete);
+
+            if (metadataAccountOldImageOptional.isPresent()) {
+                Metadata metadataAccountOldImage = metadataAccountOldImageOptional.get();
+                fileFeignClient.removeFile(metadataAccountOldImage.getValue());
+                metadataRepository.delete(metadataAccountOldImage);
+            }
 
             Metadata metadata = Metadata.builder()
                     .metadataId(MetadataId.builder()
                             .accountId(id)
-                            .key("account_image")
+                            .key(MetadataEnum.ACCOUNT_IMAGE.getValue())
                             .build())
                     .value(fileInfoDto.getId().toString())
                     .build();
 
             metadataRepository.save(metadata);
 
-
         } catch (FeignException e) {
             throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.getMessage());
         }
-
     }
 
     @Override
