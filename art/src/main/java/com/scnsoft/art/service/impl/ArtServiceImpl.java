@@ -71,7 +71,7 @@ public record ArtServiceImpl(
         String searchOption
     ) {
         Specification<Art> accountSpecification = (art, cq, cb) -> {
-            return cb.equal(art.get("accountId"), accountId);
+            return cb.equal(art.get("artistAccountId"), accountId);
         };
 
         Specification<Art> searchFilterSpecification 

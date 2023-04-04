@@ -20,8 +20,8 @@ public class OrganizationServiceFacade {
     private final OrganizationMapper organizationMapper;
 
 
-    public Page<OrganizationDto> findAll(Pageable pageable) {
-        return organizationMapper.mapPageToDto(organizationService.findAll(pageable));
+    public Page<OrganizationDto> findAll(Pageable pageable, String name, String status) {
+        return organizationMapper.mapPageToDto(organizationService.findAll(pageable, name, status));
     }
 
     public OrganizationDto findById(UUID id) {

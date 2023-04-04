@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -26,8 +27,16 @@ public class OrganizationController {
     private final OrganizationServiceFacade organizationServiceFacade;
 
     @GetMapping
-    public ResponseEntity<Page<OrganizationDto>> findAll(Pageable pageable) {
-        return ResponseEntity.ok(organizationServiceFacade.findAll(pageable));
+    public Page<OrganizationDto> findAll(
+            Pageable pageable,
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "") String status
+    ) {
+        return organizationServiceFacade.findAll(
+                pageable,
+                name,
+                status
+        );
     }
 
     @GetMapping("/{id}")

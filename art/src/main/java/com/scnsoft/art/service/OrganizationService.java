@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface OrganizationService {
 
-    Page<Organization> findAll(Pageable pageable);
+    Page<Organization> findAll(Pageable pageable, String name, String status);
 
     Organization findById(UUID id);
 
