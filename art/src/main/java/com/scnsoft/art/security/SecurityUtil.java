@@ -1,5 +1,6 @@
 package com.scnsoft.art.security;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,5 +12,4 @@ public class SecurityUtil {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return principal instanceof UserDetails ? ((UserDetailsImpl) principal).getId() : null;
     }
-
 }

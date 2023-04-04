@@ -1,16 +1,18 @@
 package com.scnsoft.art.service.impl;
 
-import com.scnsoft.art.exception.ArtResourceNotFoundException;
-import com.scnsoft.art.repository.CityRepository;
-import com.scnsoft.art.service.CityService;
-import com.scnsoft.art.entity.City;
+import java.util.List;
+import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import com.scnsoft.art.entity.City;
+import com.scnsoft.art.exception.ArtResourceNotFoundException;
+import com.scnsoft.art.repository.CityRepository;
+import com.scnsoft.art.service.CityService;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,11 @@ public class CityServiceImpl implements CityService {
     @Override
     public Page<City> findAll(Pageable pageable) {
         return cityRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<City> findAll() {
+        return cityRepository.findAll();
     }
 
     @Override

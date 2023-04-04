@@ -21,12 +21,17 @@ public class FacilityServiceFacade {
     private final FacilityMapper facilityMapper;
 
 
-    public Page<FacilityDto> findAll(Pageable pageable) {
-        return facilityMapper.mapPageToDto(facilityService.findAll(pageable));
+    public Page<FacilityDto> findAll(Pageable pageable, UUID cityId, String facilityName, Boolean isActive) {
+        var page = facilityService.findAll(pageable, cityId, facilityName, isActive);
+        return facilityMapper.mapPageToDto(page);
     }
 
-    public List<FacilityDto> findAll() {
-        return facilityService.findAll()
+    public List<FacilityDto> findAll(
+        UUID cityId, 
+        String facilityName, 
+        Boolean isActive
+    ) {
+        return facilityService.findAll(cityId, facilityName, isActive)
                 .stream()
                 .map(facilityMapper::mapToDto)
                 .toList();

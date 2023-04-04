@@ -13,7 +13,6 @@ import com.scnsoft.art.entity.City;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class ArtSpecification {
 
     public static Specification<Art> artInfosIsEmpty() {
