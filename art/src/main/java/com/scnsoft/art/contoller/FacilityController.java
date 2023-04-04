@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,13 +28,22 @@ public class FacilityController {
     private final FacilityServiceFacade facilityServiceFacade;
 
     @GetMapping
-    public ResponseEntity<Page<FacilityDto>> findAll(Pageable pageable) {
-        return ResponseEntity.ok(facilityServiceFacade.findAll(pageable));
+    public ResponseEntity<Page<FacilityDto>> findAll(
+        Pageable pageable,
+        @RequestParam(required = false) UUID cityId,
+        @RequestParam(required = false) String facilityName,
+        @RequestParam Boolean isActive
+    ) {
+        return ResponseEntity.ok(facilityServiceFacade.findAll(pageable, cityId, facilityName, isActive));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<FacilityDto>> findAll() {
-        return ResponseEntity.ok(facilityServiceFacade.findAll());
+    public ResponseEntity<List<FacilityDto>> findAll(
+        @RequestParam UUID cityId,
+        @RequestParam String facilityName,
+        @RequestParam Boolean isActive
+    ) {
+        return ResponseEntity.ok(facilityServiceFacade.findAll(cityId, facilityName, isActive));
     }
 
     @GetMapping("/{id}")
@@ -43,10 +53,9 @@ public class FacilityController {
 
     @GetMapping("/organizations/{organizationId}")
     public ResponseEntity<Page<FacilityDto>> findAllByOrganizationId(@PathVariable UUID organizationId,
-                                                                     Pageable pageable) {
+            Pageable pageable) {
         return ResponseEntity.ok(facilityServiceFacade.findAllByOrganizationId(organizationId, pageable));
     }
-
 
     @GetMapping("accounts/{accountId}")
     public ResponseEntity<FacilityDto> findByAccountId(@PathVariable UUID accountId) {

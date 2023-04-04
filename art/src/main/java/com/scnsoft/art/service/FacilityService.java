@@ -15,6 +15,10 @@ public interface FacilityService {
 
     Page<Facility> findAll(Pageable pageable);
 
+    Page<Facility> findAll(Pageable pageable, UUID cityId, String facilityName, Boolean isActive);
+
+    List<Facility> findAll(UUID cityId, String facilityName, Boolean isActive);
+
     Page<Facility> findAllByOrganizationId(UUID organizationId, Pageable pageable);
 
     Facility save(Facility facility);

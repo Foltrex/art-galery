@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.scnsoft.user.dto.AccountDto;
 import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.dto.mapper.AccountMapper;
+import com.scnsoft.user.entity.Metadata;
 import com.scnsoft.user.payload.UpdatePasswordRequest;
 import com.scnsoft.user.service.AccountService;
 
