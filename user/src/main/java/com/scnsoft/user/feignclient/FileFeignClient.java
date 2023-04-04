@@ -2,9 +2,7 @@ package com.scnsoft.user.feignclient;
 
 import com.scnsoft.user.dto.FileInfoDto;
 import com.scnsoft.user.dto.UploadFileDto;
-import com.scnsoft.user.payload.EmailMessagePayload;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

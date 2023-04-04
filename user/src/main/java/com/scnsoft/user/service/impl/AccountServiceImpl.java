@@ -6,7 +6,6 @@ import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Metadata;
 import com.scnsoft.user.entity.MetadataId;
 import com.scnsoft.user.entity.constant.MetadataEnum;
-import com.scnsoft.user.exception.FeignResponseException;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.feignclient.FileFeignClient;
 import com.scnsoft.user.payload.UpdatePasswordRequest;

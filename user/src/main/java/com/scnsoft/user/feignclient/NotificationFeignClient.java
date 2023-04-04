@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface NotificationFeignClient {
 
     @PostMapping("")
-    ResponseEntity<Void> sendMessage(@RequestBody EmailMessagePayload emailMessagePayload);
+    void sendMessage(@RequestBody EmailMessagePayload emailMessagePayload);
 
 }
