@@ -91,19 +91,20 @@ public class AccountServiceImpl implements AccountService {
 
             if (metadataAccountOldImageOptional.isPresent()) {
                 Metadata metadataAccountOldImage = metadataAccountOldImageOptional.get();
+                metadataRepository.updateValueById
+                        (metadataAccountOldImage.getMetadataId(), fileInfoDto.getId().toString());
                 fileFeignClient.removeFile(metadataAccountOldImage.getValue());
-                metadataRepository.delete(metadataAccountOldImage);
+            } else {
+                Metadata metadata = Metadata.builder()
+                        .metadataId(MetadataId.builder()
+                                .accountId(id)
+                                .key(MetadataEnum.ACCOUNT_IMAGE.getValue())
+                                .build())
+                        .value(fileInfoDto.getId().toString())
+                        .build();
+
+                metadataRepository.save(metadata);
             }
-
-            Metadata metadata = Metadata.builder()
-                    .metadataId(MetadataId.builder()
-                            .accountId(id)
-                            .key(MetadataEnum.ACCOUNT_IMAGE.getValue())
-                            .build())
-                    .value(fileInfoDto.getId().toString())
-                    .build();
-
-            metadataRepository.save(metadata);
 
         } catch (FeignException e) {
             throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.getMessage());
