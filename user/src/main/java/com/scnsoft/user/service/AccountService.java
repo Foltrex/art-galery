@@ -24,4 +24,6 @@ public interface AccountService {
     void deleteById(UUID id);
 
     Page<Account> findAll(Pageable pageable);
+
+    boolean isEditingUser(UUID id);
 }
