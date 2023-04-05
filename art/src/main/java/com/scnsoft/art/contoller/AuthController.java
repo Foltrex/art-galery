@@ -43,7 +43,6 @@ public class AuthController {
         private String type;
     }
 
-
     @PostMapping("/register")
     @PreAuthorize("permitAll()")
     public ResponseEntity<AuthToken> register(@Valid @RequestBody AccountDto accountDto) {
@@ -61,14 +60,21 @@ public class AuthController {
                         .isActive(true)
                         .name(accountDto.getFirstName() + " " + accountDto.getLastName() + " facility")
                         .build());
-                accountDto.getMetadata().add(MetaData.builder()
-                        .key("organizationId")
-                        .value(organization.getId().toString())
-                        .build());
+
+                accountDto.getMetadata()
+                        .add(MetaData.builder()
+                                .key("organizationId")
+                                .value(organization.getId().toString())
+                                .build());
+                accountDto.getMetadata()
+                        .add(MetaData.builder()
+                                .key("organizationRole")
+                                .value(Organization.Role.CREATOR.toString())
+                                .build());
             }
         }
         var createAccount = authFeignClient.register(accountDto);
-        if(createAccount.getStatusCode().equals(HttpStatus.CREATED)) {
+        if (createAccount.getStatusCode().equals(HttpStatus.CREATED)) {
             return createAccount;
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.valueOf(createAccount.getBody()));

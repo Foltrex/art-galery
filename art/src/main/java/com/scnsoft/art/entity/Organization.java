@@ -39,6 +39,12 @@ public class Organization {
         INACTIVE
     }
 
+    public enum Role {
+        CREATOR,
+        MODERATOR,
+        MEMBER;
+    }
+
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
