@@ -40,6 +40,16 @@ public class AccountServiceImpl implements AccountService {
     private final MetadataRepository metadataRepository;
 
     @Override
+    public Page<Account> findAll(Pageable pageable) {
+        return accountRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Account> findAllByOrganizationId(UUID organizationId, Pageable pageable) {
+        return accountRepository.findAllByOrganizationId(String.valueOf(organizationId), pageable);
+    }
+
+    @Override
     public Account findById(UUID id) {
         return accountRepository
                 .findById(id)
@@ -117,11 +127,6 @@ public class AccountServiceImpl implements AccountService {
     public void deleteById(UUID id) {
         Account account = findById(id);
         accountRepository.delete(account);
-    }
-
-    @Override
-    public Page<Account> findAll(Pageable pageable) {
-        return accountRepository.findAll(pageable);
     }
 
     @Override

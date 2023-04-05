@@ -64,11 +64,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Organization update(UUID id, Organization organization) {
+        System.out.println(organization.toString());
         Organization existedOrganization = findById(id);
-        if (organization.getStatus().equals(Organization.Status.NEW)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid organization status");
-        }
-
         organization.setId(id);
         organization.setFacilities(existedOrganization.getFacilities());
 

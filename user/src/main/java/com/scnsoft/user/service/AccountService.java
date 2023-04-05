@@ -11,6 +11,10 @@ import java.util.UUID;
 
 public interface AccountService {
 
+    Page<Account> findAll(Pageable pageable);
+
+    Page<Account> findAllByOrganizationId(UUID organizationId, Pageable pageable);
+
     Account findById(UUID id);
 
     Account findByEmail(String email);
@@ -23,7 +27,6 @@ public interface AccountService {
 
     void deleteById(UUID id);
 
-    Page<Account> findAll(Pageable pageable);
 
     boolean isEditingUser(UUID id);
 }

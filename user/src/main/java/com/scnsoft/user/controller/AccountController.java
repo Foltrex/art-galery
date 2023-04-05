@@ -46,6 +46,13 @@ public class AccountController {
     public Page<AccountDto> findAll( Pageable pageable) {
         return accountService.findAll(pageable).map(accountMapper::mapToDto);
     }
+
+    @GetMapping("/organizations/{organizationId}")
+    @PreAuthorize("permitAll()")
+    public Page<AccountDto> findAllByOrganizationId(@PathVariable UUID organizationId, Pageable pageable) {
+        return accountService.findAllByOrganizationId(organizationId, pageable).map(accountMapper::mapToDto);
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<AccountDto> findById(@PathVariable UUID id) {
