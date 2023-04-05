@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {OrganizationMapper.class})
+@Mapper(componentModel = "spring", uses = {OrganizationMapper.class, AddressMapper.class})
 public abstract class FacilityMapper {
 
     public abstract FacilityDto mapToDto(Facility facility);

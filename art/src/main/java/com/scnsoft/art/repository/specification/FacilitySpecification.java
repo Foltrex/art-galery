@@ -25,7 +25,8 @@ public class FacilitySpecification {
     }
     public static Specification<Facility> facilityNameStartWith(String name) {
         return (facility, cq, cb) -> {
-            return cb.equal(facility.get("name"), name);
+            String facilityNameStartWithRegex = name + "%";
+            return cb.like(facility.get("name"), facilityNameStartWithRegex);
         };
     }
     public static Specification<Facility> statusEqual(boolean status) {

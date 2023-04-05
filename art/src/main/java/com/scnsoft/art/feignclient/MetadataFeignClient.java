@@ -13,5 +13,5 @@ import com.scnsoft.art.dto.MetaData;
 @FeignClient(value = "user-service-metadatas", url = "http://localhost:8080/user-service/metadatas")
 public interface MetadataFeignClient {
   @GetMapping
-  MetaData findByKeyAndAccountId(@RequestParam(name = "accountId") UUID accountId, @RequestParam(name = "accountId") String key);
+  MetaData findByKeyAndAccountId(@RequestParam(name = "accountId") UUID accountId, @RequestParam(name = "key") String key);
 }

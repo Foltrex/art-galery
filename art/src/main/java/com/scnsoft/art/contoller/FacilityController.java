@@ -2,7 +2,11 @@ package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.FacilityDto;
 import com.scnsoft.art.facade.FacilityServiceFacade;
+import com.scnsoft.art.security.SecurityUtil;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,6 +27,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("facilities")
 @RequiredArgsConstructor
+@Slf4j
 public class FacilityController {
 
     private final FacilityServiceFacade facilityServiceFacade;
@@ -31,9 +36,10 @@ public class FacilityController {
     public ResponseEntity<Page<FacilityDto>> findAll(
         Pageable pageable,
         @RequestParam(required = false) UUID cityId,
-        @RequestParam(required = false) String facilityName,
-        @RequestParam Boolean isActive
+        @RequestParam(required = false, defaultValue = "") String facilityName,
+        @RequestParam(required = false) Boolean isActive
     ) {
+        log.info("Current account id: {}", SecurityUtil.getCurrentAccountId());
         return ResponseEntity.ok(facilityServiceFacade.findAll(pageable, cityId, facilityName, isActive));
     }
 

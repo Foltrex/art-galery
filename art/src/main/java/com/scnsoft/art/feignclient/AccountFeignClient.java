@@ -12,8 +12,8 @@ import java.util.UUID;
 @FeignClient(value = "user-service-accounts", url = "http://localhost:8083/accounts")
 public interface AccountFeignClient {
 
-    @GetMapping
-    Page<AccountDto> getAccountByEmail(String email);
+    // @GetMapping
+    // Page<AccountDto> getAccountByEmail(String email);
 
 
     @GetMapping("/{id}")

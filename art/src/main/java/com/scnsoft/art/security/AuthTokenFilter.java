@@ -44,17 +44,17 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 String email = jwtUtils.getEmailFromJwtToken(token);
                 List<String> roles = jwtUtils.getRolesFromJwtToken(token);
 
-                try {
-                    Page<AccountDto> accountDtoResponse = accountFeignClient.getAccountByEmail(email);
-                    if (accountDtoResponse.getContent().size() != 0) {
-                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
-                    } else if(accountDtoResponse.getContent().size() != 1) {
-                        log.error("two or more accounts found with same email: {}", email);
-                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
-                    }
-                } catch (FeignException e) {
-                    throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.getMessage());
-                }
+                // try {
+                //     Page<AccountDto> accountDtoResponse = accountFeignClient.getAccountByEmail(email);
+                //     if (accountDtoResponse.getContent().size() != 0) {
+                //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+                //     } else if(accountDtoResponse.getContent().size() != 1) {
+                //         log.error("two or more accounts found with same email: {}", email);
+                //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+                //     }
+                // } catch (FeignException e) {
+                //     throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.getMessage());
+                // }
 
                 setUserAuthentication(request, id, email, roles);
             }

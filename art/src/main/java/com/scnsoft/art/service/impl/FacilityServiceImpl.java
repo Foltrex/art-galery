@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.google.common.base.Strings;
 import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.AccountType;
 import com.scnsoft.art.dto.MetaData;
@@ -123,9 +124,14 @@ public class FacilityServiceImpl implements FacilityService {
         UUID currentAccountId = SecurityUtil.getCurrentAccountId();
         AccountDto accountDto = accountFeignClient.findById(currentAccountId);
 
-        Specification<Facility> generalSpecification = cityIdEqual(currentAccountId)
-            .and(facilityNameStartWith(facilityName));
+        Specification<Facility> generalSpecification = Specification.where(null);
         
+        if (cityId != null) {
+            generalSpecification = generalSpecification.and(cityIdEqual(cityId));
+        }
+        if (!Strings.isNullOrEmpty(facilityName)) {
+            generalSpecification = generalSpecification.and(facilityNameStartWith(facilityName));
+        }
         if (isActive != null) {
             generalSpecification = generalSpecification.and(statusEqual(isActive));
         }

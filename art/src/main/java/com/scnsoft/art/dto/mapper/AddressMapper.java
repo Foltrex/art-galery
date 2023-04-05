@@ -3,6 +3,7 @@ package com.scnsoft.art.dto.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +15,10 @@ import com.scnsoft.art.entity.Address;
 @Mapper(componentModel = "spring", uses = {CityMapper.class})
 public abstract class AddressMapper {
 
+    @Mapping(target = "fullName", source = "address.name")
     public abstract AddressDto mapToDto(Address address);
 
+    @Mapping(target = "name", source = "addressDto.fullName")
     public abstract Address mapToEntity(AddressDto addressDto);
 
     public Page<AddressDto> mapPageToDto(final Page<Address> addressPage) {
