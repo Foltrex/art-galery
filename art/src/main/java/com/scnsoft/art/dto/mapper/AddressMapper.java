@@ -15,10 +15,8 @@ import com.scnsoft.art.entity.Address;
 @Mapper(componentModel = "spring", uses = {CityMapper.class})
 public abstract class AddressMapper {
 
-    @Mapping(target = "fullName", source = "address.name")
     public abstract AddressDto mapToDto(Address address);
 
-    @Mapping(target = "name", source = "addressDto.fullName")
     public abstract Address mapToEntity(AddressDto addressDto);
 
     public Page<AddressDto> mapPageToDto(final Page<Address> addressPage) {
