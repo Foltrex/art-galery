@@ -17,7 +17,7 @@ spring:
     name: file-service
   datasource:
     url: jdbc:postgresql://localhost:5432/file
-    username: rooot
+    username: root
     password: root
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
