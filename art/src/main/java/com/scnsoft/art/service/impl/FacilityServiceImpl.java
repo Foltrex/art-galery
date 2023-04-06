@@ -81,7 +81,9 @@ public class FacilityServiceImpl implements FacilityService {
 
     @Override
     public Facility updateById(UUID id, Facility facility) {
+        Facility oldFacility = findById(id);
         facility.setId(id);
+        facility.setOrganization(oldFacility.getOrganization());
         return facilityRepository.save(facility);
     }
 
