@@ -9,7 +9,6 @@ import java.util.UUID;
 @Builder
 public class FileInfoDto {
     private UUID id;
-    private UUID artId;
     private String mimeType;
     private Integer contentLength;
 }

@@ -2,7 +2,9 @@ package com.scnsoft.file.controller;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import com.scnsoft.file.entity.FileInfo;
 import com.scnsoft.file.exception.ResourseNotFoundException;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -52,20 +54,23 @@ public class FileController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/arts/{artId}")
-    public ResponseEntity<List<FileInfoDto>> findAllByArtId(@PathVariable UUID artId) {
-        return ResponseEntity.ok(fileInfoServiceFacade.findAllByArtId(artId));
-    }
-
-    @DeleteMapping("/arts/{artId}")
-    public ResponseEntity<Void> deleteByArtId(@PathVariable UUID artId) {
-        fileService.deleteByArtId(artId);
-        return ResponseEntity.ok().build();
-    }
+    //@TODO REMOVE
+//    @GetMapping("/arts/{artId}")
+//    public ResponseEntity<List<FileInfoDto>> findAllByArtId(@PathVariable UUID artId) {
+//        return ResponseEntity.ok(fileInfoServiceFacade.findAllByArtId(artId));
+//    }
+//
+//    @DeleteMapping("/arts/{artId}")
+//    public ResponseEntity<Void> deleteByArtId(@PathVariable UUID artId) {
+//        fileService.deleteByArtId(artId);
+//        return ResponseEntity.ok().build();
+//    }
 
     @PostMapping
-    public ResponseEntity<FileInfoDto> uploadFile(@RequestBody UploadFileDto uploadFileDto) {
-        return ResponseEntity.ok().body(fileInfoMapper.mapToDto(fileService.uploadFile(uploadFileDto)));
+    public ResponseEntity<List<FileInfoDto>> uploadFile(@RequestBody UploadFileDto uploadFileDto) {
+        List<FileInfo> fileInfoList = fileService.uploadFile(uploadFileDto);
+        List<FileInfoDto> fileInfoDtoList = fileInfoList.stream().map(fileInfoMapper::mapToDto).toList();
+        return ResponseEntity.ok().body(fileInfoDtoList);
     }
 
     @DeleteMapping("/{id}")

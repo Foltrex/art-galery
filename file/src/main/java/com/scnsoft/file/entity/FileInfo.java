@@ -23,8 +23,6 @@ public class FileInfo {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private UUID id;
 
-    private UUID artId;
-
     private String mimeType;
 
     private Integer contentLength;

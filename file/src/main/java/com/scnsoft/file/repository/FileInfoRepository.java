@@ -10,6 +10,6 @@ import java.util.UUID;
 @Repository
 public interface FileInfoRepository extends JpaRepository<FileInfo, UUID> {
 
-    List<FileInfo> findAllByArtId(UUID artId);
+//    List<FileInfo> findAllByArtId(UUID artId);
 
 }

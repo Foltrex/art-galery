@@ -16,7 +16,7 @@ public interface FileService {
 
     InputStream getFileStream(UUID ids);
 
-    FileInfo uploadFile(UploadFileDto uploadFileDto);
+    List<FileInfo> uploadFile(UploadFileDto uploadFileDto);
 
     void removeFileById(UUID id);
 

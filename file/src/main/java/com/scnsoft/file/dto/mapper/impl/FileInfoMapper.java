@@ -12,7 +12,6 @@ public class FileInfoMapper implements Mapper<FileInfo, FileInfoDto> {
     public FileInfoDto mapToDto(FileInfo fileInfo) {
         return FileInfoDto.builder()
                 .id(fileInfo.getId())
-                .artId(fileInfo.getArtId())
                 .mimeType(fileInfo.getMimeType())
                 .contentLength(fileInfo.getContentLength())
                 .build();
@@ -22,7 +21,6 @@ public class FileInfoMapper implements Mapper<FileInfo, FileInfoDto> {
     public FileInfo mapToEntity(FileInfoDto fileInfoDto) {
         return FileInfo.builder()
                 .id(fileInfoDto.getId())
-                .artId(fileInfoDto.getArtId())
                 .mimeType(fileInfoDto.getMimeType())
                 .contentLength(fileInfoDto.getContentLength())
                 .build();
