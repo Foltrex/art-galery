@@ -42,6 +42,7 @@ public class FileServiceImpl implements FileService {
                     .data(uploadEntityFileDto.getData())
                     .mimeType(uploadEntityFileDto.getMimeType())
                     .build();
+
             List<FileInfoDto> response = fileFeignClient.uploadFile(uploadFileDto);
 
             entityFileOriginal = EntityFile.builder()

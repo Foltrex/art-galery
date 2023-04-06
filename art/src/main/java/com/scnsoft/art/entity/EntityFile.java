@@ -42,6 +42,7 @@ public class EntityFile {
     private Type type;
 
     @Column(name = "creation_date")
+    @Builder.Default
     private Date creationDate = new Date();
 
 }
