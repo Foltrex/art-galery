@@ -13,6 +13,14 @@ public interface AccountService {
 
     Page<Account> findAll(Pageable pageable);
 
+    Page<Account> findAll(
+        Pageable pageable, 
+        String username, 
+        String usertype, 
+        String organiationName, 
+        UUID cityId
+    );
+
     Page<Account> findAllByOrganizationId(UUID organizationId, Pageable pageable);
 
     Account findById(UUID id);

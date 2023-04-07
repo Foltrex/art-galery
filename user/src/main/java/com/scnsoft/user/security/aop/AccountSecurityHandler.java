@@ -24,7 +24,7 @@ public class AccountSecurityHandler {
         return accountTypes.contains(account.getAccountType().toString());
     }
 
-    private Account getCurrentAccount() {
+    public Account getCurrentAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 

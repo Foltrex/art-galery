@@ -15,6 +15,6 @@ public interface FileFeignClient {
     FileInfoDto uploadFile(@RequestBody UploadFileDto uploadFileDto);
 
     @DeleteMapping("/{id}")
-    void removeFile(@PathVariable String id);
+    void removeFile(@PathVariable("id") String id);
 
 }

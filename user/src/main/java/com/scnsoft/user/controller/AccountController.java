@@ -43,8 +43,14 @@ public class AccountController {
 
     @GetMapping
     @PreAuthorize("permitAll()")
-    public Page<AccountDto> findAll( Pageable pageable) {
-        return accountService.findAll(pageable).map(accountMapper::mapToDto);
+    public Page<AccountDto> findAll(
+        Pageable pageable,
+        @RequestParam(required = false) String username,
+        @RequestParam(required = false) String usertype,
+        @RequestParam(value = "organization", required = false) String organizationName,
+        @RequestParam(value = "city-id", required = false) UUID cityId
+    ) {
+        return accountService.findAll(pageable, username, usertype, organizationName, cityId).map(accountMapper::mapToDto);
     }
 
     @GetMapping("/organizations/{organizationId}")
