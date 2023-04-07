@@ -1,26 +1,25 @@
 package com.scnsoft.art.service.impl;
 
-import com.google.common.base.Strings;
-import com.scnsoft.art.entity.Art;
-import com.scnsoft.art.entity.Organization;
-import com.scnsoft.art.exception.ArtResourceNotFoundException;
-import com.scnsoft.art.repository.OrganizationRepository;
-import com.scnsoft.art.service.OrganizationService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static com.scnsoft.art.repository.specification.OrganizationSpecification.nameStartsWith;
+import static com.scnsoft.art.repository.specification.OrganizationSpecification.statusEquals;
+
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import static com.scnsoft.art.repository.specification.OrganizationSpecification.nameStartsWith;
-import static com.scnsoft.art.repository.specification.OrganizationSpecification.statusEquals;
+import com.google.common.base.Strings;
+import com.scnsoft.art.entity.Organization;
+import com.scnsoft.art.exception.ArtResourceNotFoundException;
+import com.scnsoft.art.repository.OrganizationRepository;
+import com.scnsoft.art.service.OrganizationService;
 
-
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -28,6 +27,10 @@ import java.util.UUID;
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
+
+    public List<Organization> findAll() {
+        return organizationRepository.findAll();
+    }
 
     @Override
     public Page<Organization> findAll(Pageable pageable, String name, String status) {
@@ -55,6 +58,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Organization findByAccountId(UUID accountId) {
         throw new UnsupportedOperationException();
+    }
+
+    public Organization findByName(String name) {
+        return organizationRepository.findByName(name);
     }
 
     @Override

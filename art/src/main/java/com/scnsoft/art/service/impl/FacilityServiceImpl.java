@@ -207,4 +207,9 @@ public class FacilityServiceImpl implements FacilityService {
             }
         }
     }
+
+    @Override
+    public List<Facility> findAllByOrganizationId(UUID organizationId) {
+        return facilityRepository.findByOrganizationId(organizationId);
+    }
 }

@@ -1,16 +1,19 @@
 package com.scnsoft.art.facade;
 
-import com.scnsoft.art.dto.OrganizationDto;
-import com.scnsoft.art.dto.mapper.OrganizationMapper;
-import com.scnsoft.art.entity.Organization;
-import com.scnsoft.art.service.impl.OrganizationServiceImpl;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.UUID;
+import com.scnsoft.art.dto.OrganizationDto;
+import com.scnsoft.art.dto.mapper.OrganizationMapper;
+import com.scnsoft.art.entity.Organization;
+import com.scnsoft.art.service.impl.OrganizationServiceImpl;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -20,12 +23,23 @@ public class OrganizationServiceFacade {
     private final OrganizationMapper organizationMapper;
 
 
+    public List<OrganizationDto> findAll() {
+        return organizationService.findAll()
+            .stream()
+            .map(organizationMapper::mapToDto)
+            .toList();
+    }
+
     public Page<OrganizationDto> findAll(Pageable pageable, String name, String status) {
         return organizationMapper.mapPageToDto(organizationService.findAll(pageable, name, status));
     }
 
     public OrganizationDto findById(UUID id) {
         return organizationMapper.mapToDto(organizationService.findById(id));
+    }
+
+    public OrganizationDto findByName(String name) {
+        return organizationMapper.mapToDto(organizationService.findByName(name));
     }
 
     public OrganizationDto findByAccountId(UUID accountId) {

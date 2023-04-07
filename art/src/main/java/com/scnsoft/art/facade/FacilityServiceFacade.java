@@ -37,6 +37,13 @@ public class FacilityServiceFacade {
                 .toList();
     }
 
+    public List<FacilityDto> findAllByOrganizationId(UUID organizationId) {
+        return facilityService.findAllByOrganizationId(organizationId)
+            .stream()
+            .map(facilityMapper::mapToDto)
+            .toList();
+    }
+
     public Page<FacilityDto> findAllByOrganizationId(UUID organizationId, Pageable pageable) {
         return facilityMapper.mapPageToDto(facilityService.findAllByOrganizationId(organizationId, pageable));
     }

@@ -21,6 +21,8 @@ public interface FacilityService {
 
     Page<Facility> findAllByOrganizationId(UUID organizationId, Pageable pageable);
 
+    List<Facility> findAllByOrganizationId(UUID organizationId);
+
     Facility save(Facility facility);
 
     Facility updateById(UUID id, Facility facility);

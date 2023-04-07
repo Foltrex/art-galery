@@ -21,4 +21,6 @@ public interface FacilityRepository extends JpaRepository<Facility, UUID>, JpaSp
     @Query("SELECT facility FROM Facility facility WHERE facility.organization.id = :organizationId")
     Page<Facility> findAllByOrganizationId(@Param("organizationId") UUID organizationId, Pageable pageable);
 
+    @Query("SELECT f From Facility f WHERE f.organization.id = :organizationId")
+    List<Facility> findByOrganizationId(@Param("organizationId") UUID organizationId);
 }

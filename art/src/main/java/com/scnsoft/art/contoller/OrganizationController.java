@@ -1,8 +1,8 @@
 package com.scnsoft.art.contoller;
 
-import com.scnsoft.art.dto.OrganizationDto;
-import com.scnsoft.art.facade.OrganizationServiceFacade;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
+import com.scnsoft.art.dto.OrganizationDto;
+import com.scnsoft.art.facade.OrganizationServiceFacade;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("organizations")
@@ -37,6 +40,16 @@ public class OrganizationController {
                 name,
                 status
         );
+    }
+
+    @GetMapping("/list")
+    List<OrganizationDto> findAll() {
+        return organizationServiceFacade.findAll();
+    }
+
+    @GetMapping("/name")
+    OrganizationDto findByName(@RequestParam String name) {
+        return organizationServiceFacade.findByName(name);
     }
 
     @GetMapping("/{id}")
