@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -16,8 +17,9 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
+@FieldNameConstants
 public class Metadata {
 
     @EmbeddedId

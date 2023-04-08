@@ -4,19 +4,33 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 
+import com.scnsoft.user.entity.Metadata;
+import com.scnsoft.user.entity.MetadataId;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Account.AccountType;
 
 public class AccountSpecification {
-    private static final String ORGANIZAITON_ID_KEY = "organizaiton_id";
 
     public static Specification<Account> idInList(List<UUID> accountIds) {
         return (account, cq, cb) -> {
-            Expression<UUID> idExpression = account.get("id");
+            Expression<UUID> idExpression = account.get(Account.Fields.id);
             return idExpression.in(accountIds);
+        };
+    }
+
+    public static Specification<Account> inMetadata(String key, String value) {
+        return (account, cq, cb) -> {
+            Join<Object, Object> join = account.join(Account.Fields.metadata, JoinType.INNER);
+
+            return cb.and(
+                    cb.equal(join.get(Metadata.Fields.metadataId).get(MetadataId.Fields.key), key),
+                    cb.equal(join.get(Metadata.Fields.value), value)
+            );
         };
     }
 
@@ -24,14 +38,14 @@ public class AccountSpecification {
         return (account, cq, cb) -> {
             String nameRegex = username + "%";
             return cb.or(
-                cb.like(account.get("firstName"), nameRegex),
-                cb.like(account.get("lastName"), nameRegex)
+                cb.like(account.get(Account.Fields.firstName), nameRegex),
+                cb.like(account.get(Account.Fields.lastName), nameRegex)
             );
         };
     } 
 
 
     public static Specification<Account> usertypeEqual(AccountType accountType) {
-        return (account, cq, cb) -> cb.equal(account.get("accountType"), accountType);
+        return (account, cq, cb) -> cb.equal(account.get(Account.Fields.accountType), accountType);
     } 
 }

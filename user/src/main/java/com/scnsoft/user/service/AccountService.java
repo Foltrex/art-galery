@@ -17,7 +17,7 @@ public interface AccountService {
         Pageable pageable, 
         String username, 
         String usertype, 
-        String organiationName, 
+        UUID organiationId,
         UUID cityId
     );
 

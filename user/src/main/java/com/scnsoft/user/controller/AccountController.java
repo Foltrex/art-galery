@@ -47,10 +47,10 @@ public class AccountController {
         Pageable pageable,
         @RequestParam(required = false) String username,
         @RequestParam(required = false) String usertype,
-        @RequestParam(value = "organization", required = false) String organizationName,
+        @RequestParam(value = "organizationId", required = false) UUID organizationId,
         @RequestParam(value = "city-id", required = false) UUID cityId
     ) {
-        return accountService.findAll(pageable, username, usertype, organizationName, cityId).map(accountMapper::mapToDto);
+        return accountService.findAll(pageable, username, usertype, organizationId, cityId).map(accountMapper::mapToDto);
     }
 
     @GetMapping("/organizations/{organizationId}")

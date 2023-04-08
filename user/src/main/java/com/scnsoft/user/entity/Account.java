@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
@@ -32,6 +33,7 @@ import java.util.UUID;
 @Entity
 @Data
 @Builder
+@FieldNameConstants
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AccountListener.class)

@@ -2,6 +2,7 @@ package com.scnsoft.user.service.impl;
 
 import static com.scnsoft.user.repository.specification.AccountSpecification.idInList;
 import static com.scnsoft.user.repository.specification.AccountSpecification.firstnameOrLastnameStartWith;
+import static com.scnsoft.user.repository.specification.AccountSpecification.inMetadata;
 import static com.scnsoft.user.repository.specification.AccountSpecification.usertypeEqual;
 
 import java.util.List;
@@ -19,7 +20,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.netflix.servo.util.Strings;
 import com.scnsoft.user.dto.FileInfoDto;
-import com.scnsoft.user.dto.OrganizationDto;
 import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Metadata;
@@ -28,7 +28,6 @@ import com.scnsoft.user.entity.Account.AccountType;
 import com.scnsoft.user.entity.constant.MetadataEnum;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.feignclient.FileFeignClient;
-import com.scnsoft.user.feignclient.OrganizationFeignClient;
 import com.scnsoft.user.payload.UpdatePasswordRequest;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.repository.MetadataRepository;
@@ -55,7 +54,6 @@ public class AccountServiceImpl implements AccountService {
     private final FileFeignClient fileFeignClient;
     private final MetadataRepository metadataRepository;
     private final AccountSecurityHandler accountSecurityHandler;
-    private final OrganizationFeignClient organizationFeignClient;
 
     @Override
     public Page<Account> findAll(Pageable pageable) {
@@ -200,7 +198,7 @@ public class AccountServiceImpl implements AccountService {
             Pageable pageable,
             String username,
             String usertype,
-            String organiationName,
+            UUID organiationId,
             UUID cityId) {
         Specification<Account> generalSpecification = Specification.where(null);
         if (!Strings.isNullOrEmpty(username)) {
@@ -210,36 +208,13 @@ public class AccountServiceImpl implements AccountService {
             AccountType accountType = AccountType.valueOf(usertype);
             generalSpecification = generalSpecification.and(usertypeEqual(accountType));
         }
-        if (!Strings.isNullOrEmpty(organiationName)) {
-            OrganizationDto organizationDto = organizationFeignClient.findByName(organiationName);
-            if (organizationDto != null) {
-                List<UUID> accountIds = metadataRepository
-                        .findByMetadataIdKeyAndValue(ORGANIZATION_ID_KEY, String.valueOf(organizationDto.getId()))
-                        .stream()
-                        .map(m -> {
-                            var metadataId = m.getMetadataId();
-                            return metadataId.getAccountId();
-                        })
-                        .toList();
-                generalSpecification = generalSpecification.and(idInList(accountIds));
-            } else {
-                return Page.empty(pageable);
-            }
+        if (organiationId != null) {
+            generalSpecification = generalSpecification
+                    .and(inMetadata("organizationId", organiationId.toString()));
         }
         if (cityId != null) {
-            List<UUID> accountIds = metadataRepository
-                .findByMetadataIdKeyAndValue(
-                    "city_id", 
-                    String.valueOf(cityId)
-                )
-                .stream()
-                .map(m -> {
-                    var metadataId = m.getMetadataId();
-                    return metadataId.getAccountId();
-                })
-                .toList();
-
-                generalSpecification = generalSpecification.and(idInList(accountIds));
+            generalSpecification = generalSpecification
+                    .and(inMetadata("city_id", cityId.toString()));
         }
 
         Account loggedUser = accountSecurityHandler.getCurrentAccount();
@@ -260,13 +235,8 @@ public class AccountServiceImpl implements AccountService {
                             .map(Metadata::getValue)
                             .orElseThrow();
 
-                    List<UUID> accountIds = metadataRepository
-                            .findByMetadataIdKeyAndValue(ORGANIZATION_ID_KEY, currentOrganizationIdString)
-                            .stream()
-                            .map(m -> m.getMetadataId().getAccountId())
-                            .toList();
-
-                    generalSpecification = generalSpecification.and(idInList(accountIds));
+                    generalSpecification = generalSpecification
+                            .and(inMetadata(ORGANIZATION_ID_KEY, currentOrganizationIdString));
                     yield accountRepository.findAll(generalSpecification, pageable);
                 } else {
                     throw new IllegalArgumentException(
