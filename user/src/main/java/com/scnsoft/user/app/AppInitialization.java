@@ -58,8 +58,8 @@ public class AppInitialization {
     }
 
     private void initAdminAccount() {
-        log.info("Initialization admin account");
-        if (accountRepository.findByEmail(adminEmail).isEmpty()) {
+        log.info("Admin account initialization");
+        accountRepository.findByEmail(adminEmail).orElseGet(() -> {
             Account account = Account.builder()
                     .email(adminEmail)
                     .password(passwordEncoder.encode(adminPassword))
@@ -69,8 +69,10 @@ public class AppInitialization {
                     .isOneTimePassword(false)
                     .build();
 
-            accountRepository.save(account);
-        }
+            account = accountRepository.save(account);
+            log.error("New admin account created, please login and change password");
+            return account;
+        });
     }
 
     private Set<Role> getAdminRoles() {

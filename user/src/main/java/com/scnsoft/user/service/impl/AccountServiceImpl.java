@@ -43,8 +43,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class AccountServiceImpl implements AccountService {
-    private static final String ORGANIZATION_ROLE_KEY = "organization_role";
-    private static final String ORGANIZATION_ID_KEY = "organization_id";
+    private static final String ORGANIZATION_ROLE_KEY = "organizationRole";
+    private static final String ORGANIZATION_ID_KEY = "organizationId";
     private static final String OWNER_ORGANIZATION_ROLE = "CREATOR";
 
     private final List<String> administrativeOrganizationRoles = List.of(
