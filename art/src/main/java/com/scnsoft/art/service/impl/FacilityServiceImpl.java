@@ -32,8 +32,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class FacilityServiceImpl implements FacilityService {
-    private static final String ORGANIZATION_ROLE_KEY = "organization_role";
-    private static final String FACILITY_KEY = "facility_id";
+    private static final String ORGANIZATION_ROLE_KEY = "organizationRole";
+    private static final String FACILITY_KEY = "facilityId";
     private final List<String> administrativeOrganizationRoles = List.of(
         "CREATOR", "MODERATOR"
     );
