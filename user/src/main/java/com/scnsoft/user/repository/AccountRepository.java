@@ -19,12 +19,4 @@ public interface AccountRepository extends JpaRepository<Account, UUID>, JpaSpec
 
     Optional<Account> findByEmail(String email);
 
-    @Query(value = "select account.* from account " +
-            "join account_metadata am on account.id = am.account_id " +
-            "where account_type = 'REPRESENTATIVE' " +
-            "and am.key = 'organizationId' " +
-            "and am.value = ?1", nativeQuery = true)
-    Page<Account> findAllByOrganizationId(String organizationId, Pageable pageable);
-
-    // Page<Account> findByIdIn(List<UUID> idList, Pageable pageable);
 }

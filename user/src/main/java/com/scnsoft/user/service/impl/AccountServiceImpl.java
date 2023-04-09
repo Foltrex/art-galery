@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.scnsoft.user.dto.AccountFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -55,11 +56,31 @@ public class AccountServiceImpl implements AccountService {
     private final MetadataRepository metadataRepository;
     private final AccountSecurityHandler accountSecurityHandler;
 
+
     @Override
-    public Page<Account> findAll(Pageable pageable) {
+    public Page<Account> findAll(
+            Pageable pageable,
+            AccountFilter accountFilter
+    ) {
+        Specification<Account> generalSpecification = Specification.where(null);
+        if (!Strings.isNullOrEmpty(accountFilter.getUsername())) {
+            generalSpecification = generalSpecification.and(firstnameOrLastnameStartWith(accountFilter.getUsername()));
+        }
+        if (accountFilter.getUsertype() != null) {
+            generalSpecification = generalSpecification.and(usertypeEqual(accountFilter.getUsertype()));
+        }
+        if (accountFilter.getOrganizationId() != null) {
+            generalSpecification = generalSpecification
+                    .and(inMetadata("organizationId", accountFilter.getOrganizationId().toString()));
+        }
+        if (accountFilter.getCityId() != null) {
+            generalSpecification = generalSpecification
+                    .and(inMetadata("city_id", accountFilter.getCityId().toString()));
+        }
+
         Account loggedUser = accountSecurityHandler.getCurrentAccount();
         return switch (loggedUser.getAccountType()) {
-            case SYSTEM -> accountRepository.findAll(pageable);
+            case SYSTEM -> accountRepository.findAll(generalSpecification, pageable);
             case REPRESENTATIVE -> {
                 String organizationRole = metadataRepository
                         .findByMetadataIdAccountIdAndMetadataIdKey(
@@ -75,12 +96,9 @@ public class AccountServiceImpl implements AccountService {
                             .map(Metadata::getValue)
                             .orElseThrow();
 
-                    List<UUID> accountIds = metadataRepository
-                            .findByMetadataIdKeyAndValue(ORGANIZATION_ID_KEY, currentOrganizationIdString)
-                            .stream()
-                            .map(m -> m.getMetadataId().getAccountId())
-                            .toList();
-                    yield accountRepository.findAll(idInList(accountIds), pageable);
+                    generalSpecification = generalSpecification
+                            .and(inMetadata(ORGANIZATION_ID_KEY, currentOrganizationIdString));
+                    yield accountRepository.findAll(generalSpecification, pageable);
                 } else {
                     throw new IllegalArgumentException(
                             "Accountss's not allowed for " + organizationRole + " representative role");
@@ -88,11 +106,6 @@ public class AccountServiceImpl implements AccountService {
             }
             case ARTIST -> throw new IllegalArgumentException("Accountss's not allowed for artist");
         };
-    }
-
-    @Override
-    public Page<Account> findAllByOrganizationId(UUID organizationId, Pageable pageable) {
-        return accountRepository.findAllByOrganizationId(String.valueOf(organizationId), pageable);
     }
 
     @Override
@@ -176,14 +189,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean isEditingUser(UUID id) {
-        Account account = accountRepository.findById(id)
+    public boolean isEditingUser(UUID activeUserId, UUID targetUserId) {
+        Account account = accountRepository.findById(activeUserId)
                 .orElseThrow();
+        if (activeUserId.equals(targetUserId)) {
+            return true;
+        }
 
         return switch (account.getAccountType()) {
             case REPRESENTATIVE -> {
                 Metadata metadata = metadataRepository
-                        .findByMetadataIdAccountIdAndMetadataIdKey(id, ORGANIZATION_ROLE_KEY)
+                        .findByMetadataIdAccountIdAndMetadataIdKey(activeUserId, ORGANIZATION_ROLE_KEY)
                         .orElseThrow();
                 yield OWNER_ORGANIZATION_ROLE.equals(metadata.getValue());
             }
@@ -193,58 +209,5 @@ public class AccountServiceImpl implements AccountService {
         };
     }
 
-    @Override
-    public Page<Account> findAll(
-            Pageable pageable,
-            String username,
-            String usertype,
-            UUID organiationId,
-            UUID cityId) {
-        Specification<Account> generalSpecification = Specification.where(null);
-        if (!Strings.isNullOrEmpty(username)) {
-            generalSpecification = generalSpecification.and(firstnameOrLastnameStartWith(username));
-        }
-        if (!Strings.isNullOrEmpty(usertype)) {
-            AccountType accountType = AccountType.valueOf(usertype);
-            generalSpecification = generalSpecification.and(usertypeEqual(accountType));
-        }
-        if (organiationId != null) {
-            generalSpecification = generalSpecification
-                    .and(inMetadata("organizationId", organiationId.toString()));
-        }
-        if (cityId != null) {
-            generalSpecification = generalSpecification
-                    .and(inMetadata("city_id", cityId.toString()));
-        }
-
-        Account loggedUser = accountSecurityHandler.getCurrentAccount();
-        return switch (loggedUser.getAccountType()) {
-            case SYSTEM -> accountRepository.findAll(generalSpecification, pageable);
-            case REPRESENTATIVE -> {
-                String organizationRole = metadataRepository
-                        .findByMetadataIdAccountIdAndMetadataIdKey(
-                                loggedUser.getId(), ORGANIZATION_ROLE_KEY)
-                        .map(Metadata::getValue)
-                        .orElseThrow();
-
-                if (administrativeOrganizationRoles.contains(organizationRole)) {
-                    String currentOrganizationIdString = loggedUser.getMetadata()
-                            .stream()
-                            .filter(m -> m.getMetadataId().getKey().equals(ORGANIZATION_ID_KEY))
-                            .findFirst()
-                            .map(Metadata::getValue)
-                            .orElseThrow();
-
-                    generalSpecification = generalSpecification
-                            .and(inMetadata(ORGANIZATION_ID_KEY, currentOrganizationIdString));
-                    yield accountRepository.findAll(generalSpecification, pageable);
-                } else {
-                    throw new IllegalArgumentException(
-                            "Accountss's not allowed for " + organizationRole + " representative role");
-                }
-            }
-            case ARTIST -> throw new IllegalArgumentException("Accountss's not allowed for artist");
-        };
-    }
 
 }

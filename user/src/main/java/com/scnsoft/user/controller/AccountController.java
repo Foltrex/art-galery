@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import com.scnsoft.user.dto.AccountFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -45,18 +46,9 @@ public class AccountController {
     @PreAuthorize("permitAll()")
     public Page<AccountDto> findAll(
         Pageable pageable,
-        @RequestParam(required = false) String username,
-        @RequestParam(required = false) String usertype,
-        @RequestParam(value = "organizationId", required = false) UUID organizationId,
-        @RequestParam(value = "city-id", required = false) UUID cityId
+        AccountFilter accountFilter
     ) {
-        return accountService.findAll(pageable, username, usertype, organizationId, cityId).map(accountMapper::mapToDto);
-    }
-
-    @GetMapping("/organizations/{organizationId}")
-    @PreAuthorize("permitAll()")
-    public Page<AccountDto> findAllByOrganizationId(@PathVariable UUID organizationId, Pageable pageable) {
-        return accountService.findAllByOrganizationId(organizationId, pageable).map(accountMapper::mapToDto);
+        return accountService.findAll(pageable, accountFilter).map(accountMapper::mapToDto);
     }
 
     @GetMapping("/{id}")
@@ -67,26 +59,26 @@ public class AccountController {
 
     //@Todo make facade later
     @PutMapping("/{id}")
-    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id)")
+    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, id)")
     public ResponseEntity<AccountDto> updateById(@PathVariable UUID id, @Valid @RequestBody AccountDto request) {
         return ResponseEntity.ok(accountMapper.mapToDto(
                 accountService.updateById(id, accountMapper.mapToEntity(request))));
     }
 
     @PatchMapping("/{id}/password")
-    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id)")
+    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, id)")
     public void updatePassword(@PathVariable UUID id, @Valid @RequestBody UpdatePasswordRequest request) {
         accountService.updatePasswordById(id, request);
     }
 
     @PatchMapping("/{id}/account-image")
-    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id)")
+    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, id)")
     public void updateAccountImage(@PathVariable UUID id, @Valid @RequestBody UploadFileDto request) {
         accountService.updateImageById(id, request);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id)")
+    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, id)")
     public void deleteById(@PathVariable UUID id) {
         accountService.deleteById(id);
     }

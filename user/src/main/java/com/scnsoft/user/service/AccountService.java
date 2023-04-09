@@ -1,5 +1,6 @@
 package com.scnsoft.user.service;
 
+import com.scnsoft.user.dto.AccountFilter;
 import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.payload.UpdatePasswordRequest;
@@ -11,17 +12,7 @@ import java.util.UUID;
 
 public interface AccountService {
 
-    Page<Account> findAll(Pageable pageable);
-
-    Page<Account> findAll(
-        Pageable pageable, 
-        String username, 
-        String usertype, 
-        UUID organiationId,
-        UUID cityId
-    );
-
-    Page<Account> findAllByOrganizationId(UUID organizationId, Pageable pageable);
+    Page<Account> findAll(Pageable pageable, AccountFilter accountFilter);
 
     Account findById(UUID id);
 
@@ -36,5 +27,5 @@ public interface AccountService {
     void deleteById(UUID id);
 
 
-    boolean isEditingUser(UUID id);
+    boolean isEditingUser(UUID activeUserId, UUID targetUserId);
 }
