@@ -1,31 +1,12 @@
 package com.scnsoft.user.service.impl;
 
-import static com.scnsoft.user.repository.specification.AccountSpecification.idInList;
-import static com.scnsoft.user.repository.specification.AccountSpecification.firstnameOrLastnameStartWith;
-import static com.scnsoft.user.repository.specification.AccountSpecification.inMetadata;
-import static com.scnsoft.user.repository.specification.AccountSpecification.usertypeEqual;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import com.scnsoft.user.dto.AccountFilter;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.netflix.servo.util.Strings;
+import com.scnsoft.user.dto.AccountFilter;
 import com.scnsoft.user.dto.FileInfoDto;
 import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Metadata;
 import com.scnsoft.user.entity.MetadataId;
-import com.scnsoft.user.entity.Account.AccountType;
 import com.scnsoft.user.entity.constant.MetadataEnum;
 import com.scnsoft.user.exception.ResourseNotFoundException;
 import com.scnsoft.user.feignclient.FileFeignClient;
@@ -34,10 +15,24 @@ import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.repository.MetadataRepository;
 import com.scnsoft.user.security.aop.AccountSecurityHandler;
 import com.scnsoft.user.service.AccountService;
-
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.scnsoft.user.repository.specification.AccountSpecification.firstnameOrLastnameStartWith;
+import static com.scnsoft.user.repository.specification.AccountSpecification.inMetadata;
+import static com.scnsoft.user.repository.specification.AccountSpecification.usertypeEqual;
 
 @Service
 @RequiredArgsConstructor
@@ -147,7 +142,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional
     public void updateImageById(UUID id, UploadFileDto uploadFileDto) {
         Account account = findById(id);
         try {
@@ -182,7 +176,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional
     public void deleteById(UUID id) {
         Account account = findById(id);
         accountRepository.delete(account);
