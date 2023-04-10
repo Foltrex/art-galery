@@ -37,7 +37,7 @@ public class Proposal {
     @JoinColumn(name = "currency_id")
     private Currency currency;
 
-    private UUID artistAccountId;
+    private UUID accountId;
 
     @NotAudited
     @NotNull

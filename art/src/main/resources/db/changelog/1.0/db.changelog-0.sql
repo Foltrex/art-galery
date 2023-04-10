@@ -91,10 +91,39 @@ CREATE TABLE IF NOT EXISTS proposal (
     organization_confirmation BOOLEAN,
     price NUMERIC (19, 2),
     art_id UUID NOT NULL REFERENCES art (id),
-    artist_id UUID NOT NULL REFERENCES artist (id),
+    account_id UUID,
     facility_id UUID REFERENCES facility (id),
     organization_id UUID NOT NULL REFERENCES organization (id)
 );
+
+-- auto-generated definition
+create table revinfo
+(
+    rev      integer not null
+        primary key,
+    revtstmp bigint
+);
+
+-- auto-generated definition
+create table proposal_audit
+(
+    id                        uuid    not null,
+    revision_id               integer not null
+        constraint fkjvt1kkakx9b1pwsdiv3cbdy91
+            references revinfo,
+    revision_type             smallint,
+    artist_confirmation       boolean,
+    commission                double precision,
+    currency                  bigint,
+    organisation_confirmation boolean,
+    price                     numeric(19, 2),
+    organization_confirmation boolean,
+    account_id         uuid,
+    primary key (id, revision_id)
+);
+
+-- auto-generated definition
+create sequence hibernate_sequence;
 
 CREATE TABLE IF NOT EXISTS representative (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v1 (),

@@ -7,7 +7,6 @@ import com.scnsoft.art.entity.Proposal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,13 +14,13 @@ import java.util.UUID;
 public interface ProposalRepository extends JpaRepository<Proposal, UUID> {
     List<Proposal> findByOrganization(Organization organization);
 
-    Page<Proposal> findByArtistAccountId(UUID artistAccountId, Pageable pageable);
+    Page<Proposal> findByAccountId(UUID artistAccountId, Pageable pageable);
 
     List<Proposal> findByArt(Art art);
 
     Page<Proposal> findByFacility(Facility facility, Pageable pageable);
 
-    long countByArtistAccountIdAndArtistConfirmationIsNull(UUID artistAccountId);
+    long countByAccountIdAndArtistConfirmationIsNull(UUID artistAccountId);
 
     long countByFacilityAndArtistConfirmationIsNull(Facility facility);
 }

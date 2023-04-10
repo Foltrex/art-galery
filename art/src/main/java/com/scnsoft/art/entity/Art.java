@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,7 +37,7 @@ public class Art {
     @Builder.Default
     private Date dateCreation = new Date();
 
-    private UUID artistAccountId;
+    private UUID accountId;
 
     @Builder.Default
     @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)

@@ -112,7 +112,7 @@ public record ArtServiceImpl(
 
     @Override
     public Page<Art> findAllByArtistId(UUID artistId, Pageable pageable) {
-        return artRepository.findAllByArtistAccountId(artistId, pageable);
+        return null;
     }
 
     @Override
