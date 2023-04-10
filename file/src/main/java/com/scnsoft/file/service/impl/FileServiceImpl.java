@@ -67,7 +67,6 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    @Transactional
     public List<FileInfo> uploadFile(UploadFileDto uploadFileDto) {
         byte[] decodedImageData = Base64.getDecoder().decode(uploadFileDto.getData());
 
@@ -83,7 +82,6 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    @Transactional
     public void removeFileById(UUID id) {
         findFileInfoById(id).ifPresent(this::deleteFile);
     }
