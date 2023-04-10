@@ -38,8 +38,6 @@ import static com.scnsoft.user.repository.specification.AccountSpecification.use
 @RequiredArgsConstructor
 @Slf4j
 public class AccountServiceImpl implements AccountService {
-    private static final String ORGANIZATION_ROLE_KEY = "organizationRole";
-    private static final String ORGANIZATION_ID_KEY = "organizationId";
     private static final String OWNER_ORGANIZATION_ROLE = "CREATOR";
 
     private final List<String> administrativeOrganizationRoles = List.of(
@@ -66,11 +64,11 @@ public class AccountServiceImpl implements AccountService {
         }
         if (accountFilter.getOrganizationId() != null) {
             generalSpecification = generalSpecification
-                    .and(inMetadata("organizationId", accountFilter.getOrganizationId().toString()));
+                    .and(inMetadata(MetadataEnum.ORGANIZATION_ID.getValue(), accountFilter.getOrganizationId().toString()));
         }
         if (accountFilter.getCityId() != null) {
             generalSpecification = generalSpecification
-                    .and(inMetadata("city_id", accountFilter.getCityId().toString()));
+                    .and(inMetadata(MetadataEnum.CITY_ID.getValue(), accountFilter.getCityId().toString()));
         }
 
         Account loggedUser = accountSecurityHandler.getCurrentAccount();
@@ -79,20 +77,20 @@ public class AccountServiceImpl implements AccountService {
             case REPRESENTATIVE -> {
                 String organizationRole = metadataRepository
                         .findByMetadataIdAccountIdAndMetadataIdKey(
-                                loggedUser.getId(), ORGANIZATION_ROLE_KEY)
+                                loggedUser.getId(), MetadataEnum.ORGANIZATION_ROLE.getValue())
                         .map(Metadata::getValue)
                         .orElseThrow();
 
                 if (administrativeOrganizationRoles.contains(organizationRole)) {
                     String currentOrganizationIdString = loggedUser.getMetadata()
                             .stream()
-                            .filter(m -> m.getMetadataId().getKey().equals(ORGANIZATION_ID_KEY))
+                            .filter(m -> m.getMetadataId().getKey().equals(MetadataEnum.ORGANIZATION_ID.getValue()))
                             .findFirst()
                             .map(Metadata::getValue)
                             .orElseThrow();
 
                     generalSpecification = generalSpecification
-                            .and(inMetadata(ORGANIZATION_ID_KEY, currentOrganizationIdString));
+                            .and(inMetadata(MetadataEnum.ORGANIZATION_ID.getValue(), currentOrganizationIdString));
                     yield accountRepository.findAll(generalSpecification, pageable);
                 } else {
                     throw new IllegalArgumentException(
@@ -192,7 +190,7 @@ public class AccountServiceImpl implements AccountService {
         return switch (account.getAccountType()) {
             case REPRESENTATIVE -> {
                 Metadata metadata = metadataRepository
-                        .findByMetadataIdAccountIdAndMetadataIdKey(activeUserId, ORGANIZATION_ROLE_KEY)
+                        .findByMetadataIdAccountIdAndMetadataIdKey(activeUserId, MetadataEnum.ORGANIZATION_ROLE.getValue())
                         .orElseThrow();
                 yield OWNER_ORGANIZATION_ROLE.equals(metadata.getValue());
             }

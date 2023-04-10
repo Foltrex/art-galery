@@ -22,7 +22,6 @@ public interface EmailMessageCodeRepository extends JpaRepository<EmailMessageCo
                     "limit 1")
     Optional<EmailMessageCode> findLastByAccountId(@Param("accountId") UUID accountId);
 
-    @Transactional
     @Modifying
     @Query("update EmailMessageCode message set message.isValid = false where message.id=:emailMessageCodeId")
     void updateSetCodeIsInvalidById(@Param("emailMessageCodeId") UUID emailMessageCodeId);
