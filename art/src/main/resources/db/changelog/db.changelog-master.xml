@@ -8,4 +8,5 @@
       http://www.liquibase.org/xml/ns/pro 
       http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">  
     <includeAll path="db/changelog/1.0"/>  
-</databaseChangeLog> 
+    <includeAll path="db/changelog/2.0"/>
+</databaseChangeLog>

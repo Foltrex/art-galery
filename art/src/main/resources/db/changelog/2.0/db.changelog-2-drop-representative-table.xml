@@ -4,10 +4,11 @@
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-    <changeSet id="2023-03-29-drop-artist" author="Foltrex">
-        <dropTable cascadeConstraints="true"
+   <changeSet id="2023-03-29-drop-representative" author="Foltrex">
+       <preConditions onFail="MARK_RAN"><tableExists schemaName="public" tableName="representative"/></preConditions>
+     <dropTable cascadeConstraints="true"
          catalogName="art"
          schemaName="public"
-         tableName="artist"/>
-    </changeSet>
+         tableName="representative"/>
+   </changeSet>
 </databaseChangeLog>
