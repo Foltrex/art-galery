@@ -15,5 +15,5 @@ public class EntityFileInfoDto {
     private UUID id;
     private String mimeType;
     private Integer contentLength;
-    private Boolean primary;
+    private Boolean isPrimary;
 }
