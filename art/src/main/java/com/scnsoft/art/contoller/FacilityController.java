@@ -1,6 +1,7 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.FacilityDto;
+import com.scnsoft.art.dto.FacilityFilter;
 import com.scnsoft.art.facade.FacilityServiceFacade;
 import com.scnsoft.art.security.SecurityUtil;
 
@@ -37,21 +38,15 @@ public class FacilityController {
     @GetMapping
     public ResponseEntity<Page<FacilityDto>> findAll(
         Pageable pageable,
-        @RequestParam(required = false) UUID cityId,
-        @RequestParam(required = false, defaultValue = "") String facilityName,
-        @RequestParam(required = false) Boolean isActive
+        FacilityFilter filter
     ) {
         log.info("Current account id: {}", SecurityUtil.getCurrentAccountId());
-        return ResponseEntity.ok(facilityServiceFacade.findAll(pageable, cityId, facilityName, isActive));
+        return ResponseEntity.ok(facilityServiceFacade.findAll(pageable, filter));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<FacilityDto>> findAll(
-        @RequestParam UUID cityId,
-        @RequestParam String facilityName,
-        @RequestParam Boolean isActive
-    ) {
-        return ResponseEntity.ok(facilityServiceFacade.findAll(cityId, facilityName, isActive));
+    public ResponseEntity<List<FacilityDto>> findAll(FacilityFilter filter) {
+        return ResponseEntity.ok(facilityServiceFacade.findAll(filter));
     }
 
     @GetMapping("/{id}")

@@ -1,22 +1,17 @@
 package com.scnsoft.art.service.impl;
 
-import static com.scnsoft.art.repository.specification.FacilitySpecification.cityIdEqual;
-import static com.scnsoft.art.repository.specification.FacilitySpecification.facilityNameStartWith;
-import static com.scnsoft.art.repository.specification.FacilitySpecification.statusEqual;
-import static com.scnsoft.art.repository.specification.FacilitySpecification.idEqual;
-
 import java.util.List;
 import java.util.UUID;
 
+import com.scnsoft.art.dto.AccountType;
+import com.scnsoft.art.dto.FacilityFilter;
+import com.scnsoft.art.repository.specification.FacilitySpecification;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.google.common.base.Strings;
 import com.scnsoft.art.dto.AccountDto;
-import com.scnsoft.art.dto.AccountType;
 import com.scnsoft.art.dto.MetaData;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
@@ -81,9 +76,17 @@ public class FacilityServiceImpl implements FacilityService {
 
     @Override
     public Facility updateById(UUID id, Facility facility) {
-        Facility oldFacility = findById(id);
         facility.setId(id);
-        facility.setOrganization(oldFacility.getOrganization());
+        UUID currentAccountId = SecurityUtil.getCurrentAccountId();
+        AccountDto accountDto = accountFeignClient.findById(currentAccountId);
+        Organization organization;
+        if(accountDto.getAccountType() == AccountType.SYSTEM) {
+            organization = organizationService.findById(facility.getOrganization().getId());
+        } else {
+            Facility oldFacility = findById(id);
+            organization = oldFacility.getOrganization();
+        }
+        facility.setOrganization(organization);
         return facilityRepository.save(facility);
     }
 
@@ -119,28 +122,15 @@ public class FacilityServiceImpl implements FacilityService {
     @Override
     public Page<Facility> findAll(
         Pageable pageable, 
-        UUID cityId, 
-        String facilityName, 
-        Boolean isActive
+        FacilityFilter filter
     ) {
         UUID currentAccountId = SecurityUtil.getCurrentAccountId();
         AccountDto accountDto = accountFeignClient.findById(currentAccountId);
 
-        Specification<Facility> generalSpecification = Specification.where(null);
-        
-        if (cityId != null) {
-            generalSpecification = generalSpecification.and(cityIdEqual(cityId));
-        }
-        if (!Strings.isNullOrEmpty(facilityName)) {
-            generalSpecification = generalSpecification.and(facilityNameStartWith(facilityName));
-        }
-        if (isActive != null) {
-            generalSpecification = generalSpecification.and(statusEqual(isActive));
-        }
-
         switch (accountDto.getAccountType()) {
             case SYSTEM:
             case ARTIST: {
+                Specification<Facility> generalSpecification = new FacilitySpecification(filter);
                 return facilityRepository.findAll(generalSpecification, pageable);
             }
             case REPRESENTATIVE: {
@@ -148,15 +138,14 @@ public class FacilityServiceImpl implements FacilityService {
                     .findByKeyAndAccountId(currentAccountId, ORGANIZATION_ROLE_KEY);
                 String organizationRole = organizationRoleMetadata.getValue();
                 if (administrativeOrganizationRoles.contains(organizationRole)) {
+                    Specification<Facility> generalSpecification = new FacilitySpecification(filter);
                     return facilityRepository.findAll(generalSpecification, pageable);
                 } else {
                     MetaData facilityMetadata = metadataFeignClient
                         .findByKeyAndAccountId(currentAccountId, FACILITY_KEY);
                     UUID facilityId = UUID.fromString(facilityMetadata.getValue());
-                    Specification<Facility> nonAdministrativeRepresentativeSpecification
-                        = generalSpecification.and(idEqual(facilityId));
-
-                    return facilityRepository.findAll(nonAdministrativeRepresentativeSpecification, pageable);
+                    filter.setId(facilityId);
+                    return facilityRepository.findAll(new FacilitySpecification(filter), pageable);
                 }
             }
             default: {
@@ -166,40 +155,29 @@ public class FacilityServiceImpl implements FacilityService {
     }
 
     @Override
-    public List<Facility> findAll(
-        UUID cityId, 
-        String facilityName, 
-        Boolean isActive
-    ) {
+    public List<Facility> findAll(FacilityFilter filter) {
         UUID currentAccountId = SecurityUtil.getCurrentAccountId();
         AccountDto accountDto = accountFeignClient.findById(currentAccountId);
 
-        Specification<Facility> generalSpecification = cityIdEqual(currentAccountId)
-            .and(facilityNameStartWith(facilityName));
-        
-        if (isActive != null) {
-            generalSpecification = generalSpecification.and(statusEqual(isActive));
-        }
 
         switch (accountDto.getAccountType()) {
             case SYSTEM:
             case ARTIST: {
-                return facilityRepository.findAll(generalSpecification);
+                return facilityRepository.findAll(new FacilitySpecification(filter));
             }
             case REPRESENTATIVE: {
                 MetaData organizationRoleMetadata = metadataFeignClient
                     .findByKeyAndAccountId(currentAccountId, ORGANIZATION_ROLE_KEY);
                 String organizationRole = organizationRoleMetadata.getValue();
                 if (administrativeOrganizationRoles.contains(organizationRole)) {
-                    return facilityRepository.findAll(generalSpecification);
+                    return facilityRepository.findAll(new FacilitySpecification(filter));
                 } else {
                     MetaData facilityMetadata = metadataFeignClient
                         .findByKeyAndAccountId(currentAccountId, FACILITY_KEY);
                     UUID facilityId = UUID.fromString(facilityMetadata.getValue());
-                    Specification<Facility> nonAdministrativeRepresentativeSpecification
-                        = generalSpecification.and(idEqual(facilityId));
-                        
-                    return facilityRepository.findAll(nonAdministrativeRepresentativeSpecification);
+                    filter.setId(facilityId);
+
+                    return facilityRepository.findAll(new FacilitySpecification(filter));
                 }
             }
             default: {

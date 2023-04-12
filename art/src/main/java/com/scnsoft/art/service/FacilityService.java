@@ -1,5 +1,6 @@
 package com.scnsoft.art.service;
 
+import com.scnsoft.art.dto.FacilityFilter;
 import com.scnsoft.art.entity.Facility;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +16,9 @@ public interface FacilityService {
 
     Page<Facility> findAll(Pageable pageable);
 
-    Page<Facility> findAll(Pageable pageable, UUID cityId, String facilityName, Boolean isActive);
+    Page<Facility> findAll(Pageable pageable, FacilityFilter filter);
 
-    List<Facility> findAll(UUID cityId, String facilityName, Boolean isActive);
+    List<Facility> findAll(FacilityFilter filter);
 
     Page<Facility> findAllByOrganizationId(UUID organizationId, Pageable pageable);
 

@@ -1,6 +1,7 @@
 package com.scnsoft.art.facade;
 
 import com.scnsoft.art.dto.FacilityDto;
+import com.scnsoft.art.dto.FacilityFilter;
 import com.scnsoft.art.dto.mapper.FacilityMapper;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.service.FacilityService;
@@ -21,17 +22,15 @@ public class FacilityServiceFacade {
     private final FacilityMapper facilityMapper;
 
 
-    public Page<FacilityDto> findAll(Pageable pageable, UUID cityId, String facilityName, Boolean isActive) {
-        var page = facilityService.findAll(pageable, cityId, facilityName, isActive);
+    public Page<FacilityDto> findAll(Pageable pageable, FacilityFilter filter) {
+        var page = facilityService.findAll(pageable, filter);
         return facilityMapper.mapPageToDto(page);
     }
 
     public List<FacilityDto> findAll(
-        UUID cityId, 
-        String facilityName, 
-        Boolean isActive
+        FacilityFilter filter
     ) {
-        return facilityService.findAll(cityId, facilityName, isActive)
+        return facilityService.findAll(filter)
                 .stream()
                 .map(facilityMapper::mapToDto)
                 .toList();
