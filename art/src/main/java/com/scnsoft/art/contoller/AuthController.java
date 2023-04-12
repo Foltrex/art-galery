@@ -1,12 +1,15 @@
 package com.scnsoft.art.contoller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scnsoft.art.dto.AccountDto;
+import com.scnsoft.art.dto.ErrorDto;
 import com.scnsoft.art.dto.MetaData;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.feignclient.AuthFeignClient;
 import com.scnsoft.art.service.FacilityService;
 import com.scnsoft.art.service.OrganizationService;
+import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.UUID;
 
 
@@ -75,11 +79,18 @@ public class AuthController {
                                 .build());
             }
         }
-        var createAccount = authFeignClient.register(accountDto);
-        if (createAccount.getStatusCode().equals(HttpStatus.CREATED)) {
-            return createAccount;
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.valueOf(createAccount.getBody()));
+        try {
+            return authFeignClient.register(accountDto);
+        } catch (FeignException e) {
+            String message;
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                ErrorDto errorDto = objectMapper.readValue(e.contentUTF8(), ErrorDto.class);
+                message = errorDto.getMessage();
+            } catch (IOException ex) {
+                message = "Something went wrong";
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
         }
     }
 }
