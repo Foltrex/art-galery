@@ -38,6 +38,11 @@ public class CityController {
         return cityServiceFacade.findAll();
     }
 
+    @GetMapping("/{id}")
+    public CityDto findById(@PathVariable("id") UUID id) {
+        return cityServiceFacade.findById(id);
+    }
+
     @PostMapping
     public ResponseEntity<CityDto> save(@RequestBody CityDto cityDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cityServiceFacade.save(cityDto));

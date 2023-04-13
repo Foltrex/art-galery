@@ -1,10 +1,18 @@
 package com.scnsoft.user.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import com.scnsoft.user.dto.AccountFilter;
+import com.scnsoft.user.dto.MetadataDto;
+import com.scnsoft.user.entity.Account;
+import com.scnsoft.user.entity.MetadataId;
+import liquibase.pro.packaged.M;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -61,26 +69,40 @@ public class AccountController {
 
     //@Todo make facade later
     @PutMapping("/{id}")
-    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, id)")
+    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, #id)")
     public ResponseEntity<AccountDto> updateById(@PathVariable UUID id, @Valid @RequestBody AccountDto request) {
+        List<Metadata> metadataList = new ArrayList<>(Optional.ofNullable(request.getMetadata())
+                .orElse(new ArrayList<>())
+                .stream()
+                .map(m -> {
+                    Metadata result = new Metadata();
+                    result.setValue(m.getValue());
+                    MetadataId metadataId = new MetadataId();
+                    metadataId.setAccountId(id);
+                    metadataId.setKey(m.getKey());
+                    result.setMetadataId(metadataId);
+                    return result;
+                }).toList());//toList return unmodifiable collection, need to wrap into array list
+        Account account = accountMapper.mapToEntity(request);
+        account.setMetadata(metadataList);
         return ResponseEntity.ok(accountMapper.mapToDto(
-                accountService.updateById(id, accountMapper.mapToEntity(request))));
+                accountService.updateById(id, account)));
     }
 
     @PatchMapping("/{id}/password")
-    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, id)")
+    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, #id)")
     public void updatePassword(@PathVariable UUID id, @Valid @RequestBody UpdatePasswordRequest request) {
         accountService.updatePasswordById(id, request);
     }
 
     @PatchMapping("/{id}/account-image")
-    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, id)")
+    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, #id)")
     public void updateAccountImage(@PathVariable UUID id, @Valid @RequestBody UploadFileDto request) {
         accountService.updateImageById(id, request);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, id)")
+    @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, #id)")
     public void deleteById(@PathVariable UUID id) {
         accountService.deleteById(id);
     }
