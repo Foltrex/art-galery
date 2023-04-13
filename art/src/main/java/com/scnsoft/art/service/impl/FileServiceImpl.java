@@ -68,4 +68,15 @@ public class FileServiceImpl implements FileService {
 
         return List.of(entityFileOriginal, entityFileThumbnail);
     }
+
+    @Override
+    public EntityFile findById(UUID id) {
+        return entityFileRepository.findById(id)
+            .orElseThrow();
+    }
+
+    @Override
+    public EntityFile save(EntityFile entityFile) {
+        return entityFileRepository.save(entityFile);
+    }
 }

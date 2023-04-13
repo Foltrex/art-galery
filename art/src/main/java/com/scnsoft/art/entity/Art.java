@@ -10,6 +10,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -34,10 +38,22 @@ public class Art {
     private String name;
     private String description;
 
-    @Builder.Default
-    private Date dateCreation = new Date();
+    private Date dateCreation;
 
-    private UUID accountId;
+    private UUID artistAccountId;
+
+    @ManyToOne
+    @JoinColumn(name = "art_size_id")
+    private ArtSize artSize;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+        name = "art_art_style",
+        joinColumns = @JoinColumn(name="art_id"),
+        inverseJoinColumns = @JoinColumn(name="art_style_id")
+    )
+    private List<ArtStyle> artStyles = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)

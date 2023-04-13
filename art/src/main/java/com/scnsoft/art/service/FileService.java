@@ -11,4 +11,8 @@ public interface FileService {
     List<EntityFile> findAllByEntityId(UUID entityId);
 
     List<EntityFile> uploadFile(UploadEntityFileDto uploadEntityFileDto);
+
+    EntityFile findById(UUID id);
+
+    EntityFile save(EntityFile entityFile);
 }

@@ -29,7 +29,6 @@ public class EntityFile {
     }
 
     @Id
-    @GeneratedValue
     private UUID id;
 
     private UUID entityId;
