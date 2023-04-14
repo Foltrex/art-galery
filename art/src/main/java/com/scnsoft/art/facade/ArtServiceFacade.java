@@ -45,6 +45,10 @@ public class ArtServiceFacade {
         artService.deleteById(id);
     }
 
+    public void deleteByAccountId(UUID accountId) {
+        artService.deleteByAccountId(accountId);
+    }
+
     public Page<ArtDto> findAll(Pageable pageable, String artistName, String cityName, String artNameAndDescription) {
         Page<Art> artPage = artService.findAll(
                 pageable,

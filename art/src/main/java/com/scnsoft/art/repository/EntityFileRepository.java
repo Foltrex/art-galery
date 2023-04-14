@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface EntityFileRepository extends JpaRepository<EntityFile, UUID> {
 
     List<EntityFile> findAllByEntityId(UUID entityId);
+
+    void deleteByEntityId(UUID artId);
 }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ArtRepository extends JpaRepository<Art, UUID>, JpaSpecificationExecutor<Art> {
@@ -18,6 +19,8 @@ public interface ArtRepository extends JpaRepository<Art, UUID>, JpaSpecificatio
 
     @Query("SELECT a FROM Art a WHERE a.artInfos IS EMPTY")
     Page<Art> findAllByArtInfosIsEmpty(Pageable pageable);
+    
+    Optional<Art> findByArtistAccountId(UUID artistAccountId);
 
 //    Page<Art> findAllByArtistAccountId(UUID artistAccountId, Pageable pageable);
 //

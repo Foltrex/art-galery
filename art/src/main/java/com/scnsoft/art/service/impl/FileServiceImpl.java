@@ -79,4 +79,15 @@ public class FileServiceImpl implements FileService {
     public EntityFile save(EntityFile entityFile) {
         return entityFileRepository.save(entityFile);
     }
+
+    @Override
+    public void deleteByArtId(UUID artId) {
+        entityFileRepository.findAllByEntityId(artId)
+            .stream()
+            .forEach(file -> {
+                fileFeignClient.removeFileById(file.getId());
+                entityFileRepository.delete(file);
+            });
+        
+    }
 }

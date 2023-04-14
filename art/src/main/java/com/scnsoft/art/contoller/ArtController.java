@@ -54,9 +54,14 @@ public class ArtController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
-        fileFeignClient.deleteByArtId(id);
+        // fileFeignClient.deleteByArtId(id);
         artServiceFacade.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/accounts/{id}")
+    public void deleteByAccountId(@PathVariable UUID id) {
+        artServiceFacade.deleteByAccountId(id);
     }
 
     @GetMapping("/artists/{artistId}")

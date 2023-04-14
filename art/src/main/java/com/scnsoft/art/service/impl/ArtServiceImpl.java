@@ -8,8 +8,6 @@ import static com.scnsoft.art.repository.specification.ArtSpecification.descript
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.criteria.Join;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,16 +18,19 @@ import com.scnsoft.art.dto.mapper.ArtMapper;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.AccountFeignClient;
+import com.scnsoft.art.feignclient.FileFeignClient;
 import com.scnsoft.art.repository.ArtInfoRepository;
 import com.scnsoft.art.repository.ArtRepository;
 import com.scnsoft.art.service.ArtService;
+import com.scnsoft.art.service.FileService;
 
 @Service
 public record ArtServiceImpl(
         ArtRepository artRepository,
         ArtInfoRepository artInfoRepository,
         AccountFeignClient accountFeignClient,
-        ArtMapper artMapper
+        ArtMapper artMapper,
+        FileService fileService
 ) implements ArtService {
     private static final String EXHIBITED_ARTS = "exhibited";
     private static final String FREE_ARTS = "free";
@@ -141,5 +142,14 @@ public record ArtServiceImpl(
         }
 
         return artRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public void deleteByAccountId(UUID accountId) {
+        Art art = artRepository.findByArtistAccountId(accountId)
+            .orElseThrow();
+    
+        fileService.deleteByArtId(art.getId());
+        this.deleteById(art.getId());
     }
 }

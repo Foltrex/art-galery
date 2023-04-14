@@ -7,8 +7,10 @@ import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Metadata;
 import com.scnsoft.user.entity.MetadataId;
+import com.scnsoft.user.entity.Account.AccountType;
 import com.scnsoft.user.entity.constant.MetadataEnum;
 import com.scnsoft.user.exception.ResourseNotFoundException;
+import com.scnsoft.user.feignclient.ArtFeignClient;
 import com.scnsoft.user.feignclient.FileFeignClient;
 import com.scnsoft.user.payload.UpdatePasswordRequest;
 import com.scnsoft.user.repository.AccountRepository;
@@ -46,6 +48,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final FileFeignClient fileFeignClient;
+    private final ArtFeignClient artFeignClient;
     private final MetadataRepository metadataRepository;
     private final AccountSecurityHandler accountSecurityHandler;
 
@@ -175,7 +178,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deleteById(UUID id) {
-        Account account = findById(id);
+        Account account = this.findById(id);
+        if (account.getAccountType() == AccountType.ARTIST) {
+            artFeignClient.deleteByAccountId(id);
+        }
+
         accountRepository.delete(account);
     }
 

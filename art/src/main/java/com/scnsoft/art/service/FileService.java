@@ -15,4 +15,6 @@ public interface FileService {
     EntityFile findById(UUID id);
 
     EntityFile save(EntityFile entityFile);
+
+    void deleteByArtId(UUID artId);
 }

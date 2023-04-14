@@ -18,7 +18,6 @@ public interface FileFeignClient {
     @PostMapping("")
     List<FileInfoDto> uploadFile(@RequestBody UploadFileDto uploadFileDto);
 
-    //@TODO REMOVE
-    @DeleteMapping("/arts/{artId}")
-    ResponseEntity<Void> deleteByArtId(@PathVariable("artId") UUID artId);
+    @DeleteMapping("/{id}")
+    public void removeFileById(@PathVariable("id") UUID id);
 }
