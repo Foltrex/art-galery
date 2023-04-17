@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.scnsoft.user.dto.mapper.AccountMapper;
 import com.scnsoft.user.dto.mapper.MetadataMapper;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.EmailMessageCode;
@@ -34,6 +35,7 @@ import com.scnsoft.user.service.AuthService;
 import com.scnsoft.user.service.EmailMessageCodeService;
 import com.scnsoft.user.util.AuthHelperUtil;
 import com.scnsoft.user.util.NumberGeneratorUtil;
+import com.scnsoft.user.util.PasswordGeneratorUtil;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
     private final NotificationFeignClient notificationFeignClient;
     private final EmailMessageCodeService emailMessageService;
     private final MetadataRepository metadataRepository;
+    private final AccountMapper accountMapper;
     private final MetadataMapper metadataMapper;
 
     @Override
@@ -110,45 +113,50 @@ public class AuthServiceImpl implements AuthService {
         return accountAuthenticationHelperServiceImpl.createAuthTokenResponse(account);
     }
 
-    // @Override
-    // public RepresentativeDto registerRepresentative(RegisterRepresentativeRequest registerRepresentativeRequest) {
-    //     if (accountRepository.findByEmail(registerRepresentativeRequest.getEmail()).isPresent()) {
-    //         throw new LoginAlreadyExistsException("Email is already in use!");
-    //     }
+    @Override
+    public AccountDto registerUser(AccountDto registeringUser) {
+        if (accountRepository.findByEmail(registeringUser.getEmail()).isPresent()) {
+            throw new LoginAlreadyExistsException("Email is already in use!");
+        }
 
-    //     String password = PasswordGeneratorUtil.generate(10);
+        String password = PasswordGeneratorUtil.generate(10);
 
-    //     Account account = accountAuthenticationHelperServiceImpl.createAccount(
-    //         registerRepresentativeRequest.getEmail(), registerRepresentativeRequest.getFirstname(), registerRepresentativeRequest.getLastname(), 
-    //         password, 
-    //         Account.AccountType.REPRESENTATIVE
-    //     );
+        String encodedPassword = accountAuthenticationHelperServiceImpl.encodePassword(password);
+        
+        Account account = accountMapper.mapToEntity(registeringUser);
+        account.setMetadata(null);
+        account.setPassword(encodedPassword);
+        account.setIsOneTimePassword(true);
 
-    //     account.setIsOneTimePassword(true);
+        Account persistedUser = accountRepository.save(account);
 
-    //     accountRepository.save(account);
+        List<Metadata> metadata = metadataMapper.mapToList(
+            registeringUser.getMetadata(), 
+            persistedUser.getId()
+        );
+        metadataRepository.saveAll(metadata);
 
 
-    //     Map<String, String> properties = new HashMap<>();
-    //     // properties.put("firstname", registerRepresentativeRequest.getFirstname());
-    //     // properties.put("lastname", registerRepresentativeRequest.getLastname());
-    //     properties.put("password", password);
+        Map<String, String> properties = new HashMap<>();
+        properties.put("firstname", persistedUser.getFirstName());
+        properties.put("lastname", persistedUser.getLastName());
+        properties.put("password", password);
 
-    //     try {
-    //         notificationFeignClient.sendMessage(EmailMessagePayload.builder()
-    //                 .receiver(registerRepresentativeRequest.getEmail())
-    //                 .subject("Account registration")
-    //                 .templateFile(TemplateFile.REPRESENTATIVE_REGISTRATION)
-    //                 .properties(properties)
-    //                 .build()
-    //         );
-    //     } catch (FeignException e) {
-    //         accountRepository.delete(account);
-    //         throw new FeignResponseException(e);
-    //     }
+        try {
+            notificationFeignClient.sendMessage(EmailMessagePayload.builder()
+                    .receiver(registeringUser.getEmail())
+                    .subject("Account registration")
+                    .templateFile(TemplateFile.USER_REGISTRATION)
+                    .properties(properties)
+                    .build()
+            );
+        } catch (FeignException e) {
+            accountRepository.delete(account);
+            throw new FeignResponseException(e);
+        }
 
-    //     return representativeDto;
-    // }
+        return accountMapper.mapToDto(persistedUser);
+    }
 
     @Override
     public void sendPasswordRecoveryCode(String receiver) {

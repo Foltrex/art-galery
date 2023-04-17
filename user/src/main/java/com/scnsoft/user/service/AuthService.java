@@ -11,7 +11,7 @@ public interface AuthService {
 
     AuthToken login(LoginRequest loginRequest);
 
-    // RepresentativeDto registerRepresentative(RegisterRepresentativeRequest registerRepresentativeRequest);
+    AccountDto registerUser(AccountDto registeringUser);
 
     void sendPasswordRecoveryCode(String receiver);
 

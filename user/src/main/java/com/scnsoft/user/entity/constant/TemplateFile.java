@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum TemplateFile {
-    REPRESENTATIVE_REGISTRATION("representative_registration.ftl"),
+    USER_REGISTRATION("user_registration.ftl"),
     PASSWORD_RECOVERY("password_recovery.ftl");
 
     private final String name;

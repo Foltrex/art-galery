@@ -38,12 +38,12 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    // @PostMapping("/register-representative")
-    // // @PreAuthorize("isAuthenticated()")
-    // public ResponseEntity<RepresentativeDto> registerRepresentative(
-    //         @Valid @RequestBody RegisterRepresentativeRequest request) {
-    //     return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerRepresentative(request));
-    // }
+    @PostMapping("/register-user")
+    // @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<AccountDto> registerUser(
+            @Valid @RequestBody AccountDto registeringUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerUser(registeringUser));
+    }
 
     @PostMapping("/password-recovery-code")
     @PreAuthorize("permitAll()")

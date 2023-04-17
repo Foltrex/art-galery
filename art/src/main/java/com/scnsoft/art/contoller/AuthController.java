@@ -1,5 +1,6 @@
 package com.scnsoft.art.contoller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.ErrorDto;
@@ -28,7 +29,6 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.UUID;
-
 
 @RestController
 @RequestMapping("auth")
@@ -90,6 +90,28 @@ public class AuthController {
             } catch (IOException ex) {
                 message = "Something went wrong";
             }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+        }
+    }
+
+    @PostMapping("/register-user")
+    public ResponseEntity<AccountDto> registerUser(@Valid @RequestBody AccountDto registeringUser) {
+        try {
+            return authFeignClient.registerUser(registeringUser);
+        } catch (FeignException e) {
+            String message;
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                ErrorDto errorDto = objectMapper.readValue(
+                    e.contentUTF8(), 
+                    ErrorDto.class
+                );
+                
+                message = errorDto.getMessage();
+            } catch (JsonProcessingException ex) {
+                message = "Something went wrong";
+            }
+
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
         }
     }

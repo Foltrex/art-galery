@@ -13,6 +13,7 @@ import com.scnsoft.user.entity.MetadataId;
 @Mapper(componentModel = "spring")
 public abstract class MetadataMapper {
     @Mapping(target = "value", source = "metadataDto.value")
+    @Mapping(target = "metadataId.key", source = "metadataDto.key")
     public abstract Metadata mapToEntity(MetadataDto metadataDto);
 
     @Mapping(target = "key", source = "metadata.metadataId.key")
