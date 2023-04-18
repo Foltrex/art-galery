@@ -19,5 +19,5 @@ public interface FileFeignClient {
     List<FileInfoDto> uploadFile(@RequestBody UploadFileDto uploadFileDto);
 
     @DeleteMapping("/{id}")
-    public void removeFileById(@PathVariable("id") UUID id);
+    void removeFileById(@PathVariable("id") UUID id);
 }

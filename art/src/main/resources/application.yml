@@ -34,6 +34,14 @@ spring:
     open-in-view: false
   liquibase:
     changeLog: classpath:db/changelog/db.changelog-master.xml
+  rabbitmq:
+    queue: account.queue
+    host: localhost
+    username: username
+    password: password
+    port: 15672
+    routing-key: user.routing-key
+    exchange: user.exchange
 eureka:
   client:
     service-url:

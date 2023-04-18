@@ -38,7 +38,6 @@ import static com.scnsoft.user.repository.specification.AccountSpecification.use
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AccountServiceImpl implements AccountService {
     private static final String OWNER_ORGANIZATION_ROLE = "CREATOR";
 

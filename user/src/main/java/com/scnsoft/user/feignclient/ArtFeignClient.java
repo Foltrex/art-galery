@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ArtFeignClient {
 
     @DeleteMapping("/accounts/{id}")
-    public void deleteByAccountId(@PathVariable("id") UUID id);
+    void deleteByAccountId(@PathVariable("id") UUID id);
 }

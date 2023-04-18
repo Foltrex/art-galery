@@ -22,7 +22,7 @@ public interface AuthFeignClient {
 
 
     @PostMapping("/register-user")
-    public ResponseEntity<AccountDto> registerUser(@Valid @RequestBody AccountDto registeringUser);
+    ResponseEntity<AccountDto> registerUser(@Valid @RequestBody AccountDto registeringUser);
 
 
     @GetMapping("/{id}")
