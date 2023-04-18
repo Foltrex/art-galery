@@ -58,7 +58,7 @@ public class AuthController {
             case REPRESENTATIVE -> {
                 Organization organization = organizationService.save(Organization.builder()
                         .id(UUID.randomUUID())
-                        .status(Organization.Status.NEW)
+                        .status(Organization.Status.ACTIVE)
                         .name(accountDto.getFirstName() + " " + accountDto.getLastName() + " org")
                         .build());
                 facilityService.save(Facility.builder()

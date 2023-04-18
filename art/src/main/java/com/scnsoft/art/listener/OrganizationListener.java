@@ -8,7 +8,7 @@ public class OrganizationListener {
 
     @PrePersist
     private void beforePersist(Organization organization) {
-        organization.setStatus(Organization.Status.NEW);
+        organization.setStatus(Organization.Status.ACTIVE);
     }
 
 }

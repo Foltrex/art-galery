@@ -36,7 +36,6 @@ import lombok.NoArgsConstructor;
 public class Organization {
 
     public enum Status {
-        NEW,
         ACTIVE,
         INACTIVE
     }
