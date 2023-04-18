@@ -18,7 +18,6 @@ import com.scnsoft.art.dto.mapper.ArtMapper;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.AccountFeignClient;
-import com.scnsoft.art.feignclient.FileFeignClient;
 import com.scnsoft.art.repository.ArtInfoRepository;
 import com.scnsoft.art.repository.ArtRepository;
 import com.scnsoft.art.service.ArtService;
@@ -146,10 +145,9 @@ public record ArtServiceImpl(
 
     @Override
     public void deleteByAccountId(UUID accountId) {
-        Art art = artRepository.findByArtistAccountId(accountId)
-            .orElseThrow();
-    
-        fileService.deleteByArtId(art.getId());
-        this.deleteById(art.getId());
+        artRepository.findByArtistAccountId(accountId).forEach(art -> {
+            fileService.deleteByArtId(art.getId());
+            this.deleteById(art.getId());
+        });
     }
 }

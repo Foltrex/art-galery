@@ -20,7 +20,7 @@ public interface ArtRepository extends JpaRepository<Art, UUID>, JpaSpecificatio
     @Query("SELECT a FROM Art a WHERE a.artInfos IS EMPTY")
     Page<Art> findAllByArtInfosIsEmpty(Pageable pageable);
     
-    Optional<Art> findByArtistAccountId(UUID artistAccountId);
+    List<Art> findByArtistAccountId(UUID artistAccountId);
 
 //    Page<Art> findAllByArtistAccountId(UUID artistAccountId, Pageable pageable);
 //
