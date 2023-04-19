@@ -1,9 +1,12 @@
 package com.scnsoft.art.contoller;
 
+import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.ArtDto;
 import com.scnsoft.art.facade.ArtServiceFacade;
 import com.scnsoft.art.feignclient.FileFeignClient;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,11 @@ import java.util.UUID;
 public class ArtController {
     private final ArtServiceFacade artServiceFacade;
     private final FileFeignClient fileFeignClient;
+
+    @RabbitListener(queues = "${spring.rabbitmq.queue}")
+    public void deleteRelatedAccountData(AccountDto accountDto) {
+        artServiceFacade.deleteByAccountId(accountDto.getId());
+    }
 
     @GetMapping
     public Page<ArtDto> findAll(
@@ -59,10 +67,11 @@ public class ArtController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/accounts/{id}")
-    public void deleteByAccountId(@PathVariable UUID id) {
-        artServiceFacade.deleteByAccountId(id);
-    }
+    // @DeleteMapping("/accounts/{id}")
+    // public void deleteByAccountId(@PathVariable UUID id) {
+    //     artServiceFacade.deleteByAccountId(id);
+    // }
+    
 
     @GetMapping("/artists/{artistId}")
     public Page<ArtDto> findAllByArtistId(@PathVariable UUID artistId, Pageable pageable) {

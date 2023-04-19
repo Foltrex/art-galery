@@ -1,9 +1,11 @@
 package com.scnsoft.user.service.impl;
 
 import com.netflix.servo.util.Strings;
+import com.scnsoft.user.dto.AccountDto;
 import com.scnsoft.user.dto.AccountFilter;
 import com.scnsoft.user.dto.FileInfoDto;
 import com.scnsoft.user.dto.UploadFileDto;
+import com.scnsoft.user.dto.mapper.AccountMapper;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.Metadata;
 import com.scnsoft.user.entity.MetadataId;
@@ -17,6 +19,8 @@ import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.repository.MetadataRepository;
 import com.scnsoft.user.security.aop.AccountSecurityHandler;
 import com.scnsoft.user.service.AccountService;
+import com.scnsoft.user.service.RabbitMQSender;
+
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +54,8 @@ public class AccountServiceImpl implements AccountService {
     private final ArtFeignClient artFeignClient;
     private final MetadataRepository metadataRepository;
     private final AccountSecurityHandler accountSecurityHandler;
+    private final RabbitMQSender<AccountDto> rabbitMQSender;
+    private final AccountMapper accountMapper;
 
 
     @Override
@@ -178,10 +184,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteById(UUID id) {
         Account account = this.findById(id);
-        if (account.getAccountType() == AccountType.ARTIST) {
-            artFeignClient.deleteByAccountId(id);
-        }
+        // if (account.getAccountType() == AccountType.ARTIST) {
+        //     artFeignClient.deleteByAccountId(id);
+        // }
 
+        rabbitMQSender.send(accountMapper.mapToDto(account));
         accountRepository.delete(account);
     }
 

@@ -141,19 +141,13 @@ public class AuthServiceImpl implements AuthService {
         properties.put("firstname", persistedUser.getFirstName());
         properties.put("lastname", persistedUser.getLastName());
         properties.put("password", password);
-
-        try {
-            notificationFeignClient.sendMessage(EmailMessagePayload.builder()
-                    .receiver(registeringUser.getEmail())
-                    .subject("Account registration")
-                    .templateFile(TemplateFile.USER_REGISTRATION)
-                    .properties(properties)
-                    .build()
-            );
-        } catch (FeignException e) {
-            accountRepository.delete(account);
-            throw new FeignResponseException(e);
-        }
+        
+        notificationFeignClient.sendMessage(EmailMessagePayload.builder()
+            .receiver(registeringUser.getEmail())
+            .subject("Account registration")
+            .templateFile(TemplateFile.USER_REGISTRATION)
+            .properties(properties)
+            .build());
 
         return accountMapper.mapToDto(persistedUser);
     }

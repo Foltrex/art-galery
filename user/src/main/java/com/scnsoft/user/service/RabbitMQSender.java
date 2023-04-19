@@ -14,10 +14,7 @@ public class RabbitMQSender<T> {
     @Value("${spring.rabbitmq.exchange}")
     private String exchange;
 
-    @Value("${spring.rabbitmq.routing-key}")
-    private String routingKey;
-
     public void send(T item) {
-        rabbitTemplate.convertAndSend(exchange, routingKey, item);
+        rabbitTemplate.convertAndSend(exchange, "", item);
     }
 }

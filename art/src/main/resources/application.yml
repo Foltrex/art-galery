@@ -37,11 +37,10 @@ spring:
   rabbitmq:
     queue: account.queue
     host: localhost
-    username: username
+    username: user
     password: password
     port: 15672
-    routing-key: user.routing-key
-    exchange: user.exchange
+    exchange: delete-account.exhcange
 eureka:
   client:
     service-url:

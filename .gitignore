@@ -38,3 +38,6 @@ out/
 
 ### Postgre volumes
 /data
+
+### Stored Images ###
+file/file/src/main/resources/storage

@@ -44,8 +44,7 @@ spring:
     port: 15672
     username: user
     password: password
-    exchange: account.exhcange
-    routing-key: account.exchange
+    exchange: delete-account.exhcange
 
 # ------------> Eureka Client <---------------
 eureka:

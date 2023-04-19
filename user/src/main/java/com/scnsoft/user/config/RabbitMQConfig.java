@@ -22,7 +22,7 @@ public class RabbitMQConfig {
     private String password;
 
     @Bean
-    private CachingConnectionFactory connectionFactory() {
+    public CachingConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory(host);
         connectionFactory.setUsername(username);
         connectionFactory.setPassword(password);
@@ -30,7 +30,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    private MessageConverter jsonMessageConverter() {
+    public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
