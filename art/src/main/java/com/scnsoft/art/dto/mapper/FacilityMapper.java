@@ -1,15 +1,15 @@
 package com.scnsoft.art.dto.mapper;
 
-import com.scnsoft.art.dto.FacilityDto;
-import com.scnsoft.art.entity.Facility;
-import com.scnsoft.art.dto.mapper.AddressMapper;
+import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import com.scnsoft.art.dto.FacilityDto;
+import com.scnsoft.art.entity.Facility;
 
 @Mapper(componentModel = "spring", uses = {OrganizationMapper.class, AddressMapper.class})
 public abstract class FacilityMapper {

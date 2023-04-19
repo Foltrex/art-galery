@@ -1,10 +1,11 @@
 package com.scnsoft.art.service.impl;
 
-import static com.scnsoft.art.repository.specification.OrganizationSpecification.nameStartsWith;
-import static com.scnsoft.art.repository.specification.OrganizationSpecification.statusEquals;
-
 import java.util.List;
 import java.util.UUID;
+
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
+import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.OrganizationRepository;
@@ -36,14 +38,17 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Page<Organization> findAll(Pageable pageable, String name, String status) {
         System.out.println("name = " + name);
         System.out.println("status = " + status);
-        Specification<Organization> specification = Specification.where(null);
+        Specification<Organization> specification = (root, cq, cb) -> {
+            root.fetch("facilities", JoinType.INNER);
+            return cb.conjunction();
+        };
 
-        if (!Strings.isNullOrEmpty(name)) {
-            specification = specification.and(nameStartsWith(name));
-        }
-        if (!Strings.isNullOrEmpty(status)) {
-            specification = specification.and(statusEquals(Organization.Status.valueOf(status)));
-        }
+        // if (!Strings.isNullOrEmpty(name)) {
+        //     specification = specification.and(nameStartsWith(name));
+        // }
+        // if (!Strings.isNullOrEmpty(status)) {
+        //     specification = specification.and(statusEquals(Organization.Status.valueOf(status)));
+        // }
 
         return organizationRepository.findAll(specification, pageable);
     }
