@@ -10,7 +10,7 @@ import java.util.UUID;
 @Setter
 public class AccountFilter {
 
-    private String username;
+    private String name;
     private Account.AccountType usertype;
     private UUID organizationId;
     private UUID cityId;

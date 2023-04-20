@@ -2,8 +2,8 @@ package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.ArtDto;
+import com.scnsoft.art.dto.ArtFilter;
 import com.scnsoft.art.facade.ArtServiceFacade;
-import com.scnsoft.art.feignclient.FileFeignClient;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -28,7 +27,6 @@ import java.util.UUID;
 @Transactional
 public class ArtController {
     private final ArtServiceFacade artServiceFacade;
-    private final FileFeignClient fileFeignClient;
 
     @RabbitListener(queues = "${spring.rabbitmq.queue}")
     public void deleteRelatedAccountData(AccountDto accountDto) {
@@ -36,18 +34,8 @@ public class ArtController {
     }
 
     @GetMapping
-    public Page<ArtDto> findAll(
-            Pageable pageable,
-            @RequestParam(defaultValue = "") String artistName,
-            @RequestParam(defaultValue = "") String cityName,
-            @RequestParam(defaultValue = "") String artNameAndDescription
-    ) {
-        return artServiceFacade.findAll(
-                pageable,
-                artistName,
-                cityName,
-                artNameAndDescription
-        );
+    public Page<ArtDto> findAll(Pageable pageable, ArtFilter artFilter) {
+        return artServiceFacade.findAll(pageable, artFilter);
     }
 
     @PostMapping
@@ -71,24 +59,6 @@ public class ArtController {
     // public void deleteByAccountId(@PathVariable UUID id) {
     //     artServiceFacade.deleteByAccountId(id);
     // }
-    
 
-    @GetMapping("/artists/{artistId}")
-    public Page<ArtDto> findAllByArtistId(@PathVariable UUID artistId, Pageable pageable) {
-        return artServiceFacade.findAllByArtistId(artistId, pageable);
-    }
 
-    @GetMapping("/accounts/{accountId}")
-    public ResponseEntity<Page<ArtDto>> findAllByAccountIdAndSearchText(
-            @PathVariable UUID accountId,
-            Pageable pageable,
-            @RequestParam(defaultValue = "") String searchText,
-            @RequestParam(defaultValue = "") String searchFilter,
-            @RequestParam(defaultValue = "art name") String searchOption
-    ) {
-        Page<ArtDto> artDtoPage = artServiceFacade.findAllByAccountId(
-            accountId, pageable, searchText, searchFilter, searchOption
-        );
-        return ResponseEntity.ok(artDtoPage);
-    }
 }

@@ -64,8 +64,8 @@ public class AccountServiceImpl implements AccountService {
             AccountFilter accountFilter
     ) {
         Specification<Account> generalSpecification = Specification.where(null);
-        if (!Strings.isNullOrEmpty(accountFilter.getUsername())) {
-            generalSpecification = generalSpecification.and(firstnameOrLastnameStartWith(accountFilter.getUsername()));
+        if (!Strings.isNullOrEmpty(accountFilter.getName())) {
+            generalSpecification = generalSpecification.and(firstnameOrLastnameStartWith(accountFilter.getName()));
         }
         if (accountFilter.getUsertype() != null) {
             generalSpecification = generalSpecification.and(usertypeEqual(accountFilter.getUsertype()));

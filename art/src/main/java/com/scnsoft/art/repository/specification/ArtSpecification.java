@@ -11,7 +11,7 @@ import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Address;
 import com.scnsoft.art.entity.City;
 
-import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 
 public class ArtSpecification {
 
@@ -22,14 +22,15 @@ public class ArtSpecification {
     public static Specification<Art> artNameContain(String name) {
         return (r, q, cb) -> {
             String nameRegex = "%" + name + "%";
-            return cb.like(r.get("name"), nameRegex);
+            return cb.like(r.get(Art.Fields.name), nameRegex);
         };
     }
 
-    public static Specification<Art> cityNameContain(String name) {
+
+    public static Specification<Art> cityIdEquals(UUID cityId) {
         return (art, q, cb) -> {
-            Join<Art, ArtInfo> artInfos = art.join("artInfos");
-            Predicate isLastArtInfo = cb.isNull(artInfos.get("expositionDateEnd"));
+            Join<Art, ArtInfo> artInfos = art.join(Art.Fields.artInfos);
+            Predicate isLastArtInfo = cb.isNull(artInfos.get(ArtInfo.Fields.expositionDateEnd));
 
             q.where(isLastArtInfo);
 
@@ -37,13 +38,16 @@ public class ArtSpecification {
             Join<Facility, Address> address = facility.join("address");
             Join<Address, City> city = address.join("city");
 
-            String nameRegex = "%" + name + "%";
-            return cb.like(city.get("name"), nameRegex);
+            return cb.equal(city.get(City.Fields.id), cityId);
         };
     }
 
     public static Specification<Art> descriptionContain(String description) {
         String decriptionRegex = "%" + description + "%";
-        return (art, q, cb) -> cb.like(art.get("description"), decriptionRegex);
+        return (art, q, cb) -> cb.like(art.get(Art.Fields.description), decriptionRegex);
+    }
+
+    public static Specification<Art> artistIdEqual(UUID artistId) {
+        return (art, q, cb) -> cb.equal(art.get(Art.Fields.artistAccountId), artistId);
     }
 }

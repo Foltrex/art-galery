@@ -2,6 +2,7 @@ package com.scnsoft.art.facade;
 
 import java.util.UUID;
 
+import com.scnsoft.art.dto.ArtFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -20,18 +21,6 @@ public class ArtServiceFacade {
     private final ArtService artService;
     private final ArtMapper artMapper;
 
-
-    public Page<ArtDto> findAllByAccountId(UUID accountId, Pageable pageable, String searchText, String searchFilter, String searchOption) {
-        Page<Art> artPage = artService.findAllByAccountId(
-            accountId, pageable, searchText, searchFilter, searchOption
-        );
-        return artMapper.mapPageToDto(artPage);
-    }
-
-    public Page<ArtDto> findAllByArtistId(UUID artistId, Pageable pageable) {
-        return artMapper.mapPageToDto(artService.findAllByArtistId(artistId, pageable));
-    }
-
     public ArtDto findById(UUID id) {
         return artMapper.mapToDto(artService.findById(id));
     }
@@ -49,13 +38,8 @@ public class ArtServiceFacade {
         artService.deleteByAccountId(accountId);
     }
 
-    public Page<ArtDto> findAll(Pageable pageable, String artistName, String cityName, String artNameAndDescription) {
-        Page<Art> artPage = artService.findAll(
-                pageable,
-                artistName,
-                cityName,
-                artNameAndDescription
-        );
+    public Page<ArtDto> findAll(Pageable pageable, ArtFilter artFilter) {
+        Page<Art> artPage = artService.findAll(pageable, artFilter);
         return artMapper.mapPageToDto(artPage);
     }
 }

@@ -36,10 +36,10 @@ public class AccountSpecification {
 
     public static Specification<Account> firstnameOrLastnameStartWith(String username) {
         return (account, cq, cb) -> {
-            String nameRegex = username + "%";
+            String nameRegex = username + "%".toLowerCase();
             return cb.or(
-                cb.like(account.get(Account.Fields.firstName), nameRegex),
-                cb.like(account.get(Account.Fields.lastName), nameRegex)
+                cb.like(cb.lower(account.get(Account.Fields.firstName)), nameRegex),
+                cb.like(cb.lower(account.get(Account.Fields.lastName)), nameRegex)
             );
         };
     } 
