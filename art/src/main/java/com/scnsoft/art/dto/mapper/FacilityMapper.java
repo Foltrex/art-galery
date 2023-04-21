@@ -2,7 +2,9 @@ package com.scnsoft.art.dto.mapper;
 
 import java.util.List;
 
+import com.scnsoft.art.entity.Organization;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,8 +15,16 @@ import com.scnsoft.art.entity.Facility;
 
 @Mapper(componentModel = "spring", uses = {OrganizationMapper.class, AddressMapper.class})
 public abstract class FacilityMapper {
-
+    @Mapping(
+            target = "organizationId",
+            source = "facility.organization.id"
+    )
+    @Mapping(
+            target = "organizationName",
+            source = "facility.organization.name"
+    )
     public abstract FacilityDto mapToDto(Facility facility);
+
 
     public abstract Facility mapToEntity(FacilityDto facilityDto);
 

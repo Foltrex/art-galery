@@ -43,13 +43,11 @@ public abstract class OrganizationMapper {
     @Named("mapToDtoList")
     public List<FacilityDto> mapToDtoList(List<Facility> facilities) {
         return facilities.stream()
-            .map(facility -> {
-                return FacilityDto.builder()
-                    .id(facility.getId())
-                    .name(facility.getName())
-                    .isActive(facility.getIsActive())
-                    .build();
-            })
+            .map(facility -> FacilityDto.builder()
+                .id(facility.getId())
+                .name(facility.getName())
+                .isActive(facility.getIsActive())
+                .build())
             .toList();
     }
 

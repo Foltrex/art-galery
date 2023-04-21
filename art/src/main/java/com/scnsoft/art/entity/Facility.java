@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import lombok.AllArgsConstructor;
@@ -32,11 +33,13 @@ public class Facility {
     private String name;
     private Boolean isActive;
 
+    @ToString.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 
     @ManyToOne
+    @ToString.Exclude
     @JoinColumn(name = "organization_id")
     private Organization organization;
 }

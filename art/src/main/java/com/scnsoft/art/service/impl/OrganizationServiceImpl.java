@@ -30,6 +30,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
 
+    @Override
     public List<Organization> findAll() {
         return organizationRepository.findAll();
     }

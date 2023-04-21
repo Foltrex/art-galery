@@ -3,6 +3,7 @@ package com.scnsoft.art.facade;
 import java.util.List;
 import java.util.UUID;
 
+import com.scnsoft.art.service.OrganizationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrganizationServiceFacade {
 
-    private final OrganizationServiceImpl organizationService;
+    private final OrganizationService organizationService;
     private final OrganizationMapper organizationMapper;
 
 
