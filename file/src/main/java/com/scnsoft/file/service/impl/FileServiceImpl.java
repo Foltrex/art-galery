@@ -86,18 +86,6 @@ public class FileServiceImpl implements FileService {
         findFileInfoById(id).ifPresent(this::deleteFile);
     }
 
-    //@TODO REMOVE
-    @Override
-    public List<FileInfo> findAllByArtId(UUID artId) {
-        return null;
-    }
-
-    //@TODO REMOVE
-    public void deleteByArtId(UUID artId) {
-//        fileInfoRepository.findAllByArtId(artId)
-//                .forEach(this::deleteFile);
-    }
-
     private String generateFilePath(UUID id) {
         String str = id.toString();
         return pathToFiles + str.substring(0, 3) + SEPARATOR + str.substring(3, 6) + SEPARATOR + id;

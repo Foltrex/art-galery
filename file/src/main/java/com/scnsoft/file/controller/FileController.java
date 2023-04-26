@@ -56,18 +56,6 @@ public class FileController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    //@TODO REMOVE
-//    @GetMapping("/arts/{artId}")
-//    public ResponseEntity<List<FileInfoDto>> findAllByArtId(@PathVariable UUID artId) {
-//        return ResponseEntity.ok(fileInfoServiceFacade.findAllByArtId(artId));
-//    }
-//
-//    @DeleteMapping("/arts/{artId}")
-//    public ResponseEntity<Void> deleteByArtId(@PathVariable UUID artId) {
-//        fileService.deleteByArtId(artId);
-//        return ResponseEntity.ok().build();
-//    }
-
     @PostMapping
     public ResponseEntity<List<FileInfoDto>> uploadFile(@RequestBody UploadFileDto uploadFileDto) {
         List<FileInfo> fileInfoList = fileService.uploadFile(uploadFileDto);

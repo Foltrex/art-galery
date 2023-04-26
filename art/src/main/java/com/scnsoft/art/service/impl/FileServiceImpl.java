@@ -81,9 +81,20 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public void delete(UUID id) {
+        List<EntityFile> thumbs = entityFileRepository.findAll(
+                (r, q, cb) -> cb.equal(r.get(EntityFile.Fields.originalId), id));
+        entityFileRepository.deleteAll(thumbs);
+        entityFileRepository.deleteById(id);
+        fileFeignClient.removeFileById(id);
+        thumbs.stream()
+                .map(EntityFile::getId)
+                .forEach(fileFeignClient::removeFileById);
+    }
+
+    @Override
     public void deleteByArtId(UUID artId) {
         entityFileRepository.findAllByEntityId(artId)
-            .stream()
             .forEach(file -> {
                 fileFeignClient.removeFileById(file.getId());
                 entityFileRepository.delete(file);

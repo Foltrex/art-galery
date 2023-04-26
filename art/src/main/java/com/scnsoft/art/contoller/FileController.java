@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,5 +43,10 @@ public class FileController {
     @PostMapping
     public EntityFile save(@RequestBody EntityFile entityFile) {
         return fileService.save(entityFile);
+    }
+
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable UUID id) {
+        fileService.delete(id);
     }
 }

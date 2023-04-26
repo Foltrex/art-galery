@@ -12,8 +12,6 @@ public interface FileService {
 
     Optional<FileInfo> findFileInfoById(UUID id);
 
-    List<FileInfo> findAllByArtId(UUID artId);
-
     InputStream getFileStream(UUID ids);
 
     List<FileInfo> uploadFile(UploadFileDto uploadFileDto);

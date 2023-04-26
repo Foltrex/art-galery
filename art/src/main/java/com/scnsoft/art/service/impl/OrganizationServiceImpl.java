@@ -40,7 +40,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         System.out.println("name = " + name);
         System.out.println("status = " + status);
         Specification<Organization> specification = (root, cq, cb) -> {
-            root.fetch("facilities", JoinType.INNER);
+            root.fetch(Organization.Fields.facilities, JoinType.INNER);
             return cb.conjunction();
         };
 
