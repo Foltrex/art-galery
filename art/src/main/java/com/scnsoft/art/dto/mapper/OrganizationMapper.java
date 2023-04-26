@@ -16,14 +16,14 @@ import com.scnsoft.art.entity.Address;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
 
-@Mapper(componentModel = "spring", uses = {AddressMapper.class})
+@Mapper(componentModel = "spring", uses = {AddressMapper.class, FacilityMapper.class})
 public abstract class OrganizationMapper {
 
-    @Mapping(
-        source = "organization.facilities", 
-        target = "facilities", 
-        qualifiedByName = "mapToDtoList"
-    )
+    // @Mapping(
+    //     source = "organization.facilities", 
+    //     target = "facilities", 
+    //     qualifiedByName = "mapToDtoList"
+    // )
     public abstract OrganizationDto mapToDto(Organization organization);
 
     @Named("mapToLiteDto")
@@ -48,16 +48,16 @@ public abstract class OrganizationMapper {
 
     }
 
-    @Named("mapToDtoList")
-    public List<FacilityDto> mapToDtoList(List<Facility> facilities) {
-        return facilities.stream()
-            .map(facility -> FacilityDto.builder()
-                .id(facility.getId())
-                .name(facility.getName())
-                .isActive(facility.getIsActive())
-                .build())
-            .toList();
-    }
+    // @Named("mapToDtoList")
+    // public List<FacilityDto> mapToDtoList(List<Facility> facilities) {
+    //     return facilities.stream()
+    //         .map(facility -> FacilityDto.builder()
+    //             .id(facility.getId())
+    //             .name(facility.getName())
+    //             .isActive(facility.getIsActive())
+    //             .build())
+    //         .toList();
+    // }
 
     public abstract List<Facility> mapToEntityList(List<FacilityDto> facilityDtos);
 }
