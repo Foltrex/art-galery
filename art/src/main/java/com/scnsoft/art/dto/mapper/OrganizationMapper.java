@@ -26,6 +26,14 @@ public abstract class OrganizationMapper {
     )
     public abstract OrganizationDto mapToDto(Organization organization);
 
+    @Named("mapToLiteDto")
+    @Mapping(
+        source = "organization.facilities",
+        target = "facilities",
+        ignore = true
+    )
+    public abstract OrganizationDto mapToLiteDto(Organization organization);
+
 
     public abstract Organization mapToEntity(OrganizationDto organizationDto);
 

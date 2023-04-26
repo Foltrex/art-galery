@@ -25,7 +25,14 @@ public abstract class FacilityMapper {
     )
     public abstract FacilityDto mapToDto(Facility facility);
 
-
+    @Mapping(
+            target = "organization.id",
+            source = "organizationId"
+    )
+    @Mapping(
+            target = "organization.name",
+            source = "organizationName"
+    )
     public abstract Facility mapToEntity(FacilityDto facilityDto);
 
     public Page<FacilityDto> mapPageToDto(Page<Facility> facilityPage) {

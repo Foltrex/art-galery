@@ -27,7 +27,7 @@ public class OrganizationServiceFacade {
     public List<OrganizationDto> findAll() {
         return organizationService.findAll()
             .stream()
-            .map(organizationMapper::mapToDto)
+            .map(organizationMapper::mapToLiteDto)
             .toList();
     }
 
