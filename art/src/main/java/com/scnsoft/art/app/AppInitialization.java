@@ -18,6 +18,8 @@ public class AppInitialization {
     private static final String DOLLAR_CURRENCY_VALUE = "USD";
     private static final String DOLLAR_CURRENCY_LABEL = "$";
 
+    private static final String GEORGIAN_CURRENCY_VALUE = "GEL";
+    private static final String GEORGIAN_CURRENCY_LABEL = "ლ";
     
     private final CurrencyRepository currencyRepository;
 
@@ -29,12 +31,21 @@ public class AppInitialization {
     @Transactional
     public void initCurrencies() {
         if (currencyRepository.findByValue(DOLLAR_CURRENCY_VALUE).isEmpty()) {
-            Currency currency = Currency.builder()
+            Currency dollarCurrency = Currency.builder()
                     .value(DOLLAR_CURRENCY_VALUE)
                     .label(DOLLAR_CURRENCY_LABEL)
                     .build();
 
-            currencyRepository.save(currency);
+            currencyRepository.save(dollarCurrency);
+        }
+
+        if (currencyRepository.findByValue(GEORGIAN_CURRENCY_VALUE).isEmpty()) {
+            Currency georgianCurrency = Currency.builder()
+                    .value(GEORGIAN_CURRENCY_VALUE)
+                    .label(GEORGIAN_CURRENCY_LABEL)
+                    .build();
+
+            currencyRepository.save(georgianCurrency);
         }
     }
 
