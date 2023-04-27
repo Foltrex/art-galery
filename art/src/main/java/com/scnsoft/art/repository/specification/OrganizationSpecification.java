@@ -7,8 +7,8 @@ import org.springframework.data.jpa.domain.Specification;
 @RequiredArgsConstructor
 public class OrganizationSpecification {
 
-    public static Specification<Organization> nameStartsWith(String name) {
-        return (root, query, cb) -> cb.like(cb.lower(root.get("name")), name.toLowerCase() + "%");
+    public static Specification<Organization> nameContain(String name) {
+        return (root, query, cb) -> cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%");
     }
 
     public static Specification<Organization> statusEquals(Organization.Status status) {

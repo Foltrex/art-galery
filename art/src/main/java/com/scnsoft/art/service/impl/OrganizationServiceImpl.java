@@ -20,6 +20,9 @@ import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.OrganizationRepository;
 import com.scnsoft.art.service.OrganizationService;
 
+import static com.scnsoft.art.repository.specification.OrganizationSpecification.nameContain;
+import static com.scnsoft.art.repository.specification.OrganizationSpecification.statusEquals;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,12 +47,12 @@ public class OrganizationServiceImpl implements OrganizationService {
             return cb.conjunction();
         };
 
-        // if (!Strings.isNullOrEmpty(name)) {
-        //     specification = specification.and(nameStartsWith(name));
-        // }
-        // if (!Strings.isNullOrEmpty(status)) {
-        //     specification = specification.and(statusEquals(Organization.Status.valueOf(status)));
-        // }
+        if (!Strings.isNullOrEmpty(name)) {
+            specification = specification.and(nameContain(name));
+        }
+        if (!Strings.isNullOrEmpty(status)) {
+            specification = specification.and(statusEquals(Organization.Status.valueOf(status)));
+        }
 
         return organizationRepository.findAll(specification, pageable);
     }
