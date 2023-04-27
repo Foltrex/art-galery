@@ -20,7 +20,7 @@ import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.OrganizationRepository;
 import com.scnsoft.art.service.OrganizationService;
 
-import static com.scnsoft.art.repository.specification.OrganizationSpecification.nameStartsWith;
+import static com.scnsoft.art.repository.specification.OrganizationSpecification.nameContain;
 import static com.scnsoft.art.repository.specification.OrganizationSpecification.statusEquals;
 
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         };
 
         if (!Strings.isNullOrEmpty(name)) {
-            specification = specification.and(nameStartsWith(name));
+            specification = specification.and(nameContain(name));
         }
         if (!Strings.isNullOrEmpty(status)) {
             specification = specification.and(statusEquals(Organization.Status.valueOf(status)));
