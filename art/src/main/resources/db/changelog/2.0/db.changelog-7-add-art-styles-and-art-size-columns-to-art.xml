@@ -1,0 +1,42 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet 
+    id="2023-04-12-add-art-styles-and-art-size-columns-to-art" 
+    author="Foltrex">
+        <addColumn catalogName="art" schemaName="public" tableName="art">
+            <column name="art_size_id" type="int">
+                <constraints 
+                foreignKeyName="fk_art_art_size"
+                referencedTableName="art_size"
+                referencedColumnNames="id"
+                />
+            </column>
+        </addColumn>
+        <createTable tableName="art_art_style">
+            <column name="art_id" type="uuid">
+                <constraints 
+                foreignKeyName="fk_art_art_style_art"
+                referencedTableName="art"
+                referencedColumnNames="id"
+            />
+            </column>
+            <column name="art_style_id" type="int">
+                <constraints 
+                foreignKeyName="fk_art_art_style_art_style"
+                referencedTableName="art_style"
+                referencedColumnNames="id"
+            />
+            </column>
+        </createTable>
+        <addPrimaryKey 
+         catalogName="art"
+         columnNames="art_id,art_style_id"
+         constraintName="pk_art_art_style"
+         schemaName="public"
+         tableName="art_art_style"/>
+    </changeSet>
+</databaseChangeLog>
