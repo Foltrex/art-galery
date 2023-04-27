@@ -31,6 +31,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public List<EntityFile> findAllPrimary(List<UUID> entityIds) {
+        return entityFileRepository.findAllPrimary(entityIds);
+    }
+
+
+    @Override
     public List<EntityFile> uploadFile(UploadEntityFileDto uploadEntityFileDto) {
         EntityFile entityFileOriginal;
         EntityFile entityFileThumbnail;

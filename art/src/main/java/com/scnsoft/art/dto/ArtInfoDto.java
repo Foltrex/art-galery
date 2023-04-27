@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ArtInfoDto {
     private UUID id;
-    private ArtDto art;
+    private UUID artId;
     private BigDecimal price;
     private CurrencyDto currency;
     private FacilityDto facility;
@@ -24,4 +24,5 @@ public class ArtInfoDto {
     private Date expositionDateStart;
     private Date expositionDateEnd;
     private String status;
+
 }

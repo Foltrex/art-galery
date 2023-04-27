@@ -11,6 +11,10 @@ import com.scnsoft.art.entity.ArtInfo;
 @Mapper(componentModel = "spring", uses = {ArtMapper.class, FacilityMapper.class})
 public interface ArtInfoMapper {
 
+    @Mapping(
+            target = "artId",
+            source = "artInfo.art.id"
+    )
     ArtInfoDto mapToDto(ArtInfo artInfo);
 
     ArtInfo mapToEntity(ArtInfoDto artInfoDto);

@@ -27,11 +27,4 @@ public class ArtInfoController {
         return artInfoServiceFacade.findByArtId(artId);
     }
 
-    @GetMapping("/last/arts/{artId}")
-    public ResponseEntity<ArtInfoDto> findLastByArtId(@PathVariable UUID artId) {
-        Optional<ArtInfoDto> optionalArtInfo = artInfoServiceFacade.findLastByArtId(artId);
-        return optionalArtInfo.isPresent()
-                ? ResponseEntity.ok(optionalArtInfo.get())
-                : ResponseEntity.ok().build();
-    }
 }

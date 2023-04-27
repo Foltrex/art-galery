@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.scnsoft.art.entity.ArtInfo;
 import com.scnsoft.art.entity.ArtSize;
 import com.scnsoft.art.entity.ArtStyle;
 
+import com.scnsoft.art.entity.EntityFile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,4 +30,6 @@ public class ArtDto {
 
     private UUID artistAccountId;
     private Date dateCreation;
+    private List<EntityFile> files;
+    private List<ArtInfoDto> artInfos;
 }

@@ -11,16 +11,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ArtInfoRepository extends JpaRepository<ArtInfo, UUID> {
-    List<ArtInfo> findByOrganization(Organization organization);
 
     @Query("""
                 SELECT ai 
                 FROM ArtInfo ai 
                 JOIN ai.art a 
-                WHERE a.id = :artId 
+                WHERE a.id in (:artIds) 
                 AND ai.expositionDateEnd IS NULL        
             """)
-    Optional<ArtInfo> findLastByArtId(@Param("artId") UUID artId);
+    List<ArtInfo> findLastByArtIds(@Param("artIds") List<UUID> artId);
 
     @Query("""
                 SELECT ai 

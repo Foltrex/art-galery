@@ -23,8 +23,8 @@ public record ArtInfoServiceImpl(
         return artInfoRepository.findByArtId(artId);
     }
 
-    public Optional<ArtInfo> findLastByArtId(UUID artId) {
-        return artInfoRepository.findLastByArtId(artId);
+    public List<ArtInfo> findLastByArtIds(List<UUID> artIds) {
+        return artInfoRepository.findLastByArtIds(artIds);
     }
 
     public ArtInfo save(ArtInfo artInfo) {
