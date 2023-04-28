@@ -1,12 +1,16 @@
 package com.scnsoft.user.service.impl;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
+import com.google.common.base.Strings;
 import com.scnsoft.user.dto.AccountDto;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -19,10 +23,15 @@ import com.scnsoft.user.dto.mapper.MetadataMapper;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.EmailMessageCode;
 import com.scnsoft.user.entity.Metadata;
+import com.scnsoft.user.entity.MetadataId;
+import com.scnsoft.user.entity.OrganizationRole;
+import com.scnsoft.user.entity.Account.AccountType;
+import com.scnsoft.user.entity.constant.MetadataEnum;
 import com.scnsoft.user.entity.constant.TemplateFile;
 import com.scnsoft.user.exception.AccountBlockedException;
 import com.scnsoft.user.exception.FeignResponseException;
 import com.scnsoft.user.exception.LoginAlreadyExistsException;
+import com.scnsoft.user.exception.WrongAccessPermissionException;
 import com.scnsoft.user.feignclient.NotificationFeignClient;
 import com.scnsoft.user.payload.AuthToken;
 import com.scnsoft.user.payload.EmailMessagePayload;
@@ -30,6 +39,7 @@ import com.scnsoft.user.payload.LoginRequest;
 import com.scnsoft.user.payload.PasswordRecoveryRequest;
 import com.scnsoft.user.repository.AccountRepository;
 import com.scnsoft.user.repository.MetadataRepository;
+import com.scnsoft.user.security.aop.AccountSecurityHandler;
 import com.scnsoft.user.service.AccountService;
 import com.scnsoft.user.service.AuthService;
 import com.scnsoft.user.service.EmailMessageCodeService;
@@ -49,6 +59,7 @@ public class AuthServiceImpl implements AuthService {
     private final AccountRepository accountRepository;
     private final AccountService accountService;
     private final AccountAuthenticationHelperServiceImpl accountAuthenticationHelperServiceImpl;
+    private final AccountSecurityHandler accountSecurityHandler;
     private final NotificationFeignClient notificationFeignClient;
     private final EmailMessageCodeService emailMessageService;
     private final MetadataRepository metadataRepository;
@@ -60,7 +71,8 @@ public class AuthServiceImpl implements AuthService {
         if (accountRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
             throw new LoginAlreadyExistsException("Email is already in use!");
         }
-        if (registrationRequest.getPassword() == null || registrationRequest.getPassword().isEmpty()) {
+
+        if (Strings.isNullOrEmpty(registrationRequest.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is required field");
         }
 
@@ -115,15 +127,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AccountDto registerUser(AccountDto registeringUser) {
+        Account account = accountMapper.mapToEntity(registeringUser);
+
         if (accountRepository.findByEmail(registeringUser.getEmail()).isPresent()) {
             throw new LoginAlreadyExistsException("Email is already in use!");
+        }
+
+        Account currentLoggedUser = accountSecurityHandler.getCurrentAccount();
+        if (!isLoggedUserAbleToCreateUser(account)) {
+            throw new WrongAccessPermissionException(currentLoggedUser + " can't create user " + account + " because of permissions");
         }
 
         String password = PasswordGeneratorUtil.generate(10);
 
         String encodedPassword = accountAuthenticationHelperServiceImpl.encodePassword(password);
-        
-        Account account = accountMapper.mapToEntity(registeringUser);
         account.setMetadata(null);
         account.setPassword(encodedPassword);
         account.setIsOneTimePassword(true);
@@ -225,4 +242,48 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    private boolean isLoggedUserAbleToCreateUser(Account creatingUser) {
+        Account currentLoggedUser = accountSecurityHandler.getCurrentAccount();
+
+        boolean isUsersAreBothRepresentatives = 
+            currentLoggedUser.getAccountType() == AccountType.REPRESENTATIVE
+            && creatingUser.getAccountType() == AccountType.REPRESENTATIVE;
+
+
+        UUID loggedUserOrganizationId = extractOrganizationIdFromAccount(currentLoggedUser);
+        UUID registeringUserOrganizationId = extractOrganizationIdFromAccount(creatingUser);
+        boolean isUserWorksInTheSameOrganizaiton = loggedUserOrganizationId.equals(registeringUserOrganizationId);
+
+        OrganizationRole loggedUserRole = extracOrganizationRoleFrom(currentLoggedUser);
+        OrganizationRole registeringUserOrganizationRole = extracOrganizationRoleFrom(creatingUser);
+
+        boolean isBossRole = loggedUserRole.equals(OrganizationRole.CREATOR)
+            || loggedUserRole.equals(OrganizationRole.MODERATOR) && registeringUserOrganizationRole.equals(OrganizationRole.MEMBER);
+
+        
+        return currentLoggedUser.getAccountType().equals(AccountType.SYSTEM)
+            || (isUsersAreBothRepresentatives && isUserWorksInTheSameOrganizaiton && isBossRole);
+    }
+
+    private UUID extractOrganizationIdFromAccount(Account account) {
+        String uuidString = extractMetadataValueByKeyFromAccount(MetadataEnum.ORGANIZATION_ID, account);
+        return UUID.fromString(uuidString);
+    }
+
+    private OrganizationRole extracOrganizationRoleFrom(Account account) {
+        String organizationRoleValue = extractMetadataValueByKeyFromAccount(MetadataEnum.ORGANIZATION_ROLE, account);
+        return OrganizationRole.valueOf(organizationRoleValue);
+    } 
+
+    private String extractMetadataValueByKeyFromAccount(MetadataEnum key, Account account) {
+        return account.getMetadata()
+        .stream()
+        .filter(m -> {
+            MetadataId metadataId = m.getMetadataId();
+            return Objects.equals(key.getValue(), metadataId.getKey());
+        })
+        .findFirst()
+        .map(Metadata::getValue)
+        .orElseThrow(() -> new WrongAccessPermissionException("User must have " + key.getValue() +": " + account));
+    } 
 }

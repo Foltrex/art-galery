@@ -1,5 +1,6 @@
 package com.scnsoft.user.util;
 
+import com.scnsoft.user.entity.Account.AccountType;
 import com.scnsoft.user.security.UserDetailsImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
