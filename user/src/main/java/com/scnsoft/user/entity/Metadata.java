@@ -28,4 +28,7 @@ public class Metadata {
     @NotEmpty
     private String value;
 
+    public String toString() {
+        return "Metadata[" + (metadataId != null ? metadataId.getKey() : "") + ":" + value + "]";
+    }
 }

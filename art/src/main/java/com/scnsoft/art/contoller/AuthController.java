@@ -36,6 +36,7 @@ import java.util.UUID;
 @Transactional
 public class AuthController {
 
+    private final ObjectMapper objectMapper;
     private final AuthFeignClient authFeignClient;
     private final OrganizationService organizationService;
     private final FacilityService facilityService;
@@ -84,7 +85,6 @@ public class AuthController {
         } catch (FeignException e) {
             String message;
             try {
-                ObjectMapper objectMapper = new ObjectMapper();
                 ErrorDto errorDto = objectMapper.readValue(e.contentUTF8(), ErrorDto.class);
                 message = errorDto.getMessage();
             } catch (IOException ex) {
@@ -101,7 +101,6 @@ public class AuthController {
         } catch (FeignException e) {
             String message;
             try {
-                ObjectMapper objectMapper = new ObjectMapper();
                 ErrorDto errorDto = objectMapper.readValue(
                     e.contentUTF8(), 
                     ErrorDto.class

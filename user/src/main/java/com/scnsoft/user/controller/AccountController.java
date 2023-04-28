@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import com.scnsoft.user.dto.AccountFilter;
 import com.scnsoft.user.dto.MetadataDto;
+import com.scnsoft.user.dto.mapper.MetadataMapper;
 import com.scnsoft.user.entity.Account;
 import com.scnsoft.user.entity.MetadataId;
 import liquibase.pro.packaged.M;
@@ -50,6 +51,7 @@ public class AccountController {
      * {@link com.scnsoft.user.service.impl.AccountServiceImpl}
      */
     private final AccountService accountService;
+    private final MetadataMapper metadataMapper;
     private final AccountMapper accountMapper;
 
     @GetMapping
@@ -97,8 +99,8 @@ public class AccountController {
 
     @PatchMapping("/{id}/account-image")
     @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, #id)")
-    public void updateAccountImage(@PathVariable UUID id, @Valid @RequestBody UploadFileDto request) {
-        accountService.updateImageById(id, request);
+    public MetadataDto updateAccountImage(@PathVariable UUID id, @Valid @RequestBody UploadFileDto request) {
+        return metadataMapper.mapToDto(accountService.updateImageById(id, request));
     }
 
     @DeleteMapping("/{id}")

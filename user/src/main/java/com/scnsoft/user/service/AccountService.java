@@ -1,8 +1,10 @@
 package com.scnsoft.user.service;
 
 import com.scnsoft.user.dto.AccountFilter;
+import com.scnsoft.user.dto.MetadataDto;
 import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.entity.Account;
+import com.scnsoft.user.entity.Metadata;
 import com.scnsoft.user.payload.UpdatePasswordRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +24,7 @@ public interface AccountService {
 
     void updatePasswordById(UUID id, UpdatePasswordRequest updatePasswordRequest);
 
-    void updateImageById(UUID id, UploadFileDto uploadFileDto);
+    Metadata updateImageById(UUID id, UploadFileDto uploadFileDto);
 
     void deleteById(UUID id);
 

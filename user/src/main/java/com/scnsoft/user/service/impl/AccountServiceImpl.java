@@ -4,6 +4,7 @@ import com.netflix.servo.util.Strings;
 import com.scnsoft.user.dto.AccountDto;
 import com.scnsoft.user.dto.AccountFilter;
 import com.scnsoft.user.dto.FileInfoDto;
+import com.scnsoft.user.dto.MetadataDto;
 import com.scnsoft.user.dto.UploadFileDto;
 import com.scnsoft.user.dto.mapper.AccountMapper;
 import com.scnsoft.user.entity.Account;
@@ -35,6 +36,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.scnsoft.user.repository.specification.AccountSpecification.firstnameOrLastnameStartWith;
 import static com.scnsoft.user.repository.specification.AccountSpecification.inMetadata;
@@ -126,11 +128,17 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account updateById(UUID id, Account account) {
         Account existedAccount = findById(id);
+        var map = account.getMetadata().stream().collect(Collectors.toMap(v -> v.getMetadataId().getKey(), v -> v, (v1, v2) -> v1));
+        metadataRepository.deleteAll(existedAccount.getMetadata()
+                .stream()
+                .filter(m -> !map.containsKey(m.getMetadataId().getKey())).collect(Collectors.toList()));
+
         existedAccount.setMetadata(account.getMetadata());
         existedAccount.setFirstName(account.getFirstName());
         existedAccount.setLastName(account.getLastName());
-
-        return accountRepository.save(existedAccount);
+        var out = accountRepository.save(existedAccount);
+        metadataRepository.saveAll(existedAccount.getMetadata());
+        return out;
     }
 
     @Override
@@ -148,7 +156,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void updateImageById(UUID id, UploadFileDto uploadFileDto) {
+    public Metadata updateImageById(UUID id, UploadFileDto uploadFileDto) {
         Account account = findById(id);
         try {
             FileInfoDto fileInfoDto = fileFeignClient.uploadFile(uploadFileDto);
@@ -161,9 +169,9 @@ public class AccountServiceImpl implements AccountService {
 
             if (metadataAccountOldImageOptional.isPresent()) {
                 Metadata metadataAccountOldImage = metadataAccountOldImageOptional.get();
-                metadataRepository.updateValueById(metadataAccountOldImage.getMetadataId(),
-                        fileInfoDto.getId().toString());
                 fileFeignClient.removeFile(metadataAccountOldImage.getValue());
+                metadataAccountOldImage.setValue(fileInfoDto.getId().toString());
+                return metadataRepository.save(metadataAccountOldImage);
             } else {
                 Metadata metadata = Metadata.builder()
                         .metadataId(MetadataId.builder()
@@ -173,7 +181,7 @@ public class AccountServiceImpl implements AccountService {
                         .value(fileInfoDto.getId().toString())
                         .build();
 
-                metadataRepository.save(metadata);
+                return metadataRepository.save(metadata);
             }
 
         } catch (FeignException e) {

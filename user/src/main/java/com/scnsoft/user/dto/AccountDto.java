@@ -26,7 +26,6 @@ public class AccountDto {
     private String email;
     @NotEmpty
     private String firstName;
-    @NotEmpty
     private String lastName;
     @NotNull
     private Account.AccountType accountType;
