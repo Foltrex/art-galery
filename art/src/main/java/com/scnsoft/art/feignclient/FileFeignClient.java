@@ -16,7 +16,7 @@ import java.util.UUID;
 public interface FileFeignClient {
 
     @PostMapping("")
-    List<FileInfoDto> uploadFile(@RequestBody UploadFileDto uploadFileDto);
+    FileInfoDto uploadFile(@RequestBody UploadFileDto uploadFileDto);
 
     @DeleteMapping("/{id}")
     void removeFileById(@PathVariable("id") UUID id);

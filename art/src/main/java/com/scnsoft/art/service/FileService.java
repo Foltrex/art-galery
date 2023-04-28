@@ -14,7 +14,7 @@ public interface FileService {
 
     List<EntityFile> findAllPrimary(List<UUID> entityIds);
 
-    List<EntityFile> uploadFile(UploadEntityFileDto uploadEntityFileDto);
+    EntityFile uploadFile(UploadEntityFileDto uploadEntityFileDto, EntityFile.Type type, UUID originalId);
 
     EntityFile findById(UUID id);
 

@@ -3,6 +3,8 @@ package com.scnsoft.art.contoller;
 import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.ArtDto;
 import com.scnsoft.art.dto.ArtFilter;
+import com.scnsoft.art.dto.UploadEntityFileDto;
+import com.scnsoft.art.entity.EntityFile;
 import com.scnsoft.art.facade.ArtServiceFacade;
 import lombok.RequiredArgsConstructor;
 
@@ -53,6 +55,11 @@ public class ArtController {
         // fileFeignClient.deleteByArtId(id);
         artServiceFacade.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/image")
+    public EntityFile uploadImage(@PathVariable UUID id, @RequestBody UploadEntityFileDto uploadEntityFileDto) {
+        return artServiceFacade.uploadImage(id, uploadEntityFileDto);
     }
 
     // @DeleteMapping("/accounts/{id}")

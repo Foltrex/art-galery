@@ -57,10 +57,9 @@ public class FileController {
     }
 
     @PostMapping
-    public ResponseEntity<List<FileInfoDto>> uploadFile(@RequestBody UploadFileDto uploadFileDto) {
-        List<FileInfo> fileInfoList = fileService.uploadFile(uploadFileDto);
-        List<FileInfoDto> fileInfoDtoList = fileInfoList.stream().map(fileInfoMapper::mapToDto).toList();
-        return ResponseEntity.ok().body(fileInfoDtoList);
+    public ResponseEntity<FileInfoDto> uploadFile(@RequestBody UploadFileDto uploadFileDto) {
+        FileInfo fileInfo = fileService.uploadFile(uploadFileDto);
+        return ResponseEntity.ok().body(fileInfoMapper.mapToDto(fileInfo));
     }
 
     @DeleteMapping("/{id}")

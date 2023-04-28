@@ -36,8 +36,8 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<List<EntityFile>> uploadFile(@RequestBody UploadEntityFileDto uploadEntityFileDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(fileService.uploadFile(uploadEntityFileDto));
+    public ResponseEntity<EntityFile> uploadFile(@RequestBody UploadEntityFileDto uploadEntityFileDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(fileService.uploadFile(uploadEntityFileDto, EntityFile.Type.ORIGINAL, null));
     }
 
     @PostMapping

@@ -1,5 +1,9 @@
 package com.scnsoft.art.facade;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -8,11 +12,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.scnsoft.art.dto.ArtFilter;
+import com.scnsoft.art.dto.UploadEntityFileDto;
 import com.scnsoft.art.dto.mapper.ArtInfoMapper;
 import com.scnsoft.art.entity.ArtInfo;
 import com.scnsoft.art.entity.EntityFile;
 import com.scnsoft.art.service.ArtInfoService;
 import com.scnsoft.art.service.FileService;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -23,6 +29,9 @@ import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.service.ArtService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.MimeType;
+
+import javax.imageio.ImageIO;
 
 @Component
 @RequiredArgsConstructor
@@ -88,5 +97,10 @@ public class ArtServiceFacade {
 
 
         return page;
+    }
+
+
+    public EntityFile uploadImage(UUID id, UploadEntityFileDto uploadEntityFileDto) {
+        return artService.uploadImage(id, uploadEntityFileDto);
     }
 }

@@ -1,5 +1,10 @@
 app:
   props:
+    images:
+      original_width: 1920
+      original_height: 1080
+      thumbnail_width: 960
+      thumbnail_height: 540
     token:
       secret: my_secret_key
       expired: 86400000
