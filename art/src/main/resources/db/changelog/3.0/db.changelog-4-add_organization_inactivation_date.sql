@@ -1,0 +1,1 @@
+alter table organization add column inactivation_date timestamp;

@@ -1,5 +1,6 @@
 package com.scnsoft.art.facade;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,8 +32,8 @@ public class OrganizationServiceFacade {
             .toList();
     }
 
-    public Page<OrganizationDto> findAll(Pageable pageable, String name, String status) {
-        return organizationMapper.mapPageToDto(organizationService.findAll(pageable, name, status));
+    public Page<OrganizationDto> findAll(Pageable pageable, String name, String status, Date inactiveDate) {
+        return organizationMapper.mapPageToDto(organizationService.findAll(pageable, name, status, inactiveDate));
     }
 
     public OrganizationDto findById(UUID id) {
@@ -57,8 +58,7 @@ public class OrganizationServiceFacade {
         return organizationMapper.mapToDto(organizationService.update(id, organization));
     }
 
-    public Void deleteById(@PathVariable UUID id) {
+    public void deleteById(@PathVariable UUID id) {
         organizationService.deleteById(id);
-        return null;
     }
 }

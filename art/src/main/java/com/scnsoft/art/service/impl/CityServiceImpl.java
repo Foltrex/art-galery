@@ -39,7 +39,9 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public City save(City city) {
-        return cityRepository.save(city);
+        return cityRepository
+                .findByNameAndCountry(city.getName(), city.getCountry())
+                .orElseGet(() -> cityRepository.save(city));
     }
 
     @Override

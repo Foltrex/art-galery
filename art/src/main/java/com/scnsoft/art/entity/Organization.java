@@ -1,6 +1,7 @@
 package com.scnsoft.art.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +36,7 @@ import lombok.NoArgsConstructor;
 @FieldNameConstants
 public class Organization {
 
+
     public enum Status {
         ACTIVE,
         INACTIVE
@@ -60,6 +62,8 @@ public class Organization {
 
     @Enumerated(value = EnumType.ORDINAL)
     private Status status;
+
+    private Date inactivationDate;
 
     @Builder.Default
     @OneToMany(mappedBy = "organization", cascade = CascadeType.REMOVE)

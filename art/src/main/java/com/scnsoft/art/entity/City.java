@@ -24,6 +24,7 @@ public class City {
     // @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private UUID id;
     private String name;
+    private String country;
     private Double latitude;
     private Double longitude;
 }

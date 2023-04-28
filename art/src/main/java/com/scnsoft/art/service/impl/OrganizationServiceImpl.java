@@ -1,6 +1,8 @@
 package com.scnsoft.art.service.impl;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.criteria.Join;
@@ -20,6 +22,7 @@ import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.OrganizationRepository;
 import com.scnsoft.art.service.OrganizationService;
 
+import static com.scnsoft.art.entity.Organization.Status.ACTIVE;
 import static com.scnsoft.art.repository.specification.OrganizationSpecification.nameContain;
 import static com.scnsoft.art.repository.specification.OrganizationSpecification.statusEquals;
 
@@ -39,14 +42,19 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Page<Organization> findAll(Pageable pageable, String name, String status) {
+    public Page<Organization> findAll(Pageable pageable, String name, String status, Date inactiveDate) {
         System.out.println("name = " + name);
         System.out.println("status = " + status);
         Specification<Organization> specification = (root, cq, cb) -> {
             root.fetch(Organization.Fields.facilities, JoinType.INNER);
             return cb.conjunction();
         };
-
+        if(inactiveDate != null) {
+            specification = specification.and((root, cq, cb) -> cb.and(
+                    root.get(Organization.Fields.inactivationDate).isNotNull(),
+                    cb.lessThan(root.get(Organization.Fields.inactivationDate), inactiveDate)
+            ));
+        }
         if (!Strings.isNullOrEmpty(name)) {
             specification = specification.and(nameContain(name));
         }
@@ -82,6 +90,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization update(UUID id, Organization organization) {
         System.out.println(organization.toString());
         Organization existedOrganization = findById(id);
+        var existingStatus = ACTIVE.equals(existedOrganization.getStatus());
+        var updatedStatus = ACTIVE.equals(organization.getStatus());
+        if(existingStatus && !updatedStatus) {
+            organization.setInactivationDate(new Date());
+        } else {
+            organization.setInactivationDate(null);
+        }
         organization.setId(id);
         organization.setFacilities(existedOrganization.getFacilities());
 
@@ -90,7 +105,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void deleteById(UUID id) {
-        organizationRepository.deleteById(id);
+        organizationRepository.findById(id).ifPresent((org) -> {
+            organizationRepository.delete(org);
+            log.warn("Organization with {} {} was deleted", org.getName(), org.getId());
+        });
     }
 
 }

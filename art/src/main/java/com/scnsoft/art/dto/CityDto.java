@@ -16,6 +16,7 @@ import java.util.UUID;
 public class CityDto {
     UUID id;
     String name;
+    String country;
     Double latitude;
     Double longitude;
 }

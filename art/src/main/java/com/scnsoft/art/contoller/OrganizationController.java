@@ -1,12 +1,15 @@
 package com.scnsoft.art.contoller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.scnsoft.art.entity.Organization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +43,8 @@ public class OrganizationController {
         return organizationServiceFacade.findAll(
                 pageable,
                 name,
-                status
+                status,
+                null
         );
     }
 
@@ -74,9 +78,16 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationServiceFacade.updateById(id, organizationDto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        return ResponseEntity.ok(organizationServiceFacade.deleteById(id));
+    @Scheduled(fixedRate = 24L * 3600 * 1000, initialDelay = 24L * 3600 * 1000)
+    public void deleteOrganization() {
+        organizationServiceFacade.findAll(
+                Pageable.unpaged(),
+                        null,
+                        Organization.Status.INACTIVE.name(),
+                        new Date(new Date().getTime() - (90L * 24 * 3600 * 1000))
+                )
+                .getContent()
+                .forEach(org -> organizationServiceFacade.deleteById(org.getId()));
     }
 
 }
