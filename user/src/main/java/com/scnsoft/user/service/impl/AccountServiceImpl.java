@@ -35,6 +35,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -160,7 +161,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = findById(id);
         try {
             FileInfoDto fileInfoDto = fileFeignClient.uploadFile(uploadFileDto);
-            List<Metadata> metadataList = account.getMetadata();
+            Set<Metadata> metadataList = account.getMetadata();
             Optional<Metadata> metadataAccountOldImageOptional = metadataList
                     .stream()
                     .filter(metadata -> metadata.getMetadataId()

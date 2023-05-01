@@ -85,6 +85,6 @@ public class Account {
 
     @Builder.Default
     @OneToMany(mappedBy = "metadataId.accountId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Metadata> metadata = new ArrayList<>();
+    private Set<Metadata> metadata = new HashSet<>();
 
 }

@@ -11,13 +11,13 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import java.util.Objects;
 
 @Entity
 @Table(name = "account_metadata")
 @Data
 @Builder
 @NoArgsConstructor
-@EqualsAndHashCode
 @AllArgsConstructor
 @FieldNameConstants
 public class Metadata {

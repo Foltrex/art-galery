@@ -12,7 +12,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -35,5 +37,5 @@ public class AccountDto {
     private Boolean isApproved;
 
     @Builder.Default
-    private List<MetadataDto> metadata = new ArrayList<>();
+    private Set<MetadataDto> metadata = new HashSet<>();
 }

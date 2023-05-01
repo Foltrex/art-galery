@@ -1,11 +1,12 @@
 package com.scnsoft.user.service.impl;
 
-import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import com.google.common.base.Strings;
@@ -87,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
                 .isOneTimePassword(false)
                 .build());
 
-        List<Metadata> metadata = metadataMapper.mapToList(registrationRequest.getMetadata(), account.getId());
+        Set<Metadata> metadata = metadataMapper.mapToList(registrationRequest.getMetadata(), account.getId());
         metadataRepository.saveAll(metadata);
 
         accountAuthenticationHelperServiceImpl.setAccountToAuthentication(registrationRequest.getEmail(), registrationRequest.getPassword());
@@ -147,7 +148,7 @@ public class AuthServiceImpl implements AuthService {
 
         Account persistedUser = accountRepository.save(account);
 
-        List<Metadata> metadata = metadataMapper.mapToList(
+        Set<Metadata> metadata = metadataMapper.mapToList(
             registeringUser.getMetadata(), 
             persistedUser.getId()
         );

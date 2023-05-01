@@ -11,13 +11,13 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 @Embeddable
 @Data
 @Builder
 @NoArgsConstructor
-@EqualsAndHashCode
 @FieldNameConstants
 @AllArgsConstructor
 public class MetadataId implements Serializable {
@@ -27,5 +27,4 @@ public class MetadataId implements Serializable {
 
     @NotEmpty
     private String key;
-
 }

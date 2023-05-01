@@ -1,8 +1,10 @@
 package com.scnsoft.user.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -73,8 +75,8 @@ public class AccountController {
     @PutMapping("/{id}")
     @PreAuthorize("@accountServiceImpl.isEditingUser(authentication.principal.id, #id)")
     public ResponseEntity<AccountDto> updateById(@PathVariable UUID id, @Valid @RequestBody AccountDto request) {
-        List<Metadata> metadataList = new ArrayList<>(Optional.ofNullable(request.getMetadata())
-                .orElse(new ArrayList<>())
+        Set<Metadata> metadataList = Optional.ofNullable(request.getMetadata())
+                .orElse(new HashSet<>())
                 .stream()
                 .map(m -> {
                     Metadata result = new Metadata();
@@ -84,7 +86,7 @@ public class AccountController {
                     metadataId.setKey(m.getKey());
                     result.setMetadataId(metadataId);
                     return result;
-                }).toList());//toList return unmodifiable collection, need to wrap into array list
+                }).collect(Collectors.toSet());
         Account account = accountMapper.mapToEntity(request);
         account.setMetadata(metadataList);
         return ResponseEntity.ok(accountMapper.mapToDto(

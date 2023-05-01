@@ -1,7 +1,8 @@
 package com.scnsoft.user.dto.mapper;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,22 +21,18 @@ public abstract class MetadataMapper {
     @Mapping(target = "value", source = "value")
     public abstract MetadataDto mapToDto(Metadata metadata);
 
-    public abstract List<MetadataDto> mapToDtoList(List<Metadata> metadatas);
- 
-    public List<Metadata> mapToList(List<MetadataDto> metadata, UUID accountId) {
+    public Set<Metadata> mapToList(Set<MetadataDto> metadata, UUID accountId) {
         return metadata
             .stream()
-            .map(metadataDto -> {
-                return Metadata.builder()
-                    .metadataId(
-                        MetadataId.builder()
-                            .accountId(accountId)
-                            .key(metadataDto.getKey())
-                            .build()
-                    )
-                    .value(metadataDto.getValue())
-                    .build();
-            })
-            .toList();
+            .map(metadataDto -> Metadata.builder()
+                .metadataId(
+                    MetadataId.builder()
+                        .accountId(accountId)
+                        .key(metadataDto.getKey())
+                        .build()
+                )
+                .value(metadataDto.getValue())
+                .build())
+            .collect(Collectors.toSet());
     }
 }
