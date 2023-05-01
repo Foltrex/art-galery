@@ -15,8 +15,8 @@ public interface EntityFileRepository extends JpaRepository<EntityFile, UUID>, J
 
     List<EntityFile> findAllByEntityId(UUID entityId);
 
-    @Query("select f from EntityFile f where f.isPrimary = true and f.entityId in (:entityIds)")
-    List<EntityFile> findAllPrimary(@Param("entityIds") List<UUID> entityIds);
+    @Query("select f from EntityFile f where f.isPrimary = true and f.originalId is not null and f.entityId in (:entityIds)")
+    List<EntityFile> findAllThumbs(@Param("entityIds") List<UUID> entityIds);
 
     void deleteByEntityId(UUID artId);
 }

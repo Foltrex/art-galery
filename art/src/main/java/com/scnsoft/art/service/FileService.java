@@ -2,8 +2,6 @@ package com.scnsoft.art.service;
 
 import com.scnsoft.art.dto.UploadEntityFileDto;
 import com.scnsoft.art.entity.EntityFile;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +10,7 @@ public interface FileService {
 
     List<EntityFile> findAllByEntityId(UUID entityId);
 
-    List<EntityFile> findAllPrimary(List<UUID> entityIds);
+    List<EntityFile> findAllThumbs(List<UUID> entityIds);
 
     EntityFile uploadFile(UploadEntityFileDto uploadEntityFileDto, EntityFile.Type type, UUID originalId);
 
