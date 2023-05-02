@@ -55,12 +55,10 @@ public class OrganizationServiceImpl implements OrganizationService {
         AccountDto accountDto = accountFeignClient.findById(currentAccountId);
 
         Specification<Organization> specification = (root, cq, cb) -> {
-            if (accountDto.getAccountType() == AccountType.REPRESENTATIVE) {
+            if (accountDto.getAccountType() == AccountType.ARTIST) {
                 root.fetch(Organization.Fields.facilities, JoinType.INNER);
-            } else {
-                root.fetch(Organization.Fields.facilities, JoinType.LEFT);
             }
-
+            
             return cb.conjunction();
         };
         if(inactiveDate != null) {
