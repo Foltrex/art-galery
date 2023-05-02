@@ -6,6 +6,10 @@ app:
       thumbnail_width: 960
       thumbnail_height: 540
       path: /var/art-gallery/attachments/
+    user:
+      system:
+        username: file@gmail.com
+        password: 11111111
 
 server:
   port: 8082

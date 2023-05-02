@@ -88,10 +88,13 @@ public class AuthServiceImpl implements AuthService {
                 .isOneTimePassword(false)
                 .build());
 
-        Set<Metadata> metadata = metadataMapper.mapToList(registrationRequest.getMetadata(), account.getId());
-        metadataRepository.saveAll(metadata);
+        if (registrationRequest.getMetadata() != null) {
+            Set<Metadata> metadata = metadataMapper.mapToList(registrationRequest.getMetadata(), account.getId());
+            metadataRepository.saveAll(metadata);
+        }
 
-        accountAuthenticationHelperServiceImpl.setAccountToAuthentication(registrationRequest.getEmail(), registrationRequest.getPassword());
+        accountAuthenticationHelperServiceImpl.setAccountToAuthentication(registrationRequest.getEmail(),
+                registrationRequest.getPassword());
 
         return accountAuthenticationHelperServiceImpl.createAuthTokenResponse(account);
     }
@@ -111,7 +114,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         try {
-            accountAuthenticationHelperServiceImpl.setAccountToAuthentication(loginRequest.getEmail(), loginRequest.getPassword());
+            accountAuthenticationHelperServiceImpl.setAccountToAuthentication(loginRequest.getEmail(),
+                    loginRequest.getPassword());
         } catch (AuthenticationException e) {
             handleEventOfBadCredentials(account);
             throw new BadCredentialsException("Invalid credentials");
@@ -136,7 +140,8 @@ public class AuthServiceImpl implements AuthService {
 
         Account currentLoggedUser = accountSecurityHandler.getCurrentAccount();
         if (!isLoggedUserAbleToCreateUser(account)) {
-            throw new WrongAccessPermissionException(currentLoggedUser + " can't create user " + account + " because of permissions");
+            throw new WrongAccessPermissionException(
+                    currentLoggedUser + " can't create user " + account + " because of permissions");
         }
 
         String password = PasswordGeneratorUtil.generate(10);
@@ -149,23 +154,21 @@ public class AuthServiceImpl implements AuthService {
         Account persistedUser = accountRepository.save(account);
 
         Set<Metadata> metadata = metadataMapper.mapToList(
-            registeringUser.getMetadata(), 
-            persistedUser.getId()
-        );
+                registeringUser.getMetadata(),
+                persistedUser.getId());
         metadataRepository.saveAll(metadata);
-
 
         Map<String, String> properties = new HashMap<>();
         properties.put("firstname", persistedUser.getFirstName());
         properties.put("lastname", persistedUser.getLastName());
         properties.put("password", password);
-        
+
         notificationFeignClient.sendMessage(EmailMessagePayload.builder()
-            .receiver(registeringUser.getEmail())
-            .subject("Account registration")
-            .templateFile(TemplateFile.USER_REGISTRATION)
-            .properties(properties)
-            .build());
+                .receiver(registeringUser.getEmail())
+                .subject("Account registration")
+                .templateFile(TemplateFile.USER_REGISTRATION)
+                .properties(properties)
+                .build());
 
         return accountMapper.mapToDto(persistedUser);
     }
@@ -218,7 +221,8 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code is not correct, try again!");
         }
 
-        account.setPassword(accountAuthenticationHelperServiceImpl.encodePassword(passwordRecoveryRequest.getPassword()));
+        account.setPassword(
+                accountAuthenticationHelperServiceImpl.encodePassword(passwordRecoveryRequest.getPassword()));
         accountRepository.save(account);
 
         emailMessageService.updateSetCodeIsInvalidById(emailMessageCode.getId(), emailMessageCode);
@@ -246,24 +250,34 @@ public class AuthServiceImpl implements AuthService {
     private boolean isLoggedUserAbleToCreateUser(Account creatingUser) {
         Account currentLoggedUser = accountSecurityHandler.getCurrentAccount();
 
-        boolean isUsersAreBothRepresentatives = 
-            currentLoggedUser.getAccountType() == AccountType.REPRESENTATIVE
-            && creatingUser.getAccountType() == AccountType.REPRESENTATIVE;
+        boolean isUsersAreBothRepresentatives = currentLoggedUser.getAccountType() == AccountType.REPRESENTATIVE
+                && creatingUser.getAccountType() == AccountType.REPRESENTATIVE;
 
+        UUID loggedUserOrganizationId;
+        UUID registeringUserOrganizationId;
+        boolean isUserWorksInTheSameOrganizaiton = false;
 
-        UUID loggedUserOrganizationId = extractOrganizationIdFromAccount(currentLoggedUser);
-        UUID registeringUserOrganizationId = extractOrganizationIdFromAccount(creatingUser);
-        boolean isUserWorksInTheSameOrganizaiton = loggedUserOrganizationId.equals(registeringUserOrganizationId);
+        if (currentLoggedUser.getAccountType() == AccountType.REPRESENTATIVE) {
+            loggedUserOrganizationId = extractOrganizationIdFromAccount(currentLoggedUser);
+            registeringUserOrganizationId = extractOrganizationIdFromAccount(creatingUser);
+            isUserWorksInTheSameOrganizaiton = loggedUserOrganizationId.equals(registeringUserOrganizationId);
+        }
 
-        OrganizationRole loggedUserRole = extracOrganizationRoleFrom(currentLoggedUser);
-        OrganizationRole registeringUserOrganizationRole = extracOrganizationRoleFrom(creatingUser);
+        OrganizationRole loggedUserRole;
+        OrganizationRole registeringUserOrganizationRole;
+        boolean isBossRole = false;
 
-        boolean isBossRole = loggedUserRole.equals(OrganizationRole.CREATOR)
-            || loggedUserRole.equals(OrganizationRole.MODERATOR) && registeringUserOrganizationRole.equals(OrganizationRole.MEMBER);
+        if (currentLoggedUser.getAccountType() == AccountType.REPRESENTATIVE) {
+            loggedUserRole = extracOrganizationRoleFrom(currentLoggedUser);
+            registeringUserOrganizationRole = extracOrganizationRoleFrom(creatingUser);
+    
+            isBossRole = loggedUserRole.equals(OrganizationRole.CREATOR)
+                    || loggedUserRole.equals(OrganizationRole.MODERATOR)
+                            && registeringUserOrganizationRole.equals(OrganizationRole.MEMBER);
+        }
 
-        
         return currentLoggedUser.getAccountType().equals(AccountType.SYSTEM)
-            || (isUsersAreBothRepresentatives && isUserWorksInTheSameOrganizaiton && isBossRole);
+                || (isUsersAreBothRepresentatives && isUserWorksInTheSameOrganizaiton && isBossRole);
     }
 
     private UUID extractOrganizationIdFromAccount(Account account) {
@@ -274,17 +288,18 @@ public class AuthServiceImpl implements AuthService {
     private OrganizationRole extracOrganizationRoleFrom(Account account) {
         String organizationRoleValue = extractMetadataValueByKeyFromAccount(MetadataEnum.ORGANIZATION_ROLE, account);
         return OrganizationRole.valueOf(organizationRoleValue);
-    } 
+    }
 
     private String extractMetadataValueByKeyFromAccount(MetadataEnum key, Account account) {
         return account.getMetadata()
-        .stream()
-        .filter(m -> {
-            MetadataId metadataId = m.getMetadataId();
-            return Objects.equals(key.getValue(), metadataId.getKey());
-        })
-        .findFirst()
-        .map(Metadata::getValue)
-        .orElseThrow(() -> new WrongAccessPermissionException("User must have " + key.getValue() +": " + account));
-    } 
+                .stream()
+                .filter(m -> {
+                    MetadataId metadataId = m.getMetadataId();
+                    return Objects.equals(key.getValue(), metadataId.getKey());
+                })
+                .findFirst()
+                .map(Metadata::getValue)
+                .orElseThrow(
+                        () -> new WrongAccessPermissionException("User must have " + key.getValue() + ": " + account));
+    }
 }

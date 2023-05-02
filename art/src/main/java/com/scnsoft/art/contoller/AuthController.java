@@ -99,11 +99,10 @@ public class AuthController {
 
     @PostMapping("/register-user")
     public ResponseEntity<AccountDto> registerUser(
-        @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
         @Valid @RequestBody AccountDto registeringUser
     ) {
         try {
-            return authFeignClient.registerUser(authorizationHeader, registeringUser);
+            return authFeignClient.registerUser(registeringUser);
         } catch (FeignException e) {
             String message;
             try {

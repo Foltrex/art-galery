@@ -8,6 +8,10 @@ app:
     token:
       secret: my_secret_key
       expired: 86400000
+    user:
+      system:
+        username: file@gmail.com
+        password: 11111111
 server:
   port: 8081
   error:

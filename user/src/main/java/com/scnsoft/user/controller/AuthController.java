@@ -42,7 +42,9 @@ public class AuthController {
     @PreAuthorize("permitAll()")
     public ResponseEntity<AccountDto> registerUser(
             @Valid @RequestBody AccountDto registeringUser) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerUser(registeringUser));
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(authService.registerUser(registeringUser));
     }
 
     @PostMapping("/password-recovery-code")
