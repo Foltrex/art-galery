@@ -1,13 +1,14 @@
 package com.scnsoft.art.service.impl;
 
+import static com.scnsoft.art.repository.specification.OrganizationSpecification.nameContain;
+import static com.scnsoft.art.repository.specification.OrganizationSpecification.statusEquals;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -16,10 +17,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
-import com.scnsoft.art.entity.Facility;
+import com.scnsoft.art.dto.AccountDto;
+import com.scnsoft.art.dto.AccountType;
 import com.scnsoft.art.entity.Organization;
 import com.scnsoft.art.exception.ArtResourceNotFoundException;
+import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.repository.OrganizationRepository;
+import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.service.OrganizationService;
 
 import static com.scnsoft.art.entity.Organization.Status.ACTIVE;
@@ -35,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
+    private final AccountFeignClient accountFeignClient;
 
     @Override
     public List<Organization> findAll() {
@@ -45,8 +50,17 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Page<Organization> findAll(Pageable pageable, String name, String status, Date inactiveDate) {
         System.out.println("name = " + name);
         System.out.println("status = " + status);
+
+        UUID currentAccountId = SecurityUtil.getCurrentAccountId();
+        AccountDto accountDto = accountFeignClient.findById(currentAccountId);
+
         Specification<Organization> specification = (root, cq, cb) -> {
-            root.fetch(Organization.Fields.facilities, JoinType.INNER);
+            if (accountDto.getAccountType() == AccountType.REPRESENTATIVE) {
+                root.fetch(Organization.Fields.facilities, JoinType.INNER);
+            } else {
+                root.fetch(Organization.Fields.facilities, JoinType.LEFT);
+            }
+
             return cb.conjunction();
         };
         if(inactiveDate != null) {

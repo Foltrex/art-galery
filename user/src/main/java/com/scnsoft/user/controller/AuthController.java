@@ -39,6 +39,7 @@ public class AuthController {
     }
 
     @PostMapping("/register-user")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<AccountDto> registerUser(
             @Valid @RequestBody AccountDto registeringUser) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerUser(registeringUser));
