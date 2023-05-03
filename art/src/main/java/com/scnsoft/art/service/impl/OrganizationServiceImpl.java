@@ -5,7 +5,6 @@ import static com.scnsoft.art.repository.specification.OrganizationSpecification
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.criteria.JoinType;
@@ -14,24 +13,23 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
 import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.AccountType;
 import com.scnsoft.art.entity.Organization;
-import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.repository.OrganizationRepository;
 import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.service.OrganizationService;
 
 import static com.scnsoft.art.entity.Organization.Status.ACTIVE;
-import static com.scnsoft.art.repository.specification.OrganizationSpecification.nameContain;
-import static com.scnsoft.art.repository.specification.OrganizationSpecification.statusEquals;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -81,7 +79,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization findById(UUID id) {
         return organizationRepository
                 .findById(id)
-                .orElseThrow(() -> new ArtResourceNotFoundException("Organization not found by id!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Organization with id " + id + " not found"));
     }
 
     @Override

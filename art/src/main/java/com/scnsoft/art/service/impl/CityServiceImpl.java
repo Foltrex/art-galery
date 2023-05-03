@@ -5,14 +5,15 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.scnsoft.art.entity.City;
-import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.repository.CityRepository;
 import com.scnsoft.art.service.CityService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class CityServiceImpl implements CityService {
     public City findById(UUID id) {
         return cityRepository
                 .findById(id)
-                .orElseThrow(() -> new ArtResourceNotFoundException("City not found by id"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "City with id " + id + " not found"));
     }
 
     @Override

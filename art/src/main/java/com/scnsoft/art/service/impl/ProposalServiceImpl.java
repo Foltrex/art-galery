@@ -6,17 +6,18 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.Proposal;
-import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.repository.FacilityRepository;
 import com.scnsoft.art.repository.ProposalRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Slf4j
@@ -29,7 +30,7 @@ public class ProposalServiceImpl {
 
     public Proposal findById(UUID proposalId) {
         return proposalRepository.findById(proposalId)
-                .orElseThrow(ArtResourceNotFoundException::new);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal with id " + proposalId + " not found"));
     }
 
     public Proposal save(Proposal proposal) {

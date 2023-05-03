@@ -1,5 +1,6 @@
 package com.scnsoft.art.service.impl;
 
+import java.nio.file.ReadOnlyFileSystemException;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,13 +10,13 @@ import com.scnsoft.art.repository.specification.FacilitySpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.MetaData;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
-import com.scnsoft.art.exception.ArtResourceNotFoundException;
 import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.feignclient.MetadataFeignClient;
 import com.scnsoft.art.repository.FacilityRepository;
@@ -23,6 +24,7 @@ import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.service.FacilityService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +68,7 @@ public class FacilityServiceImpl implements FacilityService {
     public Facility findById(UUID id) {
         return facilityRepository
                 .findById(id)
-                .orElseThrow(ArtResourceNotFoundException::new);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Facility with id " + id + " not found"));
     }
 
     @Override
