@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -24,5 +25,5 @@ public class AccountDto {
     private Date blockedSince;
     private Boolean isApproved;
     private AccountType accountType;
-    private List<MetaData> metadata;
+    private Set<MetaDataDto> metadata;
 }

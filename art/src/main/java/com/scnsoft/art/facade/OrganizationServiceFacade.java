@@ -32,8 +32,8 @@ public class OrganizationServiceFacade {
             .toList();
     }
 
-    public Page<OrganizationDto> findAll(Pageable pageable, String name, String status, Date inactiveDate) {
-        return organizationMapper.mapPageToDto(organizationService.findAll(pageable, name, status, inactiveDate));
+    public Page<OrganizationDto> findAll(Pageable pageable, String name, String status, Boolean withFacilities, Date inactiveDate) {
+        return organizationMapper.mapPageToDto(organizationService.findAll(pageable, name, status, withFacilities, inactiveDate));
     }
 
     public OrganizationDto findById(UUID id) {

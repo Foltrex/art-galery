@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface OrganizationService {
 
     List<Organization> findAll();
-    Page<Organization> findAll(Pageable pageable, String name, String status, Date inactiveDate);
+    Page<Organization> findAll(Pageable pageable, String name, String status, Boolean withFacilities, Date inactiveDate);
 
     Organization findById(UUID id);
 

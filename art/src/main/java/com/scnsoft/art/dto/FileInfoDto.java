@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -15,4 +16,9 @@ public class FileInfoDto {
     private UUID id;
     private String mimeType;
     private Integer contentLength;
+    private String directory;
+    private Date createdAt;
+    private Integer cacheControl;
+
+    private String data;
 }

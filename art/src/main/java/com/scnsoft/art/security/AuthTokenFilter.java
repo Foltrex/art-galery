@@ -1,7 +1,5 @@
 package com.scnsoft.art.security;
 
-import com.scnsoft.art.dto.AccountDto;
-import com.scnsoft.art.feignclient.AccountFeignClient;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,33 +27,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Autowired
-    private AccountFeignClient accountFeignClient;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = jwtUtils.parseJwtToken(request);
-
             if (token != null && jwtUtils.validateJwtToken(token)) {
                 UUID id = jwtUtils.getIdFromJwtToken(token);
                 String email = jwtUtils.getEmailFromJwtToken(token);
                 List<String> roles = jwtUtils.getRolesFromJwtToken(token);
-
-                // try {
-                //     Page<AccountDto> accountDtoResponse = accountFeignClient.getAccountByEmail(email);
-                //     if (accountDtoResponse.getContent().size() != 0) {
-                //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
-                //     } else if(accountDtoResponse.getContent().size() != 1) {
-                //         log.error("two or more accounts found with same email: {}", email);
-                //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
-                //     }
-                // } catch (FeignException e) {
-                //     throw new ResponseStatusException(HttpStatus.valueOf(e.status()), e.getMessage());
-                // }
-
                 setUserAuthentication(request, id, email, roles);
             }
         } catch (Exception e) {

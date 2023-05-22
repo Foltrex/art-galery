@@ -1,7 +1,6 @@
 package com.scnsoft.art.service;
 
 import com.scnsoft.art.dto.ArtFilter;
-import com.scnsoft.art.dto.UploadEntityFileDto;
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.EntityFile;
 import org.springframework.data.domain.Page;
@@ -14,7 +13,7 @@ public interface ArtService {
 
     List<Art> findAll();
 
-    Art save(Art art);
+    Art save(Art art, List<EntityFile> images);
 
     Art findById(UUID id);
 
@@ -23,6 +22,4 @@ public interface ArtService {
     void deleteByAccountId(UUID accountId);
 
     Page<Art> findAll(Pageable pageable, ArtFilter artFilter);
-
-    EntityFile uploadImage(UUID id, UploadEntityFileDto uploadEntityFileDto);
 }

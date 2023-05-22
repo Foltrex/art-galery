@@ -31,7 +31,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class FacilityController {
+public class  FacilityController {
 
     private final FacilityServiceFacade facilityServiceFacade;
 
@@ -54,35 +54,16 @@ public class FacilityController {
         return ResponseEntity.ok(facilityServiceFacade.findById(id));
     }
 
-    @GetMapping("/organizations/{organizationId}")
-    public ResponseEntity<Page<FacilityDto>> findAllByOrganizationId(@PathVariable UUID organizationId,
-            Pageable pageable) {
-        return ResponseEntity.ok(facilityServiceFacade.findAllByOrganizationId(organizationId, pageable));
-    }
-
-    @GetMapping("accounts/{accountId}")
-    public ResponseEntity<FacilityDto> findByAccountId(@PathVariable UUID accountId) {
-        return ResponseEntity.ok(facilityServiceFacade.findByAccountId(accountId));
-    }
-
-    @GetMapping("page/accounts/{accountId}")
-    public ResponseEntity<Page<FacilityDto>> findAllByAccountId(@PathVariable UUID accountId, Pageable pageable) {
-        return ResponseEntity.ok(facilityServiceFacade.findAllByAccountId(accountId, pageable));
-    }
-
-    @GetMapping("list/accounts/{accountId}")
-    public ResponseEntity<List<FacilityDto>> findAllByAccountId(@PathVariable UUID accountId) {
-        return ResponseEntity.ok(facilityServiceFacade.findAllByAccountId(accountId));
-    }
-
     @PostMapping
     public ResponseEntity<FacilityDto> save(@RequestBody FacilityDto facilityDto) {
+        facilityDto.setId(null);
         return ResponseEntity.status(HttpStatus.CREATED).body(facilityServiceFacade.save(facilityDto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<FacilityDto> update(@PathVariable UUID id, @RequestBody FacilityDto facilityDto) {
-        return ResponseEntity.ok(facilityServiceFacade.updateById(id, facilityDto));
+        facilityDto.setId(id);
+        return ResponseEntity.ok(facilityServiceFacade.save(facilityDto));
     }
 
     @DeleteMapping("/{id}")

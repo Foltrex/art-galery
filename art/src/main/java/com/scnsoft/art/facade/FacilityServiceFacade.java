@@ -5,11 +5,14 @@ import com.scnsoft.art.dto.FacilityFilter;
 import com.scnsoft.art.dto.mapper.FacilityMapper;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.service.FacilityService;
+import com.scnsoft.art.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,12 +22,15 @@ import java.util.UUID;
 public class FacilityServiceFacade {
 
     private final FacilityService facilityService;
+    private final FileService fileService;
     private final FacilityMapper facilityMapper;
 
 
     public Page<FacilityDto> findAll(Pageable pageable, FacilityFilter filter) {
         var page = facilityService.findAll(pageable, filter);
-        return facilityMapper.mapPageToDto(page);
+        Page<FacilityDto> result = facilityMapper.mapPageToDto(page);
+        result.forEach(f -> f.setImages(fileService.findAllByEntityId(f.getId())));
+        return result;
     }
 
     public List<FacilityDto> findAll(
@@ -36,33 +42,16 @@ public class FacilityServiceFacade {
                 .toList();
     }
 
-    public List<FacilityDto> findAllByOrganizationId(UUID organizationId) {
-        return facilityService.findAllByOrganizationId(organizationId)
-            .stream()
-            .map(facilityMapper::mapToDto)
-            .toList();
-    }
-
-    public Page<FacilityDto> findAllByOrganizationId(UUID organizationId, Pageable pageable) {
-        return facilityMapper.mapPageToDto(facilityService.findAllByOrganizationId(organizationId, pageable));
-    }
-
     public FacilityDto findById(UUID id) {
-        return facilityMapper.mapToDto(facilityService.findById(id));
-    }
-
-    public FacilityDto findByAccountId(UUID accountId) {
-        return facilityMapper.mapToDto(facilityService.findByAccountId(accountId));
+        FacilityDto dto = facilityMapper.mapToDto(facilityService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Facility with id " + id + " not found")));
+        dto.setImages(fileService.findAllByEntityId(id));
+        return dto;
     }
 
     public FacilityDto save(FacilityDto facilityDto) {
         Facility facility = facilityMapper.mapToEntity(facilityDto);
-        return facilityMapper.mapToDto(facilityService.save(facility));
-    }
-
-    public FacilityDto updateById(UUID id, FacilityDto facilityDto) {
-        Facility facility = facilityMapper.mapToEntity(facilityDto);
-        return facilityMapper.mapToDto(facilityService.updateById(id, facility));
+        return facilityMapper.mapToDto(facilityService.save(facility, facilityDto.getImages()));
     }
 
     public Void deleteById(@PathVariable UUID id) {
@@ -70,14 +59,4 @@ public class FacilityServiceFacade {
         return null;
     }
 
-    public Page<FacilityDto> findAllByAccountId(UUID accountId, Pageable pageable) {
-        return facilityMapper.mapPageToDto(facilityService.findAllByAccountId(accountId, pageable));
-    }
-
-    public List<FacilityDto> findAllByAccountId(UUID accountId) {
-        return facilityService.findAllByAccountId(accountId)
-                .stream()
-                .map(facilityMapper::mapToDto)
-                .toList();
-    }
 }

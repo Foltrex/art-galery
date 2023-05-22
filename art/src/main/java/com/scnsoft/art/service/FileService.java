@@ -1,20 +1,22 @@
 package com.scnsoft.art.service;
 
-import com.scnsoft.art.dto.UploadEntityFileDto;
+import com.scnsoft.art.dto.FileInfoDto;
 import com.scnsoft.art.entity.EntityFile;
+import com.scnsoft.art.entity.FileInfo;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface FileService {
 
-    List<EntityFile> findAllByEntityId(UUID entityId);
-
     List<EntityFile> findAllThumbs(List<UUID> entityIds);
 
-    EntityFile uploadFile(UploadEntityFileDto uploadEntityFileDto, EntityFile.Type type, UUID originalId);
+    List<EntityFile> findAllByEntityId(UUID entityId);
 
-    EntityFile findById(UUID id);
+    FileInfo uploadTempFile(FileInfoDto uploadEntityFileDto);
+
+    Optional<EntityFile> findById(UUID id);
 
     EntityFile save(EntityFile entityFile);
 

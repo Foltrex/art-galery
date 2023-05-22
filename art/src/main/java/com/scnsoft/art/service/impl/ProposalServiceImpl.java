@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.scnsoft.art.entity.Art;
 import com.scnsoft.art.entity.Proposal;
-import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.repository.FacilityRepository;
 import com.scnsoft.art.repository.ProposalRepository;
 
@@ -25,8 +24,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class ProposalServiceImpl {
 
     private final ProposalRepository proposalRepository;
-    private final FacilityRepository facilityRepository;
-    private final AccountFeignClient accountFeignClient;
 
     public Proposal findById(UUID proposalId) {
         return proposalRepository.findById(proposalId)

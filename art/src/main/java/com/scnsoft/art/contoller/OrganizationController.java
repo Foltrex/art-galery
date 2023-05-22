@@ -38,12 +38,14 @@ public class OrganizationController {
     public Page<OrganizationDto> findAll(
             Pageable pageable,
             @RequestParam(defaultValue = "") String name,
-            @RequestParam(defaultValue = "") String status
+            @RequestParam(defaultValue = "") String status,
+            @RequestParam(required = false) Boolean withFacilities
     ) {
         return organizationServiceFacade.findAll(
                 pageable,
                 name,
                 status,
+                withFacilities,
                 null
         );
     }
@@ -84,6 +86,7 @@ public class OrganizationController {
                 Pageable.unpaged(),
                         null,
                         Organization.Status.INACTIVE.name(),
+                        false,
                         new Date(new Date().getTime() - (90L * 24 * 3600 * 1000))
                 )
                 .getContent()

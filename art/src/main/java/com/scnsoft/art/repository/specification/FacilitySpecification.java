@@ -9,7 +9,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.google.common.base.Strings;
 import com.scnsoft.art.dto.FacilityFilter;
 import com.scnsoft.art.entity.Organization;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,7 @@ public class FacilitySpecification implements Specification<Facility>{
             Join<Address, City> city = address.join(Address.Fields.city);
             predicates.add(cb.equal(city.get(City.Fields.id), filter.getCityId()));
         }
-        if (!Strings.isNullOrEmpty(filter.getFacilityName())) {
+        if (!(filter.getFacilityName() == null || filter.getFacilityName().isEmpty())) {
             String facilityName = "%" + filter.getFacilityName() + "%";
             predicates.add(cb.like(root.get(Facility.Fields.name), facilityName));
         }

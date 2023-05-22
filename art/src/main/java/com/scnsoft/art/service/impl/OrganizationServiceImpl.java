@@ -16,13 +16,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.google.common.base.Strings;
-import com.scnsoft.art.dto.AccountDto;
-import com.scnsoft.art.dto.AccountType;
 import com.scnsoft.art.entity.Organization;
-import com.scnsoft.art.feignclient.AccountFeignClient;
 import com.scnsoft.art.repository.OrganizationRepository;
-import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.service.OrganizationService;
 
 import static com.scnsoft.art.entity.Organization.Status.ACTIVE;
@@ -37,7 +32,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationRepository organizationRepository;
-    private final AccountFeignClient accountFeignClient;
 
     @Override
     public List<Organization> findAll() {
@@ -45,18 +39,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Page<Organization> findAll(Pageable pageable, String name, String status, Date inactiveDate) {
-        System.out.println("name = " + name);
-        System.out.println("status = " + status);
-
-        UUID currentAccountId = SecurityUtil.getCurrentAccountId();
-        AccountDto accountDto = accountFeignClient.findById(currentAccountId);
-
+    public Page<Organization> findAll(Pageable pageable, String name, String status, Boolean withFacilities, Date inactiveDate) {
         Specification<Organization> specification = (root, cq, cb) -> {
-            if (accountDto.getAccountType() == AccountType.ARTIST) {
+            if (withFacilities) {
                 root.fetch(Organization.Fields.facilities, JoinType.INNER);
             }
-            
             return cb.conjunction();
         };
         if(inactiveDate != null) {
@@ -65,10 +52,10 @@ public class OrganizationServiceImpl implements OrganizationService {
                     cb.lessThan(root.get(Organization.Fields.inactivationDate), inactiveDate)
             ));
         }
-        if (!Strings.isNullOrEmpty(name)) {
+        if (!(name == null || name.isEmpty())) {
             specification = specification.and(nameContain(name));
         }
-        if (!Strings.isNullOrEmpty(status)) {
+        if (!(status == null || status.isEmpty())) {
             specification = specification.and(statusEquals(Organization.Status.valueOf(status)));
         }
 

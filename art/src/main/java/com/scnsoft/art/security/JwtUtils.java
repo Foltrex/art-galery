@@ -1,34 +1,35 @@
 package com.scnsoft.art.security;
 
+import com.scnsoft.art.dto.AccountType;
+import com.scnsoft.art.entity.Role;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
-@PropertySource("/application.yml")
 @Slf4j
 public class JwtUtils {
 
     @Value("${app.props.token.secret}")
     private String jwtSecret;
 
-    @PostConstruct
-    protected void init() {
-        jwtSecret = Base64.getEncoder().encodeToString(jwtSecret.getBytes());
-    }
+    @Value("${app.props.token.expired}")
+    private long jwtExpirationMs;
 
     public String parseJwtToken(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
@@ -69,4 +70,29 @@ public class JwtUtils {
         return (List<String>) Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("roles");
     }
 
+    private Set<String> getRoleNames(Set<Role> userRoles) {
+        Set<String> roles = new HashSet<>();
+        userRoles.forEach(role -> roles.add(role.getName().toString()));
+
+        return roles;
+    }
+
+
+    public String createToken(String email, UUID id, AccountType accountType, Set<Role> roles) {
+        Claims claims = Jwts.claims().setSubject(email);
+
+        claims.put("id", id);
+        claims.put("type", accountType.toString());
+        claims.put("roles", getRoleNames(roles));
+
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + jwtExpirationMs);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
 }

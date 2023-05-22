@@ -1,14 +1,10 @@
 package com.scnsoft.art.contoller;
 
-import com.scnsoft.art.dto.AccountDto;
 import com.scnsoft.art.dto.ArtDto;
 import com.scnsoft.art.dto.ArtFilter;
-import com.scnsoft.art.dto.UploadEntityFileDto;
-import com.scnsoft.art.entity.EntityFile;
 import com.scnsoft.art.facade.ArtServiceFacade;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +25,6 @@ import java.util.UUID;
 @Transactional
 public class ArtController {
     private final ArtServiceFacade artServiceFacade;
-
-    @RabbitListener(queues = "${spring.rabbitmq.queue}")
-    public void deleteRelatedAccountData(AccountDto accountDto) {
-        artServiceFacade.deleteByAccountId(accountDto.getId());
-    }
 
     @GetMapping
     public Page<ArtDto> findAll(Pageable pageable, ArtFilter artFilter) {
@@ -56,16 +47,4 @@ public class ArtController {
         artServiceFacade.deleteById(id);
         return ResponseEntity.ok().build();
     }
-
-    @PostMapping("/{id}/image")
-    public EntityFile uploadImage(@PathVariable UUID id, @RequestBody UploadEntityFileDto uploadEntityFileDto) {
-        return artServiceFacade.uploadImage(id, uploadEntityFileDto);
-    }
-
-    // @DeleteMapping("/accounts/{id}")
-    // public void deleteByAccountId(@PathVariable UUID id) {
-    //     artServiceFacade.deleteByAccountId(id);
-    // }
-
-
 }

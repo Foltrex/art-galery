@@ -7,7 +7,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.scnsoft.art.dto.ArtFilter;
-import com.scnsoft.art.dto.UploadEntityFileDto;
 import com.scnsoft.art.dto.mapper.ArtInfoMapper;
 import com.scnsoft.art.entity.ArtInfo;
 import com.scnsoft.art.entity.EntityFile;
@@ -35,12 +34,17 @@ public class ArtServiceFacade {
     private final ArtInfoMapper artInfoMapper;
 
     public ArtDto findById(UUID id) {
-        return artMapper.mapToDto(artService.findById(id));
+        ArtDto result = artMapper.mapToDto(artService.findById(id));
+        result.setFiles(fileService.findAllByEntityId(id));
+        return result;
     }
 
     public ArtDto save(ArtDto artDto) {
         Art art = artMapper.mapToEntity(artDto);
-        return artMapper.mapToDto(artService.save(art));
+        var result = artMapper.mapToDto(artService.save(art, artDto.getFiles()));
+        result.setFiles(fileService.findAllByEntityId(result.getId()));
+        return result;
+
     }
 
     public void deleteById(UUID id) {
@@ -85,13 +89,7 @@ public class ArtServiceFacade {
                 art.setArtInfos(Collections.singletonList(artInfoMapper.mapToDto(info)));
             }
         });
-
-
         return page;
     }
 
-
-    public EntityFile uploadImage(UUID id, UploadEntityFileDto uploadEntityFileDto) {
-        return artService.uploadImage(id, uploadEntityFileDto);
-    }
 }

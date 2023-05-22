@@ -1,6 +1,9 @@
 package com.scnsoft.art.security;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.scnsoft.art.entity.Account;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,31 +12,55 @@ import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-@Data
+@ToString
+@EqualsAndHashCode
 public class UserDetailsImpl implements UserDetails {
 
     @Serial
     private static final long serialVersionUID = 1L;
     private final UUID id;
     private final String email;
+    @JsonIgnore
+    private final String password;
+
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(UUID id,
                            String email,
+                           String password,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
+        this.password = password;
         this.authorities = authorities;
     }
-
     public static UserDetailsImpl build(UUID id, String email, List<String> roles) {
         List<SimpleGrantedAuthority> authorities = roles
                 .stream()
                 .map(SimpleGrantedAuthority::new)
                 .toList();
+        return new UserDetailsImpl(
+                id,
+                email,
+                null,
+                authorities);
+    }
+    public static UserDetailsImpl build(Account account) {
+        List<GrantedAuthority> authorities = account.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
 
-        return new UserDetailsImpl(id, email, authorities);
+        return new UserDetailsImpl(
+                account.getId(),
+                account.getEmail(),
+                account.getPassword(),
+                authorities);
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     @Override
@@ -43,7 +70,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
