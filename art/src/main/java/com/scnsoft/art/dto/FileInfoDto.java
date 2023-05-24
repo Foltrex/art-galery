@@ -17,6 +17,7 @@ public class FileInfoDto {
     private String mimeType;
     private Integer contentLength;
     private String directory;
+    private String originalName;
     private Date createdAt;
     private Integer cacheControl;
 

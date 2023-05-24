@@ -10,7 +10,7 @@ import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.service.FacilityService;
 import com.scnsoft.art.service.MetadataValidationService;
-import com.scnsoft.art.service.user.AccountServiceImpl;
+import com.scnsoft.art.service.user.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ import java.util.UUID;
 public class MetadataValidationServiceImpl implements MetadataValidationService {
 
     private final AccountMapper accountMapper;
-    private final AccountServiceImpl accountFeignClient;
+    private final AccountService accountFeignClient;
     private final FacilityService facilityService;
 
     @Override

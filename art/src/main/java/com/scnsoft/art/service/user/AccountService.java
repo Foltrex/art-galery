@@ -1,6 +1,7 @@
 package com.scnsoft.art.service.user;
 
 import com.scnsoft.art.dto.AccountFilter;
+import com.scnsoft.art.dto.AccountType;
 import com.scnsoft.art.dto.MetadataEnum;
 import com.scnsoft.art.dto.UpdatePasswordRequest;
 import com.scnsoft.art.entity.Account;
@@ -8,6 +9,7 @@ import com.scnsoft.art.entity.Metadata;
 import com.scnsoft.art.repository.AccountRepository;
 import com.scnsoft.art.repository.MetadataRepository;
 import com.scnsoft.art.repository.specification.AccountSpecification;
+import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.security.user.security.aop.AccountSecurityHandler;
 import com.scnsoft.art.service.ArtService;
 import com.scnsoft.art.service.FileServiceImplFile;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,7 +33,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AccountServiceImpl {
+public class AccountService {
     private static final String OWNER_ORGANIZATION_ROLE = "CREATOR";
     @Value("${app.props.account.avatar_width}")
     private Integer avatarWidth;
@@ -176,6 +179,9 @@ public class AccountServiceImpl {
         artService.deleteByAccountId(id);
     }
 
+    public boolean isSystemUser() {
+        return findById(SecurityUtil.getCurrentAccountId()).getAccountType() == AccountType.SYSTEM;
+    }
     public boolean isEditingUser(UUID activeUserId, UUID targetUserId) {
         Account account = accountRepository.findById(activeUserId)
                 .orElseThrow();

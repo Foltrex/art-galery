@@ -36,6 +36,8 @@ public class FileInfo {
 
     private Integer cacheControl;
 
+    private String originalName;
+
     private String directory;
 
     private Date createdAt;

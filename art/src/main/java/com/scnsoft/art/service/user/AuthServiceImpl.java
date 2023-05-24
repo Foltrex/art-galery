@@ -38,8 +38,8 @@ import java.util.UUID;
 public class AuthServiceImpl  {
 
     private final AccountRepository accountRepository;
-    private final AccountServiceImpl accountService;
-    private final AccountAuthenticationHelperServiceImpl accountAuthenticationHelperServiceImpl;
+    private final AccountService accountService;
+    private final AccountAuthenticationHelperService accountAuthenticationHelperService;
     private final EmailMessageServiceImpl emailMessageService;
     private final MetadataRepository metadataRepository;
     private final AccountMapper accountMapper;
@@ -60,9 +60,9 @@ public class AuthServiceImpl  {
                 .email(registrationRequest.getEmail())
                 .firstName(registrationRequest.getFirstName())
                 .lastName(registrationRequest.getLastName())
-                .password(accountAuthenticationHelperServiceImpl.encodePassword(registrationRequest.getPassword()))
+                .password(accountAuthenticationHelperService.encodePassword(registrationRequest.getPassword()))
                 .accountType(registrationRequest.getAccountType())
-                .roles(accountAuthenticationHelperServiceImpl.getUserRoles())
+                .roles(accountAuthenticationHelperService.getUserRoles())
                 .isOneTimePassword(false)
                 .build());
 
@@ -71,10 +71,10 @@ public class AuthServiceImpl  {
             metadataRepository.saveAll(metadata);
         }
 
-        accountAuthenticationHelperServiceImpl.setAccountToAuthentication(registrationRequest.getEmail(),
+        accountAuthenticationHelperService.setAccountToAuthentication(registrationRequest.getEmail(),
                 registrationRequest.getPassword());
 
-        return accountAuthenticationHelperServiceImpl.createAuthTokenResponse(account);
+        return accountAuthenticationHelperService.createAuthTokenResponse(account);
     }
 
     public AuthToken login(LoginRequest loginRequest) {
@@ -91,7 +91,7 @@ public class AuthServiceImpl  {
         }
 
         try {
-            accountAuthenticationHelperServiceImpl.setAccountToAuthentication(loginRequest.getEmail(),
+            accountAuthenticationHelperService.setAccountToAuthentication(loginRequest.getEmail(),
                     loginRequest.getPassword());
         } catch (AuthenticationException e) {
             handleEventOfBadCredentials(account);
@@ -104,7 +104,7 @@ public class AuthServiceImpl  {
             accountRepository.save(account);
         }
 
-        return accountAuthenticationHelperServiceImpl.createAuthTokenResponse(account);
+        return accountAuthenticationHelperService.createAuthTokenResponse(account);
     }
 
     public AccountDto registerUser(AccountDto registeringUser) {
@@ -116,7 +116,7 @@ public class AuthServiceImpl  {
 
         String password = PasswordGeneratorUtil.generate(10);
 
-        String encodedPassword = accountAuthenticationHelperServiceImpl.encodePassword(password);
+        String encodedPassword = accountAuthenticationHelperService.encodePassword(password);
         account.setMetadata(null);
         account.setPassword(encodedPassword);
         account.setIsOneTimePassword(true);
@@ -187,7 +187,7 @@ public class AuthServiceImpl  {
         }
 
         account.setPassword(
-                accountAuthenticationHelperServiceImpl.encodePassword(passwordRecoveryRequest.getPassword()));
+                accountAuthenticationHelperService.encodePassword(passwordRecoveryRequest.getPassword()));
         accountRepository.save(account);
 
         emailMessageService.updateSetCodeIsInvalidById(emailMessageCode.getId(), emailMessageCode);

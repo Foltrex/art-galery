@@ -1,0 +1,1 @@
+alter table file_info add column original_name varchar(64);

@@ -11,7 +11,7 @@ import com.scnsoft.art.entity.Account;
 import com.scnsoft.art.entity.EntityFile;
 import com.scnsoft.art.entity.Metadata;
 import com.scnsoft.art.repository.specification.FacilitySpecification;
-import com.scnsoft.art.service.user.AccountServiceImpl;
+import com.scnsoft.art.service.user.AccountService;
 import com.scnsoft.art.service.user.MetadataServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -36,7 +36,7 @@ public class FacilityServiceImpl implements FacilityService {
 
     private final FacilityRepository facilityRepository;
     private final OrganizationServiceImpl organizationService;
-    private final AccountServiceImpl accountService;
+    private final AccountService accountService;
     private final MetadataServiceImpl metadataService;
     private final ImageService imageService;
 
@@ -59,26 +59,7 @@ public class FacilityServiceImpl implements FacilityService {
 
     @Override
     public Facility save(Facility facility, List<EntityFile> images) {
-        var id = facility.getId();
-        if(id == null) {
-            facility = facilityRepository.save(facility);
-            id = facility.getId();
-        }
-        UUID currentAccountId = SecurityUtil.getCurrentAccountId();
-        Account accountDto = accountService.findById(currentAccountId);
-
-        Organization organization;
-        if(accountDto.getAccountType() == AccountType.SYSTEM) {
-            organization = organizationService.findById(facility.getOrganization().getId());
-        } else {
-            Metadata orgId = metadataService.findByKeyAndAccountId(
-                    MetadataEnum.ORGANIZATION_ID.getValue(),
-                    currentAccountId);
-            organization = organizationService.findById(UUID.fromString(orgId.getValue()));
-        }
-        facility.setOrganization(organization);
-
-
+        facility = facilityRepository.save(facility);
         imageService.processImages(
                 facility.getId(),
                 images,
@@ -87,7 +68,7 @@ public class FacilityServiceImpl implements FacilityService {
                 facilityImageHeight,
                 null, null);
 
-        return facilityRepository.save(facility);
+        return facility;
     }
 
     @Override

@@ -3,17 +3,22 @@ package com.scnsoft.art.contoller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scnsoft.art.dto.AccountDto;
+import com.scnsoft.art.dto.AccountType;
 import com.scnsoft.art.dto.AuthToken;
 import com.scnsoft.art.dto.ErrorDto;
 import com.scnsoft.art.dto.LoginRequest;
 import com.scnsoft.art.dto.MetaDataDto;
 import com.scnsoft.art.dto.PasswordRecoveryRequest;
 import com.scnsoft.art.dto.SendEmailMessageRequest;
+import com.scnsoft.art.entity.Account;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
+import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.service.FacilityService;
 import com.scnsoft.art.service.MetadataValidationService;
 import com.scnsoft.art.service.OrganizationService;
+import com.scnsoft.art.service.user.AccountAuthenticationHelperService;
+import com.scnsoft.art.service.user.AccountService;
 import com.scnsoft.art.service.user.AuthServiceImpl;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +27,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -44,6 +50,8 @@ public class AuthController {
     private final FacilityService facilityService;
     private final MetadataValidationService metadataValidationService;
     private final AuthServiceImpl authService;
+    private final AccountAuthenticationHelperService accountAuthenticationHelperService;
+    private final AccountService accountService;
 
 
     @PostMapping("/login")
@@ -109,18 +117,7 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Metadata set is invalid");
         }
 
-        try {
-            return ResponseEntity.ok(authService.register(accountDto));
-        } catch (FeignException e) {
-            String message;
-            try {
-                ErrorDto errorDto = objectMapper.readValue(e.contentUTF8(), ErrorDto.class);
-                message = errorDto.getMessage();
-            } catch (IOException ex) {
-                message = "Something went wrong";
-            }
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
-        }
+        return ResponseEntity.ok(authService.register(accountDto));
     }
 
     @PostMapping("/register-user")
@@ -150,5 +147,20 @@ public class AuthController {
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
         }
+    }
+
+    @GetMapping("/impersonate")
+    @PreAuthorize("isAuthenticated()")
+    public AuthToken impersonate(@RequestParam("username") String username) {
+        Account current = accountService.findById(SecurityUtil.getCurrentAccountId());
+        if(current.getAccountType() != AccountType.SYSTEM) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You have no permissions for impersonate action");
+        }
+        Account target = accountService.findByEmail(username);
+        if(target.getAccountType() == AccountType.SYSTEM) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You have no permissions for impersonate system user");
+        }
+
+        return accountAuthenticationHelperService.createAuthTokenResponse(target);
     }
 }

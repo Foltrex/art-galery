@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class AccountAuthenticationHelperServiceImpl {
+public class AccountAuthenticationHelperService {
 
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;

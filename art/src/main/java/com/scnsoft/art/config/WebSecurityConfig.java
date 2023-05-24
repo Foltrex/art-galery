@@ -21,7 +21,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,7 +34,9 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
 
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
+    public WebSecurityConfig(
+            UserDetailsServiceImpl userDetailsService,
+            AuthEntryPointJwt unauthorizedHandler) {
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
     }
@@ -65,6 +66,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http.cors()
+                .and()
+                .authorizeRequests().antMatchers("/auth/impersonate").access("@accountService.isSystemUser()")
                 .and()
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)

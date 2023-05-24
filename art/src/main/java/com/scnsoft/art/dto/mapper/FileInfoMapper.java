@@ -12,6 +12,7 @@ public class FileInfoMapper {
                 .mimeType(fileInfo.getMimeType())
                 .contentLength(fileInfo.getContentLength())
                 .directory(fileInfo.getDirectory())
+                .originalName(fileInfo.getOriginalName())
                 .createdAt(fileInfo.getCreatedAt())
                 .cacheControl(fileInfo.getCacheControl())
                 .build();
@@ -23,6 +24,7 @@ public class FileInfoMapper {
                 .mimeType(fileInfoDto.getMimeType())
                 .contentLength(fileInfoDto.getContentLength())
                 .directory(fileInfoDto.getDirectory())
+                .originalName(fileInfoDto.getOriginalName())
                 .createdAt(fileInfoDto.getCreatedAt())
                 .cacheControl(fileInfoDto.getCacheControl())
                 .build();

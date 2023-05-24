@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -86,9 +87,12 @@ public class FileServiceImplFile {
         if(fileInfo.getId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to upstream new file");
         }
-        String path = generateFilePath(fileInfo.getId());
-        documentService.save(path, b);
-        fileInfo.setContentLength(b.length);
+        if(b != null) {
+            String path = generateFilePath(fileInfo.getId());
+            documentService.save(path, b);
+            fileInfo.setContentLength(b.length);
+        }
+        fileInfo.setOriginalName(trimFileName(fileInfo.getOriginalName()));
         return fileInfoRepository.save(fileInfo);
     }
 
@@ -100,8 +104,11 @@ public class FileServiceImplFile {
                 .mimeType(uploadFileDto.getMimeType())
                 .contentLength(decodedImageData.length)
                 .directory(uploadFileDto.getDirectory())
+                .originalName(uploadFileDto.getOriginalName())
                 .cacheControl(uploadFileDto.getCacheControl())
                 .build();
+
+        fileInfo.setOriginalName(trimFileName(fileInfo.getOriginalName()));
 
         fileInfo = fileInfoRepository.save(fileInfo);
 
@@ -128,5 +135,16 @@ public class FileServiceImplFile {
         return pathToFiles + str.substring(0, 3) + SEPARATOR + str.substring(3, 6) + SEPARATOR + id;
     }
 
+    private String trimFileName(String name) {
+        if(name.length() < 50) {
+            return name;
+        }
+        var ext = name.lastIndexOf(".");
+        if(ext == -1) {
+            return name.substring(0, 50);
+        }
+        var extLength = name.length() - ext;
+        return name.substring(0, 50 - extLength) + name.substring(ext);
+    }
 
 }
