@@ -136,6 +136,9 @@ public class FileServiceImplFile {
     }
 
     private String trimFileName(String name) {
+        if(name == null) {
+            return null;
+        }
         if(name.length() < 50) {
             return name;
         }
