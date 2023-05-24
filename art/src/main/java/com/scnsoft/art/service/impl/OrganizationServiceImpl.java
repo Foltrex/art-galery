@@ -41,7 +41,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Page<Organization> findAll(Pageable pageable, String name, String status, Boolean withFacilities, Date inactiveDate) {
         Specification<Organization> specification = (root, cq, cb) -> {
-            if (withFacilities) {
+            if (Boolean.TRUE.equals(withFacilities)) {
                 root.fetch(Organization.Fields.facilities, JoinType.INNER);
             }
             return cb.conjunction();
