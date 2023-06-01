@@ -14,4 +14,5 @@
     <includeAll path="db/changelog/5.0"/>
     <includeAll path="db/changelog/6.0"/>
     <includeAll path="db/changelog/7.0"/>
+    <includeAll path="db/changelog/8.0"/>
 </databaseChangeLog>

@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -37,6 +38,7 @@ public class Art {
     private UUID id;
     private String name;
     private String description;
+    private Long price;
 
     private Date dateCreation;
 
@@ -62,4 +64,8 @@ public class Art {
     @Builder.Default
     @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)
     private List<Proposal> proposals = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
 }

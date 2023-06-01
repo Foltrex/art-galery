@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -22,7 +23,7 @@ public class ProposalDto {
     private CurrencyDto currency;
     private UUID artistAccountId;
     private OrganizationDto organization;
-    private FacilityDto facility;
+    private List<FacilityDto> facilities;
     private Boolean artistConfirmation;
     private Boolean organizationConfirmation;
 }

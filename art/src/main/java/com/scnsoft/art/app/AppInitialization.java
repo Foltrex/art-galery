@@ -27,7 +27,7 @@ public class AppInitialization {
     private static final String DOLLAR_CURRENCY_VALUE = "USD";
     private static final String DOLLAR_CURRENCY_LABEL = "$";
 
-    private static final String GEORGIAN_CURRENCY_VALUE = "GEL";
+    public static final String GEORGIAN_CURRENCY_VALUE = "GEL";
     private static final String GEORGIAN_CURRENCY_LABEL = "ლ";
 
     private final CurrencyRepository currencyRepository;

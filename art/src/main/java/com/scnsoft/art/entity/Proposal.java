@@ -12,9 +12,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,6 +28,9 @@ import java.util.UUID;
 @Builder
 @FieldNameConstants
 public class Proposal {
+    public enum ProposalStatus {
+        SENT, AWAIT, CANCELED, APPROVED
+    }
     @Id
     @GeneratedValue
     private UUID id;
@@ -38,6 +44,7 @@ public class Proposal {
     private Currency currency;
 
     private UUID accountId;
+    private ProposalStatus status;
 
     @NotAudited
     @NotNull
@@ -46,9 +53,13 @@ public class Proposal {
     private Organization organization;
 
     @NotAudited
-    @ManyToOne
-    @JoinColumn(name = "facility_id")
-    private Facility facility;
+    @ManyToMany
+    @JoinTable(
+            name = "proposal_m2m_facility",
+            joinColumns = {@JoinColumn(name = "proposal_id")},
+            inverseJoinColumns = {@JoinColumn(name = "facility_id")}
+    )
+    private List<Facility> facilities;
 
     @NotAudited
     @ManyToOne

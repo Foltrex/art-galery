@@ -30,6 +30,8 @@ public class ArtDto {
 
     private UUID artistAccountId;
     private Date dateCreation;
+    private CurrencyDto currency;
+    private Long price;
     private List<EntityFile> files;
     private List<ArtInfoDto> artInfos;
 }
