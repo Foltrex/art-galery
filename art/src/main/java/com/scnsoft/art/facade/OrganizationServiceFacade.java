@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.scnsoft.art.dto.OrganizationFilter;
 import com.scnsoft.art.service.OrganizationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,8 +33,8 @@ public class OrganizationServiceFacade {
             .toList();
     }
 
-    public Page<OrganizationDto> findAll(Pageable pageable, String name, String status, Boolean withFacilities, Date inactiveDate) {
-        return organizationMapper.mapPageToDto(organizationService.findAll(pageable, name, status, withFacilities, inactiveDate));
+    public Page<OrganizationDto> findAll(Pageable pageable, OrganizationFilter filter, Date inactiveDate) {
+        return organizationMapper.mapPageToDto(organizationService.findAll(pageable, filter, inactiveDate));
     }
 
     public OrganizationDto findById(UUID id) {

@@ -30,7 +30,6 @@ import javax.persistence.criteria.Predicate;
 public class ProposalServiceImpl {
 
     private final ProposalRepository proposalRepository;
-    private final AccountService accountService;
 
     public Optional<Proposal> findById(UUID proposalId) {
         return proposalRepository.findById(proposalId);
@@ -40,12 +39,12 @@ public class ProposalServiceImpl {
         return proposalRepository.save(proposal);
     }
 
-    public Page<Proposal> findAll(ProposalFilter filter, Pageable pageable, int received) {
-         return proposalRepository.findAll(prepareSpec(filter, received), pageable);
+    public Page<Proposal> findAll(ProposalFilter filter, Pageable pageable) {
+         return proposalRepository.findAll(prepareSpec(filter), pageable);
     }
 
     public long count(ProposalFilter filter) {
-        return proposalRepository.count(prepareSpec(filter, 1));
+        return proposalRepository.count(prepareSpec(filter));
     }
 
     public void discardAllProposalsForArtExceptPassed(Art art, Proposal proposal) {
@@ -66,18 +65,17 @@ public class ProposalServiceImpl {
     /**
      *
      * @param filter filter
-     * @param received 1 for received, 0 for agreed, -1 for sent
      * @return props
      */
-    private Specification<Proposal> prepareSpec(ProposalFilter filter, int received) {
+    private Specification<Proposal> prepareSpec(ProposalFilter filter) {
         return ((r, query, cb) -> {
             Predicate out = cb.and();
             if(filter.getAccountId() != null) {
                 out = cb.and(out, cb.equal(r.get(Proposal.Fields.accountId), filter.getAccountId()));
-                if(received == 1) {
+                if(filter.getReceived() == 1) {
                     out = cb.and(out, cb.equal(r.get(Proposal.Fields.artistConfirmation), Boolean.FALSE));
                     out = cb.and(out, cb.equal(r.get(Proposal.Fields.organizationConfirmation), Boolean.TRUE));
-                } else if(received == -1) {
+                } else if(filter.getReceived() == -1) {
                     out = cb.and(out, cb.equal(r.get(Proposal.Fields.artistConfirmation), Boolean.TRUE));
                     out = cb.and(out, cb.equal(r.get(Proposal.Fields.organizationConfirmation), Boolean.FALSE));
                 } else {
@@ -93,11 +91,11 @@ public class ProposalServiceImpl {
             if(filter.getOrganizationId() != null) {
                 out = cb.and(out, cb.equal(
                         r.get(Proposal.Fields.organization).get(Organization.Fields.id),
-                        filter.getAccountId()));
-                if(received == 1) {
+                        filter.getOrganizationId()));
+                if(filter.getReceived() == 1) {
                     out = cb.and(out, cb.equal(r.get(Proposal.Fields.artistConfirmation), Boolean.TRUE));
                     out = cb.and(out, cb.equal(r.get(Proposal.Fields.organizationConfirmation), Boolean.FALSE));
-                } else if(received == -1) {
+                } else if(filter.getReceived() == -1) {
                     out = cb.and(out, cb.equal(r.get(Proposal.Fields.artistConfirmation), Boolean.FALSE));
                     out = cb.and(out, cb.equal(r.get(Proposal.Fields.organizationConfirmation), Boolean.TRUE));
                 } else {

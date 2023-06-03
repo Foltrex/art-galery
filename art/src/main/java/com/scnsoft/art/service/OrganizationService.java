@@ -1,5 +1,6 @@
 package com.scnsoft.art.service;
 
+import com.scnsoft.art.dto.OrganizationFilter;
 import com.scnsoft.art.entity.Organization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import java.util.UUID;
 public interface OrganizationService {
 
     List<Organization> findAll();
-    Page<Organization> findAll(Pageable pageable, String name, String status, Boolean withFacilities, Date inactiveDate);
+    Page<Organization> findAll(Pageable pageable, OrganizationFilter filter, Date inactiveDate);
 
     Organization findById(UUID id);
 

@@ -1,6 +1,8 @@
 package com.scnsoft.art.service.impl;
 
+import static com.scnsoft.art.repository.specification.OrganizationSpecification.facilityIdEqual;
 import static com.scnsoft.art.repository.specification.OrganizationSpecification.nameContain;
+import static com.scnsoft.art.repository.specification.OrganizationSpecification.organizationIdEquals;
 import static com.scnsoft.art.repository.specification.OrganizationSpecification.statusEquals;
 
 import java.util.Date;
@@ -9,6 +11,7 @@ import java.util.UUID;
 
 import javax.persistence.criteria.JoinType;
 
+import com.scnsoft.art.dto.OrganizationFilter;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,9 +42,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Page<Organization> findAll(Pageable pageable, String name, String status, Boolean withFacilities, Date inactiveDate) {
+    public Page<Organization> findAll(Pageable pageable, OrganizationFilter filter, Date inactiveDate) {
         Specification<Organization> specification = (root, cq, cb) -> {
-            if (Boolean.TRUE.equals(withFacilities)) {
+            if (Boolean.TRUE.equals(filter.getWithFacilities())) {
                 root.fetch(Organization.Fields.facilities, JoinType.INNER);
             }
             return cb.conjunction();
@@ -52,11 +55,17 @@ public class OrganizationServiceImpl implements OrganizationService {
                     cb.lessThan(root.get(Organization.Fields.inactivationDate), inactiveDate)
             ));
         }
-        if (!(name == null || name.isEmpty())) {
-            specification = specification.and(nameContain(name));
+        if (!(filter.getName() == null || filter.getName().isEmpty())) {
+            specification = specification.and(nameContain(filter.getName()));
         }
-        if (!(status == null || status.isEmpty())) {
-            specification = specification.and(statusEquals(Organization.Status.valueOf(status)));
+        if (filter.getStatus() != null) {
+            specification = specification.and(statusEquals(filter.getStatus()));
+        }
+        if(filter.getOrganizationId() != null) {
+            specification = specification.and(organizationIdEquals(filter.getOrganizationId()));
+        }
+        if(filter.getFacilityId() != null) {
+            specification = specification.and(facilityIdEqual(filter.getFacilityId()));
         }
 
         return organizationRepository.findAll(specification, pageable);

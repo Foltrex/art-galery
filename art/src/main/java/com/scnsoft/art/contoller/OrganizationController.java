@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.scnsoft.art.dto.FacilityFilter;
+import com.scnsoft.art.dto.OrganizationFilter;
 import com.scnsoft.art.entity.Organization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,15 +39,11 @@ public class OrganizationController {
     @GetMapping
     public Page<OrganizationDto> findAll(
             Pageable pageable,
-            @RequestParam(defaultValue = "") String name,
-            @RequestParam(defaultValue = "") String status,
-            @RequestParam(required = false) Boolean withFacilities
+            OrganizationFilter filter
     ) {
         return organizationServiceFacade.findAll(
                 pageable,
-                name,
-                status,
-                withFacilities,
+                filter,
                 null
         );
     }
@@ -82,11 +80,11 @@ public class OrganizationController {
 
     @Scheduled(fixedRate = 24L * 3600 * 1000, initialDelay = 24L * 3600 * 1000)
     public void deleteOrganization() {
+        OrganizationFilter filter = new OrganizationFilter();
+        filter.setStatus(Organization.Status.INACTIVE);
         organizationServiceFacade.findAll(
                 Pageable.unpaged(),
-                        null,
-                        Organization.Status.INACTIVE.name(),
-                        false,
+                        filter,
                         new Date(new Date().getTime() - (90L * 24 * 3600 * 1000))
                 )
                 .getContent()

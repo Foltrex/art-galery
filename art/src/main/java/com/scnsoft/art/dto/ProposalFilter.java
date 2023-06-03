@@ -11,4 +11,10 @@ public class ProposalFilter {
     private UUID accountId;
     private UUID facilityId;
     private UUID organizationId;
+    /**
+    * 1 - receieved
+    * 0 - approved
+    * -1 - sent
+    */
+    private Integer received;
 }

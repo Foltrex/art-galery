@@ -1,6 +1,5 @@
 package com.scnsoft.art.contoller;
 
-import com.scnsoft.art.dto.ProposalBook;
 import com.scnsoft.art.dto.ProposalDto;
 import com.scnsoft.art.dto.ProposalFilter;
 import com.scnsoft.art.facade.ArtInfoServiceFacade;
@@ -20,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -41,16 +42,13 @@ public class ProposalController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ProposalBook> findAll(ProposalFilter filter, Pageable pageable) {
+    public ResponseEntity<Page<ProposalDto>> findAll(ProposalFilter filter, Pageable pageable) {
         return ResponseEntity.ok(proposalServiceFacade.findAll(filter, pageable));
     }
 
-    @RequestMapping(method = RequestMethod.HEAD)
-    public ResponseEntity<Void> count(ProposalFilter filter) {
-        long proposalsAmount = proposalServiceFacade.count(filter);
-        return ResponseEntity.ok()
-                .header(X_TOTAL_COUNT_HEADER, Objects.toString(proposalsAmount))
-                .build();
+    @GetMapping("count")
+    public ResponseEntity<Map<String, Long>> count(ProposalFilter filter) {
+        return ResponseEntity.ok(proposalServiceFacade.count(filter));
     }
 
     @DeleteMapping("/{id}")

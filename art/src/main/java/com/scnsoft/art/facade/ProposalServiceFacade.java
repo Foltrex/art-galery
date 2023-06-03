@@ -2,7 +2,6 @@ package com.scnsoft.art.facade;
 
 import com.scnsoft.art.dto.AccountType;
 import com.scnsoft.art.dto.MetadataEnum;
-import com.scnsoft.art.dto.ProposalBook;
 import com.scnsoft.art.dto.ProposalDto;
 import com.scnsoft.art.dto.ProposalFilter;
 import com.scnsoft.art.dto.mapper.ProposalMapper;
@@ -17,7 +16,6 @@ import com.scnsoft.art.service.FacilityService;
 import com.scnsoft.art.service.OrganizationService;
 import com.scnsoft.art.service.impl.ProposalServiceImpl;
 import com.scnsoft.art.service.user.AccountService;
-import liquibase.repackaged.net.sf.jsqlparser.util.validation.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +23,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -69,6 +70,7 @@ public class ProposalServiceFacade {
                             return f;
                         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Facility does not exists"));
                     });
+            proposal.setAccountId(proposalDto.getArt().getArtistAccountId());
         }
         proposal.setStatus(Proposal.ProposalStatus.SENT);
         Currency currency = currencyService.findAll().stream()
@@ -79,17 +81,20 @@ public class ProposalServiceFacade {
         return proposalMapper.mapToDto(proposalService.save(proposal));
     }
 
-    public ProposalBook findAll(ProposalFilter filter, Pageable pageable) {
-        ProposalBook book = new ProposalBook();
-        Account account = accountService.findById(SecurityUtil.getCurrentAccountId());
-        book.setReceived(proposalMapper.mapPageToDto(proposalService.findAll(filter, pageable, 1)));
-        book.setSent(proposalMapper.mapPageToDto(proposalService.findAll(filter, pageable, -1)));
-        book.setApproved(proposalMapper.mapPageToDto(proposalService.findAll(filter, pageable, 0)));
-        return book;
+    public Page<ProposalDto> findAll(ProposalFilter filter, Pageable pageable) {
+        return proposalMapper.mapPageToDto(proposalService.findAll(filter, pageable));
     }
 
-    public long count(ProposalFilter filter) {
-        return proposalService.count(filter);
+    public Map<String, Long> count(ProposalFilter filter) {
+        return new HashMap<>(){{
+            filter.setReceived(1);
+            put("received", proposalService.count(filter));
+            filter.setReceived(-1);
+            put("sent", proposalService.count(filter));
+            filter.setReceived(0);
+            put("approved", proposalService.count(filter));
+
+        }};
     }
 
     public void deleteById(UUID id) {
