@@ -17,6 +17,7 @@ import com.scnsoft.art.util.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -93,11 +95,10 @@ public class AccountService {
                             .and(AccountSpecification.inMetadata(MetadataEnum.ORGANIZATION_ID.getValue(), currentOrganizationIdString));
                     yield accountRepository.findAll(generalSpecification, pageable);
                 } else {
-                    throw new IllegalArgumentException(
-                            "Accountss's not allowed for " + organizationRole + " representative role");
+                    yield new PageImpl<>(new ArrayList<>());
                 }
             }
-            case ARTIST -> throw new IllegalArgumentException("Accountss's not allowed for artist");
+            case ARTIST -> new PageImpl<>(new ArrayList<>());
         };
     }
 

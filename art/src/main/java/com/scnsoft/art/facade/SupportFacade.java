@@ -27,7 +27,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -71,18 +73,20 @@ public class SupportFacade {
         }
         var out = supportService.findThreads(filter, pageable).map(supportMapper::mapToThreadDto);
 
-
-        var opPosts = supportService.findOpPosts(
+        var opPosts = supportService.findPosts(
                 out.stream().map(SupportThreadDto::getId).collect(Collectors.toList()));
 
         out.getContent().forEach(f -> {
             var opPost = opPosts.get(f.getId());
-            if(opPost != null) {
-                f.setPosts(Collections.singletonList(supportMapper.mapToDto(opPost)));
-            } else {
-                f.setPosts(new ArrayList<>());
+            f.setPosts(new ArrayList<>());
+            if(opPost.size() > 0) {
+                f.getPosts().add(supportMapper.mapToDto(opPost.get(0)));
+            }
+            if(opPost.size() > 1) {
+                f.getPosts().add(supportMapper.mapToDto(opPost.get(opPost.size() - 1)));
             }
         });
+
 
         return out;
     }
@@ -147,8 +151,8 @@ public class SupportFacade {
                         }
                     }
                     thread.setUpdatedAt(new Date());
-                    if(!isSystem && thread.getStatus() == SupportThread.SupportThreadStatus.done) {
-                        thread.setStatus(SupportThread.SupportThreadStatus.open);
+                    if(!isSystem && thread.getStatus() == SupportThread.SupportThreadStatus.DONE) {
+                        thread.setStatus(SupportThread.SupportThreadStatus.OPEN);
                     }
                     supportService.saveThread(thread);
                 },
@@ -224,5 +228,11 @@ public class SupportFacade {
 
         return supportMapper.mapToThreadDto(supportService.saveThread(thread));
 
+    }
+
+    public Map<String, Integer> getCount(UUID id) {
+        return new HashMap<>(){{
+            put("count", supportService.getUnanswered(id));
+        }};
     }
 }

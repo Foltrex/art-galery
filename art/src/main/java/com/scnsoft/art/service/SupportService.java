@@ -6,6 +6,7 @@ import com.scnsoft.art.entity.Support;
 import com.scnsoft.art.entity.SupportThread;
 import com.scnsoft.art.repository.SupportRepository;
 import com.scnsoft.art.repository.SupportThreadRepository;
+import com.scnsoft.art.service.user.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ public class SupportService {
 
     private final SupportThreadRepository supportThreadRepository;
     private final SupportRepository supportRepository;
+    private final AccountService accountService;
 
     public Support save(Support support) {
         return supportRepository.save(support);
@@ -72,14 +75,25 @@ public class SupportService {
         supportRepository.delete(post);
     }
 
-    public Map<UUID, Support> findOpPosts(List<UUID> uuidStream) {
-        if(uuidStream == null || uuidStream.isEmpty()) {
+    public Map<UUID, List<Support>> findPosts(List<UUID> idList) {
+        if(idList == null || idList.isEmpty()) {
             return new HashMap<>();
         }
-        return supportRepository.findOpPosts(uuidStream).stream().collect(Collectors.toMap(
-                Support::getThreadId,
-                s -> s,
-                (s1, s2) -> s1
-        ));
+
+        var data = supportRepository.findPosts(idList);
+        Map<UUID, List<Support>> out = new HashMap<>();
+        for(Support s : data) {
+            List<Support> list = out.computeIfAbsent(s.getThreadId(), k -> new ArrayList<>());
+            list.add(s);
+        }
+        return out;
     }
+
+    public Integer getUnanswered(UUID id) {
+        boolean isSystemUser = accountService.isSystemUser();
+        var open = isSystemUser ? supportRepository.getOpen(SupportThread.SupportThreadStatus.OPEN) : 0;
+        var unanswered = supportRepository.getUnanswered(id);
+        return open + unanswered;
+    }
+
 }
