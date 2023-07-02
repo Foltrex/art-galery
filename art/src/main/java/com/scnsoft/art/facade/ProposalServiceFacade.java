@@ -219,9 +219,6 @@ public class ProposalServiceFacade {
             return proposalMapper.mapToDto(proposalService.save(existing));
         }
 
-
-
-
         if(Boolean.TRUE.equals(existing.getArtistConfirmation()) && Boolean.TRUE.equals(existing.getOrganizationConfirmation())) {
             existing.setStatus(Proposal.ProposalStatus.APPROVED);
             proposalService.discardAllProposalsForArtExceptPassed(existing);
