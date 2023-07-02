@@ -38,6 +38,10 @@ import java.util.UUID;
 @EntityListeners(AccountListener.class)
 public class Account {
 
+    public enum BlockReason {
+        INVALID_PASSWORD
+    }
+
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -59,6 +63,8 @@ public class Account {
     private Integer failCount;
 
     private Date blockedSince;
+    private Long blockDuration;
+    private BlockReason blockReason;
 
     @Enumerated(EnumType.STRING)
     private AccountType accountType;

@@ -14,7 +14,6 @@ import com.scnsoft.art.entity.constant.TemplateFile;
 import com.scnsoft.art.repository.AccountRepository;
 import com.scnsoft.art.repository.MetadataRepository;
 import com.scnsoft.art.service.EmailSenderService;
-import com.scnsoft.art.util.AuthHelperUtil;
 import com.scnsoft.art.util.NumberGeneratorUtil;
 import com.scnsoft.art.util.PasswordGeneratorUtil;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +44,7 @@ public class AuthServiceImpl  {
     private final AccountMapper accountMapper;
     private final MetadataMapper metadataMapper;
     private final EmailSenderService emailSenderService;
+    private final AuthFailServiceImpl authFailService;
 
     public AuthToken register(AccountDto registrationRequest) {
         if (accountRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
@@ -79,22 +79,23 @@ public class AuthServiceImpl  {
 
     public AuthToken login(LoginRequest loginRequest) {
         Account account = accountService.findByEmail(loginRequest.getEmail());
+        Date blockedSince = account.getBlockedSince();
+        Long blockDuration = account.getBlockDuration();
 
-        Integer failCount = account.getFailCount();
-        if (failCount != 0 && failCount % 5 == 0) {
-            long secondsToUnblock = AuthHelperUtil.calculateSecondsToUnblock(account.getBlockedSince());
-
-            if (secondsToUnblock > 0) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Account blocked on " + secondsToUnblock + " seconds");
+        if (blockedSince != null
+                && blockDuration != null) {
+            long await = System.currentTimeMillis() - (blockedSince.getTime() + (blockDuration * 1000));
+            if(await < -1) {
+                await = -1 * await / 1000;
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, await + "");
             }
-            account.setFailCount(0);
         }
 
         try {
             accountAuthenticationHelperService.setAccountToAuthentication(loginRequest.getEmail(),
                     loginRequest.getPassword());
         } catch (AuthenticationException e) {
-            handleEventOfBadCredentials(account);
+            authFailService.handleEventOfBadCredentials(account);
             throw new BadCredentialsException("Invalid credentials");
         }
 
@@ -180,7 +181,7 @@ public class AuthServiceImpl  {
         if (!emailMessageCode.getCode().equals(passwordRecoveryRequest.getCode())) {
             emailMessageCode.setCountAttempts(emailMessageCode.getCountAttempts() + 1);
             if (emailMessageCode.getCountAttempts().equals(5)) {
-                emailMessageService.updateSetCodeIsInvalidById(emailMessageCode.getId(), emailMessageCode);
+                authFailService.updateSetCodeIsInvalidById(emailMessageCode.getId(), emailMessageCode);
             }
 
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code is not correct, try again!");
@@ -197,18 +198,4 @@ public class AuthServiceImpl  {
         SecurityContextHolder.getContext().setAuthentication(null);
         SecurityContextHolder.clearContext();
     }
-
-    private void handleEventOfBadCredentials(Account account) {
-        account.setLastFail(new Date());
-        if (AuthHelperUtil.isBruteForce(account.getLastFail())) {
-            Integer failCount = account.getFailCount();
-            account.setFailCount(++failCount);
-
-            if (failCount % 5 == 0) {
-                account.setBlockedSince(new Date());
-            }
-            accountRepository.save(account);
-        }
-    }
-
 }

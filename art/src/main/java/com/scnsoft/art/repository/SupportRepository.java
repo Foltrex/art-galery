@@ -26,6 +26,14 @@ public interface SupportRepository extends JpaRepository<Support, UUID>, JpaSpec
             "order by support.thread_id, support.created_at desc) t1 where t1.account_id != :id")
     Integer getUnanswered(@Param("id") UUID id);
 
+    @Query(nativeQuery = true, value = "select count(1) from (" +
+            "select distinct on (support.thread_id) " +
+            "support.account_id from support_thread " +
+            "inner join support on support.thread_id = support_thread.id " +
+            "where support_thread.status = 0 and support_thread.account_id = :id " +
+            "order by support.thread_id, support.created_at desc) t1 where t1.account_id != :id")
+    Integer getMyUnanswered(@Param("id") UUID id);
+
     @Query("select count(s) from SupportThread s where s.status = :status")
     Integer getOpen(@Param("status") SupportThread.SupportThreadStatus status);
 

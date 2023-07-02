@@ -73,6 +73,30 @@ public class ArtServiceImpl implements ArtService {
         }
         Art saved = artRepository.save(art);
 
+        entityFiles.stream()
+                .filter(f -> f.getOriginalId() == null && Boolean.TRUE.equals(f.getIsPrimary()))
+                .findAny().orElseGet(() -> {
+                    EntityFile newPrimary = null;
+                    for(EntityFile f : entityFiles) {
+                        if(f.getOriginalId() == null) {
+                            //update first as a primary
+                            f.setIsPrimary(true);
+                            newPrimary = f;
+                            break;
+                        }
+                    }
+                    if(newPrimary != null) {
+                        for(EntityFile f : entityFiles) {
+                            if(newPrimary.getId().equals(f.getOriginalId())) {
+                                //update thumbnail
+                                f.setIsPrimary(true);
+                                break;
+                            }
+                        }
+                    }
+                    return newPrimary;
+                });
+
         imageService.processImages(
                 saved.getId(),
                 entityFiles,

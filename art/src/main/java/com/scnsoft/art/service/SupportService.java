@@ -92,7 +92,9 @@ public class SupportService {
     public Integer getUnanswered(UUID id) {
         boolean isSystemUser = accountService.isSystemUser();
         var open = isSystemUser ? supportRepository.getOpen(SupportThread.SupportThreadStatus.OPEN) : 0;
-        var unanswered = supportRepository.getUnanswered(id);
+        var unanswered = isSystemUser
+                ? supportRepository.getUnanswered(id)
+                : supportRepository.getMyUnanswered(id);
         return open + unanswered;
     }
 

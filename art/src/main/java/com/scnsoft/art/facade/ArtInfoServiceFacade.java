@@ -32,10 +32,4 @@ public record ArtInfoServiceFacade(
         return artInfoMapper.mapToDto(artInfoService.save(artInfo));
     }
 
-    public ArtInfoDto createFromProposal(ProposalDto proposalDto) {
-        ArtInfo artInfo = artInfoMapper.mapProposalDtoToEntity(proposalDto);
-        Proposal proposal = proposalMapper.mapToEntity(proposalDto);
-        proposalServiceImpl.discardAllProposalsForArtExceptPassed(artInfo.getArt(), proposal);
-        return artInfoMapper.mapToDto(artInfoService.save(artInfo));
-    }
 }

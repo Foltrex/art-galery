@@ -19,6 +19,4 @@ public interface ArtInfoMapper {
 
     ArtInfo mapToEntity(ArtInfoDto artInfoDto);
 
-    @Mapping(target = "id", ignore = true)
-    ArtInfo mapProposalDtoToEntity(ProposalDto proposal);
 }

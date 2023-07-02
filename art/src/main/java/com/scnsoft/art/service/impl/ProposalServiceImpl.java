@@ -5,10 +5,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.scnsoft.art.dto.AccountType;
 import com.scnsoft.art.dto.ProposalFilter;
-import com.scnsoft.art.entity.Account;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
+import com.scnsoft.art.security.SecurityUtil;
 import com.scnsoft.art.service.user.AccountService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,9 +31,31 @@ import javax.persistence.criteria.Predicate;
 public class ProposalServiceImpl {
 
     private final ProposalRepository proposalRepository;
+    private final AccountService accountService;
 
-    public Optional<Proposal> findById(UUID proposalId) {
-        return proposalRepository.findById(proposalId);
+    public Optional<Proposal> findById(UUID proposalId, boolean allowUpdateStatus) {
+        return proposalRepository.findById(proposalId).map(p -> {
+            if(!allowUpdateStatus) {
+                return p;
+            }
+            if(p.getStatus().equals(Proposal.ProposalStatus.SENT)) {
+                UUID accountId = SecurityUtil.getCurrentAccountId();
+                var account = accountService.findById(accountId);
+                boolean updateRequired = false;
+                if(account.getAccountType().equals(AccountType.ARTIST) && !Boolean.TRUE.equals(p.getArtistConfirmation())) {
+                    updateRequired = true;
+                } else if (account.getAccountType().equals(AccountType.REPRESENTATIVE) && !Boolean.TRUE.equals(p.getOrganizationConfirmation())) {
+                    updateRequired = true;
+                }
+
+                if(updateRequired) {
+                    p.setStatus(Proposal.ProposalStatus.AWAIT);
+                    p.setUpdateAccountId(accountId);
+                    p = save(p);
+                }
+            }
+            return p;
+        });
     }
 
     public Proposal save(Proposal proposal) {
@@ -47,11 +70,11 @@ public class ProposalServiceImpl {
         return proposalRepository.count(prepareSpec(filter));
     }
 
-    public void discardAllProposalsForArtExceptPassed(Art art, Proposal proposal) {
-        List<Proposal> proposals = proposalRepository.findByArt(art);
+    public void discardAllProposalsForArtExceptPassed(Proposal proposal) {
+        List<Proposal> proposals = proposalRepository.findByArt(proposal.getArt());
         for (Proposal p : proposals) {
             if (!Objects.equals(proposal.getId(), p.getId())) {
-                p.setArtistConfirmation(false);
+                p.setStatus(Proposal.ProposalStatus.CANCELED);
                 proposalRepository.save(p);
             }
         }
@@ -102,6 +125,9 @@ public class ProposalServiceImpl {
                     out = cb.and(out, cb.equal(r.get(Proposal.Fields.artistConfirmation), Boolean.TRUE));
                     out = cb.and(out, cb.equal(r.get(Proposal.Fields.organizationConfirmation), Boolean.TRUE));
                 }
+            }
+            if(filter.getStatus() != null) {
+                out = cb.and(out, r.get(Proposal.Fields.status).in(filter.getStatus()));
             }
             return out;
         });

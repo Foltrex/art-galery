@@ -16,12 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -35,7 +32,7 @@ public class ProposalController {
     private final ArtInfoServiceFacade artInfoServiceFacade;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProposalDto> findAllById(@PathVariable("id") UUID id) {
+    public ResponseEntity<ProposalDto> findById(@PathVariable("id") UUID id) {
         return proposalServiceFacade.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -58,19 +55,13 @@ public class ProposalController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProposalDto> update(@RequestBody ProposalDto proposalDto) {
-        if (
-                proposalDto.getArtistConfirmation() != null && proposalDto.getArtistConfirmation() &&
-                        proposalDto.getOrganizationConfirmation() != null && proposalDto.getOrganizationConfirmation()
-        ) {
-            artInfoServiceFacade.createFromProposal(proposalDto);
-        }
-        return null;
-    }
-
     @PostMapping
     public ResponseEntity<ProposalDto> save(@RequestBody ProposalDto proposalDto) {
-        return ResponseEntity.ok(proposalServiceFacade.save(proposalDto));
+        return ResponseEntity.ok(proposalServiceFacade.create(proposalDto));
+    }
+    @PutMapping("{id}")
+    public ResponseEntity<ProposalDto> save(@PathVariable UUID id, @RequestBody ProposalDto proposalDto) {
+        proposalDto.setId(id);
+        return ResponseEntity.ok(proposalServiceFacade.update(proposalDto));
     }
 }
