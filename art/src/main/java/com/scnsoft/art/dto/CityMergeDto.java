@@ -13,11 +13,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CityDto {
-    UUID id;
-    UUID successor;
-    String name;
-    String country;
-    Double latitude;
-    Double longitude;
+public class CityMergeDto {
+    UUID main;
+    UUID obsolete;
 }

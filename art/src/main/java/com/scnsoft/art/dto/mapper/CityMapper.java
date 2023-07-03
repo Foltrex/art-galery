@@ -19,16 +19,22 @@ public abstract class CityMapper {
     public abstract CityDto mapToDto(City city);
 
     public City mapToEntity(CityDto cityDto) {
-        return cityRepository.findByNameAndCountry(cityDto.getName(), cityDto.getCountry())
-                .orElseGet(() -> {
-                    City city = new City();
-                    city.setId(cityDto.getId());
-                    city.setName(cityDto.getName());
-                    city.setCountry(cityDto.getCountry());
-                    city.setLongitude(cityDto.getLongitude());
-                    city.setLatitude(cityDto.getLatitude());
-                    return city;
-                });
+        City city = null;
+        if(cityDto.getId() != null) {
+            city = cityRepository.findById(cityDto.getId()).orElse(null);
+        }
+        if(city == null) {
+            city = cityRepository.findByNameAndCountry(cityDto.getName(), cityDto.getCountry()).orElse(null);
+        }
+        if(city == null) {
+            city = new City();
+        }
+        city.setName(cityDto.getName());
+        city.setCountry(cityDto.getCountry());
+        city.setLongitude(cityDto.getLongitude());
+        city.setLatitude(cityDto.getLatitude());
+        city.setSuccessor(cityDto.getSuccessor());
+        return city;
     }
 
     public Page<CityDto> mapPageToDto(final Page<City> cityPage) {

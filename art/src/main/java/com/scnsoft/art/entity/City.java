@@ -23,6 +23,7 @@ public class City {
     // @GeneratedValue(generator = "uuid2")
     // @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private UUID id;
+    private UUID successor;
     private String name;
     private String country;
     private Double latitude;

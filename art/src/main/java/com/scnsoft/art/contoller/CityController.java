@@ -1,6 +1,7 @@
 package com.scnsoft.art.contoller;
 
 import com.scnsoft.art.dto.CityDto;
+import com.scnsoft.art.dto.CityMergeDto;
 import com.scnsoft.art.facade.CityServiceFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -46,6 +47,10 @@ public class CityController {
     @PostMapping
     public ResponseEntity<CityDto> save(@RequestBody CityDto cityDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cityServiceFacade.save(cityDto));
+    }
+    @PostMapping("merge")
+    public ResponseEntity<CityDto> merge(@RequestBody CityMergeDto cityMergeDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(cityServiceFacade.merge(cityMergeDto));
     }
 
     @PutMapping("/{id}")

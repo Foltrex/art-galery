@@ -1,8 +1,11 @@
 package com.scnsoft.art.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import com.scnsoft.art.dto.CityMergeDto;
+import com.scnsoft.art.repository.AddressRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class CityServiceImpl implements CityService {
 
     private final CityRepository cityRepository;
+    private final AddressRepository addressRepository;
 
     @Override
     public Page<City> findAll(Pageable pageable) {
@@ -28,7 +32,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public List<City> findAll() {
-        return cityRepository.findAll();
+        return cityRepository.findNotObsolete();
     }
 
     @Override
@@ -40,8 +44,20 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public City save(City city) {
-        return cityRepository
-                .findByNameAndCountry(city.getName(), city.getCountry())
+        return save(city, false);
+    }
+    @Override
+    public City save(City city, boolean force) {
+        Optional<City> opt = force
+                ? cityRepository.findByNameAndCountry(city.getName(), city.getCountry())
+                : Optional.empty();
+
+        return opt.map(existing -> {
+                    if(existing.getSuccessor() == null) {
+                        return existing;
+                    }
+                    return findById(existing.getSuccessor());
+                })
                 .orElseGet(() -> cityRepository.save(city));
     }
 
@@ -54,5 +70,15 @@ public class CityServiceImpl implements CityService {
     @Override
     public void deleteById(UUID id) {
         cityRepository.deleteById(id);
+    }
+
+    @Override
+    public City merge(CityMergeDto cityDto) {
+        City obsolete = findById(cityDto.getObsolete());
+        City main = findById(cityDto.getMain());
+        addressRepository.mergeCity(cityDto.getMain(), cityDto.getObsolete());
+        obsolete.setSuccessor(main.getId());
+        save(obsolete);
+        return main;
     }
 }

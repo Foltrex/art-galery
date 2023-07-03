@@ -9,10 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import com.scnsoft.art.dto.AddressDto;
 import com.scnsoft.art.dto.FacilityDto;
 import com.scnsoft.art.dto.OrganizationDto;
-import com.scnsoft.art.entity.Address;
 import com.scnsoft.art.entity.Facility;
 import com.scnsoft.art.entity.Organization;
 
