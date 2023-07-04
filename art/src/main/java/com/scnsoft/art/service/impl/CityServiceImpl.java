@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.scnsoft.art.dto.CityMergeDto;
+import com.scnsoft.art.dto.MetadataEnum;
+import com.scnsoft.art.repository.AccountRepository;
 import com.scnsoft.art.repository.AddressRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ public class CityServiceImpl implements CityService {
 
     private final CityRepository cityRepository;
     private final AddressRepository addressRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     public Page<City> findAll(Pageable pageable) {
@@ -77,6 +80,7 @@ public class CityServiceImpl implements CityService {
         City obsolete = findById(cityDto.getObsolete());
         City main = findById(cityDto.getMain());
         addressRepository.mergeCity(cityDto.getMain(), cityDto.getObsolete());
+        accountRepository.mergeCity(MetadataEnum.CITY_ID, obsolete.getId(), main.getId());
         obsolete.setSuccessor(main.getId());
         save(obsolete);
         return main;
