@@ -58,6 +58,24 @@ public class Art {
     private List<ArtStyle> artStyles = new ArrayList<>();
 
     @Builder.Default
+    @ManyToMany
+    @JoinTable(
+        name = "art_art_topic",
+        joinColumns = @JoinColumn(name="art_id"),
+        inverseJoinColumns = @JoinColumn(name="art_topic_id")
+    )
+    private List<ArtTopic> artTopics = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "art_format_id")
+    private ArtSize artFormat;
+
+
+    @ManyToOne
+    @JoinColumn(name = "art_type_id")
+    private ArtType artType;
+
+    @Builder.Default
     @OneToMany(mappedBy = "art", cascade = CascadeType.REMOVE)
     private List<ArtInfo> artInfos = new ArrayList<>();
 

@@ -14,6 +14,8 @@ import java.util.UUID;
 
 import com.scnsoft.art.dto.ArtFilter;
 import com.scnsoft.art.dto.FileInfoDto;
+import com.scnsoft.art.entity.ArtStyle;
+import com.scnsoft.art.entity.ArtTopic;
 import com.scnsoft.art.entity.EntityFile;
 import com.scnsoft.art.entity.FileInfo;
 import com.scnsoft.art.service.FileServiceImplFile;
@@ -32,6 +34,9 @@ import com.scnsoft.art.repository.ArtRepository;
 import com.scnsoft.art.service.ArtService;
 import com.scnsoft.art.service.FileService;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 
 @Slf4j
 @Service
@@ -131,12 +136,45 @@ public class ArtServiceImpl implements ArtService {
             specification = specification.and(artNameOrDescription);
         }
 
+        if(artFilter.getArtFormat() != null && !artFilter.getArtFormat().isEmpty()) {
+            specification = specification.and((r, q, cb) ->
+                    r.get(Art.Fields.artFormat).in(artFilter.getArtFormat()));
+        }
+        if(artFilter.getPrice() != null && artFilter.getPrice().size() == 2) {
+            specification = specification.and((r, q, cb) ->
+                    cb.between(
+                            r.get(Art.Fields.price),
+                            artFilter.getPrice().get(0),
+                            artFilter.getPrice().get(1)));
+        }
+        if(artFilter.getArtSize() != null && !artFilter.getArtSize().isEmpty()) {
+            specification = specification.and((r, q, cb) ->
+                    r.get(Art.Fields.artSize).in(artFilter.getArtSize()));
+        }
+        if(artFilter.getArtStyle() != null && !artFilter.getArtStyle().isEmpty()) {
+            specification = specification.and((r, q, cb) -> {
+                Join<Art , ArtStyle> join = r.join(Art.Fields.artStyles, JoinType.INNER);
+                return join.get(ArtStyle.Fields.id).in(artFilter.getArtStyle());
+            });
+        }
+        if(artFilter.getArtTopic() != null && !artFilter.getArtTopic().isEmpty()) {
+            specification = specification.and((r, q, cb) -> {
+                Join<Art , ArtTopic> join = r.join(Art.Fields.artTopics, JoinType.INNER);
+                return join.get(ArtTopic.Fields.id).in(artFilter.getArtTopic());
+            });
+        }
+        if(artFilter.getArtType() != null && !artFilter.getArtType().isEmpty()) {
+            specification = specification.and((r, q, cb) ->
+                    r.get(Art.Fields.artType).in(artFilter.getArtType()));
+        }
+
         if(artFilter.getArtistId() != null) {
             specification = specification.and(artistIdEqual(artFilter.getArtistId()));
         }
 
         return artRepository.findAll(specification, pageable);
     }
+
 
     @Override
     public void deleteByAccountId(UUID accountId) {

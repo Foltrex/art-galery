@@ -76,3 +76,6 @@ spring:
 
 
 
+logging:
+  pattern:
+    console: "%clr(%d{MM-dd HH:mm}){blue} %clr(%-5p) %clr(%logger{0}){blue} %clr(:){red} %clr(%m){faint}%n"

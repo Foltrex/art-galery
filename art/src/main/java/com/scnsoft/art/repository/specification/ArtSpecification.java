@@ -21,8 +21,8 @@ public class ArtSpecification {
 
     public static Specification<Art> artNameContain(String name) {
         return (r, q, cb) -> {
-            String nameRegex = "%" + name + "%";
-            return cb.like(r.get(Art.Fields.name), nameRegex);
+            String nameRegex = "%" + name.toLowerCase() + "%";
+            return cb.like(cb.lower(r.get(Art.Fields.name)), nameRegex);
         };
     }
 

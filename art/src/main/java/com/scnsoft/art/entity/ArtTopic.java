@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 @Table(name = "art_topic")
 @Data
 @Builder
+@FieldNameConstants
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArtTopic {

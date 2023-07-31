@@ -20,6 +20,6 @@ public interface AccountRepository extends JpaRepository<Account, UUID>, JpaSpec
     Optional<Account> findByEmail(String email);
 
     @Modifying
-    @Query("update Metadata m set m.value = :main where m.metadataId.key = :city and m.value = :obsolete")
+    @Query("update Metadata m set m.value = :main where m.metadataId.key = :cityId and m.value = :obsolete")
     void mergeCity(MetadataEnum cityId, UUID obsolete, UUID main);
 }
